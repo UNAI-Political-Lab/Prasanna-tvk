@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { Send, CheckCircle, AlertCircle, Paperclip, X, FileText, Image, Video, File } from 'lucide-react'
 
 const PetitionForm = () => {
     const [isSubmitted, setIsSubmitted] = useState(false)
@@ -14,6 +14,54 @@ const PetitionForm = () => {
         title: '',
         description: ''
     })
+    const [mediaFiles, setMediaFiles] = useState([])
+    const [isDragging, setIsDragging] = useState(false)
+    const [fileError, setFileError] = useState(null)
+    const fileInputRef = useRef(null)
+
+    const MAX_FILES = 5
+    const MAX_SIZE_MB = 10
+
+    const getFileIcon = (file) => {
+        if (file.type.startsWith('image/')) return <Image size={18} className="text-blue-500" />
+        if (file.type.startsWith('video/')) return <Video size={18} className="text-purple-500" />
+        if (file.type.includes('pdf') || file.type.includes('text') || file.type.includes('document'))
+            return <FileText size={18} className="text-orange-500" />
+        return <File size={18} className="text-gray-400" />
+    }
+
+    const processFiles = useCallback((incoming) => {
+        setFileError(null)
+        const valid = []
+        for (const file of incoming) {
+            if (mediaFiles.length + valid.length >= MAX_FILES) {
+                setFileError(`You can attach a maximum of ${MAX_FILES} files.`)
+                break
+            }
+            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                setFileError(`"${file.name}" exceeds the ${MAX_SIZE_MB} MB limit.`)
+                continue
+            }
+            valid.push(file)
+        }
+        setMediaFiles(prev => [...prev, ...valid])
+    }, [mediaFiles])
+
+    const handleFileInput = (e) => {
+        processFiles(Array.from(e.target.files))
+        e.target.value = ''
+    }
+
+    const handleDrop = (e) => {
+        e.preventDefault()
+        setIsDragging(false)
+        processFiles(Array.from(e.dataTransfer.files))
+    }
+
+    const removeFile = (index) => {
+        setMediaFiles(prev => prev.filter((_, i) => i !== index))
+        setFileError(null)
+    }
 
     // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIoHOUMvA5rgy0EZnLGgw5z0_cJVT6W4l2Gt1UIUtDB-ovfHDAvTKKbeEtk7cen9SQ/exec'
@@ -27,6 +75,10 @@ const PetitionForm = () => {
             const params = new URLSearchParams()
             for (const key in formData) {
                 params.append(key, formData[key])
+            }
+            // Attach file names (binary upload not possible in no-cors mode)
+            if (mediaFiles.length > 0) {
+                params.append('attachments', mediaFiles.map(f => f.name).join(', '))
             }
 
             await fetch(SCRIPT_URL, {
@@ -141,6 +193,98 @@ const PetitionForm = () => {
                                 placeholder="Describe your concern or demand in detail..."
                                 className="w-full bg-white border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm resize-none"
                             ></textarea>
+                        </div>
+
+                        {/* ── Media Attachment Section ── */}
+                        <div className="space-y-3">
+                            <label className="text-sm font-black text-tvk-dark uppercase tracking-widest flex items-center gap-2">
+                                <Paperclip size={15} /> Supporting Media <span className="font-normal normal-case opacity-50 tracking-normal">(optional · up to {MAX_FILES} files · {MAX_SIZE_MB} MB each)</span>
+                            </label>
+
+                            {/* Drop Zone */}
+                            <motion.div
+                                onClick={() => fileInputRef.current?.click()}
+                                onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+                                onDragLeave={() => setIsDragging(false)}
+                                onDrop={handleDrop}
+                                animate={{ borderColor: isDragging ? 'rgba(145,9,5,0.4)' : 'rgba(145,9,5,0.1)', backgroundColor: isDragging ? 'rgba(145,9,5,0.04)' : 'rgba(255,255,255,0.6)' }}
+                                transition={{ duration: 0.2 }}
+                                className="w-full border-2 border-dashed rounded-2xl px-5 py-8 flex flex-col items-center justify-center gap-2 cursor-pointer select-none"
+                            >
+                                <Paperclip size={28} className="text-tvk-red/40" />
+                                <p className="text-sm font-bold text-tvk-dark/50">
+                                    {isDragging ? 'Drop files here…' : 'Click or drag & drop files here'}
+                                </p>
+                                <p className="text-xs text-tvk-dark/30">Images, videos, PDFs & documents accepted</p>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    multiple
+                                    accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+                                    className="hidden"
+                                    onChange={handleFileInput}
+                                />
+                            </motion.div>
+
+                            {/* File Error */}
+                            <AnimatePresence>
+                                {fileError && (
+                                    <motion.p
+                                        initial={{ opacity: 0, y: -4 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0 }}
+                                        className="text-xs text-red-500 font-semibold flex items-center gap-1"
+                                    >
+                                        <AlertCircle size={13} /> {fileError}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
+
+                            {/* File Preview List */}
+                            <AnimatePresence>
+                                {mediaFiles.length > 0 && (
+                                    <motion.ul
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="space-y-2"
+                                    >
+                                        {mediaFiles.map((file, idx) => (
+                                            <motion.li
+                                                key={file.name + idx}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                exit={{ opacity: 0, x: 10 }}
+                                                className="flex items-center gap-3 bg-white border border-tvk-red/10 rounded-xl px-4 py-3 shadow-sm"
+                                            >
+                                                {/* Thumbnail for images */}
+                                                {file.type.startsWith('image/') ? (
+                                                    <img
+                                                        src={URL.createObjectURL(file)}
+                                                        alt={file.name}
+                                                        className="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-gray-100"
+                                                    />
+                                                ) : (
+                                                    <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0 border border-gray-100">
+                                                        {getFileIcon(file)}
+                                                    </div>
+                                                )}
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-semibold text-tvk-dark truncate">{file.name}</p>
+                                                    <p className="text-xs text-tvk-dark/40">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeFile(idx)}
+                                                    className="text-tvk-dark/30 hover:text-tvk-red transition-colors flex-shrink-0"
+                                                    aria-label="Remove file"
+                                                >
+                                                    <X size={16} />
+                                                </button>
+                                            </motion.li>
+                                        ))}
+                                    </motion.ul>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         <motion.button
