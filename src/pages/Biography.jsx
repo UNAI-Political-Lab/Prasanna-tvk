@@ -20,8 +20,8 @@ const Biography = () => {
                         className="w-full md:w-1/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl relative"
                     >
                         <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Placeholder_candidate.jpg/440px-Placeholder_candidate.jpg"
-                            alt="TVK Candidate"
+                            src="/prasannatvk-bio.jpeg"
+                            alt="TVK Candidate Mr. S. Prasanna"
                             className="w-full h-full object-cover"
                         />
                         <div className="absolute top-4 right-4 bg-tvk-yellow text-tvk-red font-bold px-4 py-1 rounded-full text-xs uppercase tracking-tighter">
