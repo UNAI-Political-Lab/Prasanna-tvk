@@ -112,18 +112,18 @@ const Biography = () => {
                             </div>
                         </div>
                         <div className="w-full md:w-1/2 flex justify-center">
-                            <div className="relative group">
-                                <div className="absolute -inset-4 bg-tvk-yellow/20 rounded-full blur-2xl group-hover:bg-tvk-red/20 transition-all duration-700" />
-                                <div className="w-64 h-64 md:w-96 md:h-96 rounded-full border-[12px] border-white overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] relative z-10">
+                            <div className="relative">
+                                <div className="absolute -inset-4 bg-tvk-yellow/10 rounded-full blur-2xl" />
+                                <div className="w-64 h-64 md:w-96 md:h-96 rounded-full border-[12px] border-white overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] relative z-10 bg-gray-50">
                                     <img
-                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Placeholder_leader.jpg/440px-Placeholder_leader.jpg"
-                                        alt="Leader"
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                                        src="/thalapathy.png"
+                                        alt="Thalapathy Vijay"
+                                        className="w-full h-full object-cover"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-tvk-red/20 to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-tvk-red/5 to-transparent pointer-events-none" />
                                 </div>
                                 {/* Decorative Ring */}
-                                <div className="absolute -inset-8 border border-tvk-red/10 rounded-full animate-[spin_40s_linear_infinite] -z-1" />
+                                <div className="absolute -inset-8 border border-tvk-red/10 rounded-full animate-[spin_60s_linear_infinite] pointer-events-none" />
                             </div>
                         </div>
                     </div>

@@ -31,7 +31,7 @@ const ContactForm = () => {
                                 <input
                                     required
                                     type="text"
-                                    placeholder="John Doe"
+                                    placeholder="Name"
                                     className="w-full bg-tvk-lightBg/50 border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium"
                                 />
                             </div>
@@ -50,7 +50,7 @@ const ContactForm = () => {
                             <label className="text-sm font-black text-tvk-dark uppercase tracking-widest">Email (Optional)</label>
                             <input
                                 type="email"
-                                placeholder="john@example.com"
+                                placeholder="Email"
                                 className="w-full bg-tvk-lightBg/50 border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium"
                             />
                         </div>

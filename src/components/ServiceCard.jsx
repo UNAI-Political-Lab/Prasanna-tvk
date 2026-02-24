@@ -17,16 +17,6 @@ const ServiceCard = ({ icon, title, desc }) => {
             <p className="text-base text-tvk-dark/60 leading-relaxed font-medium">
                 {desc}
             </p>
-            <div className="mt-auto pt-6 flex items-center text-tvk-red font-bold text-sm">
-                Learn More
-                <motion.span
-                    initial={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    className="ml-2"
-                >
-                    →
-                </motion.span>
-            </div>
         </motion.div>
     )
 }

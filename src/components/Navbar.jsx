@@ -31,11 +31,16 @@ const Navbar = () => {
             <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
                 <Link to="/" className="group">
                     <div className="h-12 md:h-16 flex items-center justify-center px-6 bg-white rounded-xl transition-transform group-hover:scale-105 shadow-lg">
-                        <img
-                            src={logo}
-                            alt="TVK - Tamilaga Vettri Kazhagam"
-                            className="h-10 md:h-14 w-auto object-contain"
-                        />
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={logo}
+                                alt="TVK Logo"
+                                className="h-10 md:h-14 w-auto object-contain"
+                            />
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border border-tvk-red/10">
+                                <img src="/symbol.png" alt="TVK Symbol" className="w-full h-full object-contain" />
+                            </div>
+                        </div>
                     </div>
                 </Link>
 

@@ -8,17 +8,12 @@ const Contact = () => {
         {
             icon: <MapPin />,
             title: "Main Office",
-            details: ["123 Victory Street,", "District Headquarters, Tamil Nadu, 600001"]
+            details: ["No 27 100 feet road taramani link road  ", "Velachery", "Chennai, TAMIL NADU 600042"]
         },
         {
             icon: <Phone />,
             title: "Helpline",
-            details: ["+91 98765 43210", "+91 94444 00000"]
-        },
-        {
-            icon: <Mail />,
-            title: "Email Us",
-            details: ["contact@tvkcandidate.com", "grievance@tvk.org"]
+            details: ["+91 9884770108"]
         },
         {
             icon: <Clock />,
@@ -69,18 +64,18 @@ const Contact = () => {
                         </div>
 
                         {/* Map Placeholder */}
-                        <div className="mt-10 rounded-2xl overflow-hidden shadow-lg border-4 border-white h-72 relative group">
-                            <img
-                                src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80&w=1000"
-                                alt="Map Placeholder"
-                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                            />
-                            <div className="absolute inset-0 bg-tvk-red/10 group-hover:bg-transparent transition-all" />
-                            <div className="absolute bottom-4 right-4">
-                                <a href="#" className="bg-white text-tvk-red font-bold px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm hover:scale-105 transition-all">
-                                    Open in Maps <ExternalLink size={16} />
-                                </a>
-                            </div>
+                        <div className="mt-10 rounded-2xl overflow-hidden shadow-lg border-4 border-white h-72 relative group bg-gray-100">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15551.488314156!2d80.20755!3d12.9791!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d8869c9b489%3A0x6bba46c53ed98322!2sVelachery%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen=""
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                            ></iframe>
+                            <div className="absolute inset-0 pointer-events-none border-2 border-tvk-red/10 rounded-2xl"></div>
                         </div>
                     </div>
 

@@ -14,12 +14,15 @@ const Footer = () => {
                     {/* Brand */}
                     <div className="col-span-1 md:col-span-1">
                         <Link to="/" className="mb-8 block group w-fit">
-                            <div className="flex items-center justify-center px-4 bg-white border border-tvk-red/10 rounded-xl transition-transform group-hover:scale-105 shadow-sm py-2">
+                            <div className="flex items-center justify-center px-4 bg-white border border-tvk-red/10 rounded-xl transition-transform group-hover:scale-105 shadow-sm py-2 gap-3">
                                 <img
                                     src={logo}
                                     alt="TVK Logo"
                                     className="h-10 object-contain"
                                 />
+                                <div className="w-8 h-8 rounded-full overflow-hidden border border-tvk-red/10">
+                                    <img src="/symbol.png" alt="TVK Symbol" className="w-full h-full object-contain" />
+                                </div>
                             </div>
                         </Link>
                         <p className="text-tvk-dark/60 mb-8 leading-relaxed font-medium">
@@ -57,13 +60,13 @@ const Footer = () => {
                                 <div className="w-10 h-10 shrink-0 bg-tvk-lightBg border border-tvk-red/10 rounded-xl flex items-center justify-center text-tvk-red">
                                     <MapPin size={18} />
                                 </div>
-                                <span className="text-tvk-dark/70 leading-relaxed">123 Victory Street, Tamil Nadu, India</span>
+                                <span className="text-tvk-dark/70 leading-relaxed">No 27 100 feet road taramani link road  Velachery Chennai, TAMIL NADU 600042</span>
                             </li>
                             <li className="flex gap-4 items-center">
                                 <div className="w-10 h-10 shrink-0 bg-tvk-lightBg border border-tvk-red/10 rounded-xl flex items-center justify-center text-tvk-red">
                                     <Phone size={18} />
                                 </div>
-                                <span className="text-tvk-dark/70">+91 98765 43210</span>
+                                <span className="text-tvk-dark/70">+91 9884770108</span>
                             </li>
                         </ul>
                     </div>
