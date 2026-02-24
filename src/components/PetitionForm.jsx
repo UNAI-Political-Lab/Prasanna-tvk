@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Send, CheckCircle, AlertCircle } from 'lucide-react'
 
 const PetitionForm = () => {
-    const [isSubmitted, setIsSubmitted] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -13,12 +14,33 @@ const PetitionForm = () => {
         description: ''
     })
 
-    const handleSubmit = (e) => {
+    // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_XXXXXXXXXXXX/exec'
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        // Simulate backend submission
-        setTimeout(() => {
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Apps Script requires no-cors for simple submissions or specific handling
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+
+            // Since we're using no-cors, we won't get a proper response body, 
+            // but the submission should still reach the script.
             setIsSubmitted(true)
-        }, 1000)
+        } catch (err) {
+            console.error('Submission error:', err)
+            setError('There was an error submitting your petition. Please try again later.')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const handleChange = (e) => {
@@ -121,10 +143,25 @@ const PetitionForm = () => {
                             whileHover={{ scale: 1.01, translateY: -2 }}
                             whileTap={{ scale: 0.98 }}
                             type="submit"
-                            className="w-full bg-tvk-red text-white font-black py-5 text-lg rounded-2xl shadow-[0_10px_30px_rgba(145,9,5,0.2)] hover:shadow-[0_15px_40px_rgba(145,9,5,0.3)] transition-all flex items-center justify-center gap-3 uppercase tracking-widest"
+                            disabled={isLoading}
+                            className={`w-full ${isLoading ? 'bg-tvk-dark/20' : 'bg-tvk-red'} text-white font-black py-5 text-lg rounded-2xl shadow-[0_10px_30px_rgba(145,9,5,0.2)] hover:shadow-[0_15px_40px_rgba(145,9,5,0.3)] transition-all flex items-center justify-center gap-3 uppercase tracking-widest disabled:cursor-not-allowed`}
                         >
-                            Submit Petition <Send size={20} />
+                            {isLoading ? 'Submitting...' : 'Submit Petition'} <Send size={20} className={isLoading ? 'animate-pulse' : ''} />
                         </motion.button>
+
+                        <AnimatePresence>
+                            {error && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    className="bg-red-50 text-red-600 p-4 rounded-xl flex items-center gap-3 font-bold text-sm"
+                                >
+                                    <AlertCircle size={20} />
+                                    {error}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                         <p className="text-center text-xs text-tvk-dark/40 mt-6 font-bold uppercase tracking-wider">
                             By submitting, you agree to being contacted by our office regarding this petition.
                         </p>
