@@ -15,7 +15,7 @@ const PetitionForm = () => {
     })
 
     // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_XXXXXXXXXXXX/exec'
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjlGfnXA1oVUyWyyBwJVwz1j1lPb2YrhHU3UkyN0bFiqOAqmiGdCRSI2JEo3diMr0C/exec'
 
     const handleSubmit = async (e) => {
         e.preventDefault()
