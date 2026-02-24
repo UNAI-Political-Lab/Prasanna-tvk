@@ -16,25 +16,28 @@ const PetitionForm = () => {
     })
 
     // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjlGfnXA1oVUyWyyBwJVwz1j1lPb2YrhHU3UkyN0bFiqOAqmiGdCRSI2JEo3diMr0C/exec'
-
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIoHOUMvA5rgy0EZnLGgw5z0_cJVT6W4l2Gt1UIUtDB-ovfHDAvTKKbeEtk7cen9SQ/exec'
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
         setError(null)
 
         try {
-            const response = await fetch(SCRIPT_URL, {
+            // Using URLSearchParams is more compatible with GAS e.parameter in no-cors mode
+            const params = new URLSearchParams()
+            for (const key in formData) {
+                params.append(key, formData[key])
+            }
+
+            await fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Apps Script requires no-cors for simple submissions or specific handling
+                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify(formData)
+                body: params.toString()
             })
 
-            // Since we're using no-cors, we won't get a proper response body, 
-            // but the submission should still reach the script.
             setIsSubmitted(true)
         } catch (err) {
             console.error('Submission error:', err)
