@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import PetitionForm from '../components/PetitionForm'
-import { Shield, FileCheck, Users, Headphones } from 'lucide-react'
+import { Shield, FileCheck, Users } from 'lucide-react'
 
 const Petition = () => {
     return (
@@ -27,7 +27,6 @@ const Petition = () => {
                                 { icon: <Shield className="text-tvk-red" />, title: "Secure & Confidential", desc: "Your personal information is protected and handled with utmost care." },
                                 { icon: <FileCheck className="text-tvk-red" />, title: "Trackable Progress", desc: "Every petition is indexed and tracked for resolution by our team." },
                                 { icon: <Users className="text-tvk-red" />, title: "Collective Impact", desc: "Shared concerns help us prioritize issues that affect the most people." },
-                                { icon: <Headphones className="text-tvk-red" />, title: "Support Office", desc: "Call our helpline at 1800-TVK-HELP if you need immediate assistance." }
                             ].map((item, i) => (
                                 <div key={i} className="flex gap-4">
                                     <div className="w-10 h-10 bg-tvk-red/10 rounded-lg flex items-center justify-center shrink-0 mt-1">
