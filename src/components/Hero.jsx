@@ -64,8 +64,38 @@ const Hero = () => {
                         transition={{ duration: 0.8 }}
                         className="flex-1 text-center lg:text-left"
                     >
-                        <div className="inline-block px-6 py-2 mb-8 bg-white text-tvk-red rounded-full font-black text-xs tracking-[0.2em] uppercase shadow-xl ring-1 ring-tvk-red/10">
-                            Tamilaga Vettri Kazhagam
+                        <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
+                            <div className="bg-white px-6 py-2 rounded-full shadow-xl ring-1 ring-tvk-red/10">
+                                <span className="text-tvk-red font-black text-xs tracking-[0.2em] uppercase">Tamilaga Vettri Kazhagam</span>
+                            </div>
+                        </div>
+
+                        {/* Leader Portraits - Historic Legacy */}
+                        <div className="flex gap-4 mb-10 justify-center lg:justify-start">
+                            {[
+                                { name: "Ambedkar", img: "/ambethkar.png" },
+                                { name: "EVR Periyar", img: "/EVRa.png" },
+                                { name: "Kamarajar", img: "/kamarajar.png" },
+                                { name: "Velu Nachiyar", img: "/velunachiyar.png" },
+                                { name: "Anjalai Ammal", img: "/anjalaiammal.png" }
+                            ].map((leader, idx) => (
+                                <div key={idx} className="relative group">
+                                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-tvk-yellow overflow-hidden shadow-[0_0_15px_rgba(251,191,36,0.2)] group-hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] transition-all duration-500 cursor-help bg-white/5">
+                                        <img
+                                            src={leader.img}
+                                            alt={leader.name}
+                                            className="w-full h-full object-cover grayscale-[0.3] brightness-110 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                                            onError={(e) => {
+                                                e.target.src = `https://placehold.co/100x100?text=${leader.name[0]}`
+                                            }}
+                                        />
+                                    </div>
+                                    {/* Tooltip on Hover */}
+                                    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-tvk-red text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest z-50">
+                                        {leader.name}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                         <h1 className="text-4xl md:text-7xl font-black mb-10 leading-none text-white drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] tracking-tighter whitespace-nowrap">
                             Mr. S. <span className="text-tvk-yellow">Prasanna</span>
