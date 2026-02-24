@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-sans bg-white text-tvk-dark;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-heading tracking-tight text-tvk-dark;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-tvk-red text-white font-bold py-3 px-8 rounded-full shadow-tvk-maroon hover:shadow-tvk-maroon-hover transition-all duration-300 transform hover:-translate-y-1 hover:bg-tvk-darkRed;
+    }
+
+    .glass-card {
+        @apply bg-white border border-tvk-red/5 rounded-3xl shadow-soft hover:shadow-soft-hover transition-all duration-500;
+    }
+
+    .nav-link {
+        @apply text-tvk-dark/70 hover:text-tvk-red font-bold transition-all duration-300 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-tvk-red after:transition-all after:duration-300 hover:after:w-full;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-tvk-lightBg;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-tvk-red rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-tvk-darkRed;
+}
