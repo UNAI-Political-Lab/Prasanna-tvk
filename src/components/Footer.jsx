@@ -110,9 +110,20 @@ const Footer = () => {
 
                 <div className="border-t border-tvk-red/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-tvk-dark/40 font-bold">
                     <p>© 2026 TVK Candidate Member. All Rights Reserved.</p>
-                    <div className="flex gap-10">
-                        <a href="#" className="hover:text-tvk-red transition-colors">Privacy Policy</a>
-                        <a href="#" className="hover:text-tvk-red transition-colors">Terms of Service</a>
+                    <div className="flex flex-col items-center md:items-end gap-3">
+                        <div className="flex gap-10">
+                            <a href="#" className="hover:text-tvk-red transition-colors">Privacy Policy</a>
+                            <a href="#" className="hover:text-tvk-red transition-colors">Terms of Service</a>
+                        </div>
+                        <a
+                            href="https://www.unaitech.com/services"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 group transition-all"
+                        >
+                            <span className="text-xs uppercase tracking-widest font-black text-tvk-dark/50 group-hover:text-tvk-red transition-colors">Developed By</span>
+                            <img src="/Unaiwebbg.png" alt="Unai Tech" className="h-16 object-contain grayscale group-hover:grayscale-0 transition-all opacity-80 group-hover:opacity-100" />
+                        </a>
                     </div>
                 </div>
             </div>

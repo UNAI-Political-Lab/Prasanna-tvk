@@ -5,16 +5,16 @@ const ServiceCard = ({ icon, title, desc }) => {
     return (
         <motion.div
             whileHover={{ y: -10 }}
-            className="glass-card p-10 flex flex-col h-full group relative overflow-hidden"
+            className="glass-card p-6 md:p-10 flex flex-col h-full group relative overflow-hidden"
         >
             {/* Cinematic Accent */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-tvk-yellow/5 blur-3xl -z-10 group-hover:bg-tvk-red/10 transition-colors duration-500" />
 
-            <div className="w-16 h-16 bg-white border-2 border-tvk-yellow rounded-2xl flex items-center justify-center text-tvk-red mb-8 shadow-xl group-hover:border-tvk-red group-hover:scale-110 transition-all duration-500">
-                {React.cloneElement(icon, { size: 32 })}
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-white border-2 border-tvk-yellow rounded-2xl flex items-center justify-center text-tvk-red mb-6 md:mb-8 shadow-xl group-hover:border-tvk-red group-hover:scale-110 transition-all duration-500">
+                {React.cloneElement(icon, { size: 28 })}
             </div>
-            <h3 className="text-2xl font-black mb-4 group-hover:text-tvk-red transition-colors text-tvk-dark">{title}</h3>
-            <p className="text-base text-tvk-dark/60 leading-relaxed font-medium">
+            <h3 className="text-xl md:text-2xl font-black mb-3 md:mb-4 group-hover:text-tvk-red transition-colors text-tvk-dark">{title}</h3>
+            <p className="text-sm md:text-base text-tvk-dark/60 leading-relaxed font-medium">
                 {desc}
             </p>
         </motion.div>

@@ -8,7 +8,7 @@ const Hero = () => {
     const candidateImg = "/candidate.jpeg"
 
     return (
-        <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-black">
+        <section className="relative min-h-[100dvh] lg:min-h-[90vh] flex items-center pt-24 lg:pt-20 overflow-hidden bg-black py-10 lg:py-0">
             {/* Cinematic Background Layer */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <video
@@ -64,14 +64,14 @@ const Hero = () => {
                         transition={{ duration: 0.8 }}
                         className="flex-1 text-center lg:text-left"
                     >
-                        <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
+                        <div className="flex items-center justify-center lg:justify-start gap-4 mb-4 lg:mb-8">
                             <div className="bg-white px-6 py-2 rounded-full shadow-xl ring-1 ring-tvk-red/10">
                                 <span className="text-tvk-red font-black text-xs tracking-[0.2em] uppercase">Tamilaga Vettri Kazhagam</span>
                             </div>
                         </div>
 
                         {/* Leader Portraits - Historic Legacy */}
-                        <div className="flex gap-4 mb-10 justify-center lg:justify-start">
+                        <div className="flex flex-wrap gap-2 md:gap-4 mb-6 lg:mb-10 justify-center lg:justify-start">
                             {[
                                 { name: "Ambedkar", img: "/ambethkar.png" },
                                 { name: "EVR Periyar", img: "/EVRa.png" },
@@ -80,7 +80,7 @@ const Hero = () => {
                                 { name: "Anjalai Ammal", img: "/anjalaiammal.png" }
                             ].map((leader, idx) => (
                                 <div key={idx} className="relative group">
-                                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-tvk-yellow overflow-hidden shadow-[0_0_15px_rgba(251,191,36,0.2)] group-hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] transition-all duration-500 cursor-help bg-white/5">
+                                    <div className="w-10 h-10 md:w-16 md:h-16 rounded-full border-2 border-tvk-yellow overflow-hidden shadow-[0_0_15px_rgba(251,191,36,0.2)] group-hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] transition-all duration-500 cursor-help bg-white/5">
                                         <img
                                             src={leader.img}
                                             alt={leader.name}
@@ -97,25 +97,48 @@ const Hero = () => {
                                 </div>
                             ))}
                         </div>
-                        <h1 className="text-4xl md:text-7xl font-black mb-10 leading-none text-white drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] tracking-tighter whitespace-nowrap">
+
+                        {/* Mobile Candidate Portrait */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="lg:hidden mb-8 flex justify-center"
+                        >
+                            <div className="relative z-10 w-48 h-48 rounded-full border-[8px] border-white shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden ring-4 ring-tvk-yellow/10">
+                                <img
+                                    src={candidateImg}
+                                    alt="TVK Candidate"
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        if (e.target.src !== "https://placehold.co/800x800?text=CANDIDATE+PORTRAIT") {
+                                            e.target.src = "https://placehold.co/800x800?text=CANDIDATE+PORTRAIT";
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </motion.div>
+
+                        <h1 className="text-3xl md:text-7xl font-black mb-4 md:mb-10 leading-[1.1] md:leading-none text-white drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] tracking-tighter">
                             Mr. S. <span className="text-tvk-yellow">Prasanna</span>
                         </h1>
-                        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-8">
+                        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 md:gap-4 mb-6 md:mb-8">
                             {['Entrepreneur', 'Social Worker', 'Political Activist'].map((title, i) => (
-                                <span key={i} className="text-tvk-yellow font-bold text-sm md:text-base uppercase tracking-widest border border-tvk-yellow/30 px-4 py-1.5 rounded-lg backdrop-blur-sm">
+                                <span key={i} className="text-tvk-yellow font-bold text-xs md:text-base uppercase tracking-widest border border-tvk-yellow/30 px-3 md:px-4 py-1 md:py-1.5 rounded-lg backdrop-blur-sm">
                                     {title}
                                 </span>
                             ))}
                         </div>
-                        <p className="text-xl text-white/90 mb-12 max-w-2xl leading-relaxed font-medium drop-shadow-lg lg:pr-12">
+                        <p className="text-base md:text-xl text-white/90 mb-8 md:mb-12 max-w-2xl leading-relaxed font-medium drop-shadow-lg lg:pr-12">
                             A dynamic entrepreneur and committed social activist with a deep commitment to public welfare. Leading with professional excellence and grassroots involvement.
                         </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
+                        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 md:gap-6">
                             <motion.div
+                                className="w-full sm:w-auto"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <Link to="/petition" className="relative overflow-hidden bg-tvk-yellow text-tvk-red font-black py-5 px-14 rounded-full shadow-[0_0_30px_rgba(251,191,36,0.4)] hover:shadow-[0_0_50px_rgba(251,191,36,0.6)] transition-all duration-500 text-lg flex items-center gap-3 group">
+                                <Link to="/petition" className="relative overflow-hidden bg-tvk-yellow text-tvk-red font-black py-4 md:py-5 px-8 md:px-14 rounded-full shadow-[0_0_30px_rgba(251,191,36,0.4)] hover:shadow-[0_0_50px_rgba(251,191,36,0.6)] transition-all duration-500 text-base md:text-lg flex items-center justify-center gap-3 group">
                                     <span className="relative z-10 transition-colors group-hover:text-tvk-red">Submit Your Petition</span>
                                     <ArrowRight size={24} className="relative z-10 group-hover:translate-x-2 transition-transform duration-500" />
                                     <motion.div
@@ -142,7 +165,7 @@ const Hero = () => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <Link to="/biography" className="flex items-center gap-3 px-14 py-5 rounded-full font-black border-2 border-white/30 text-white backdrop-blur-xl hover:bg-white hover:text-tvk-red transition-all duration-500 shadow-[0_0_30px_rgba(255,255,255,0.1)] text-lg group relative overflow-hidden">
+                                <Link to="/biography" className="flex items-center gap-3 px-10 md:px-14 py-4 md:py-5 rounded-full font-black border-2 border-white/30 text-white backdrop-blur-xl hover:bg-white hover:text-tvk-red transition-all duration-500 shadow-[0_0_30px_rgba(255,255,255,0.1)] text-base md:text-lg group relative overflow-hidden">
                                     <FileText size={24} className="group-hover:rotate-12 transition-transform duration-500" />
                                     <span>Learn Our Story</span>
                                     {/* Animated border/glow effect */}
@@ -152,14 +175,14 @@ const Hero = () => {
                         </div>
                     </motion.div>
 
-                    {/* Right Content - Circular Candidate Portrait */}
+                    {/* Right Content - Circular Candidate Portrait (Desktop only) */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                         animate={{ opacity: 1, scale: 1, rotate: 0 }}
                         transition={{ duration: 1.2, ease: "easeOut" }}
-                        className="flex-1 relative mt-12 lg:mt-0 flex items-center justify-center p-8"
+                        className="hidden lg:flex flex-1 relative mt-6 lg:mt-0 items-center justify-center p-4"
                     >
-                        <div className="relative z-10 w-72 h-72 md:w-[480px] md:h-[480px] rounded-full border-[12px] border-white shadow-[0_20px_100px_rgba(0,0,0,0.8)] overflow-hidden ring-8 ring-tvk-yellow/10">
+                        <div className="relative z-10 w-48 h-48 md:w-[480px] md:h-[480px] rounded-full border-[8px] md:border-[12px] border-white shadow-[0_20px_100px_rgba(0,0,0,0.8)] overflow-hidden ring-4 md:ring-8 ring-tvk-yellow/10">
                             <img
                                 src={candidateImg}
                                 alt="TVK Candidate"
