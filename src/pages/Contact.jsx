@@ -1,25 +1,22 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import ContactForm from '../components/ContactForm'
-import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react'
+import { MapPin, Phone, Mail, ExternalLink } from 'lucide-react'
 
 const Contact = () => {
     const contactInfo = [
         {
             icon: <MapPin />,
             title: "Main Office",
-            details: ["No 27 100 feet road taramani link road  ", "Velachery", "Chennai, TAMIL NADU 600042"]
+            details: ["No 27 ,100 Feet Rd ,Taramani Link Road, Velachery, Chennai, Tamil Nadu 600042"],
+            link: "https://maps.app.goo.gl/vT4vh4KcB7Cc8U3h6"
         },
         {
             icon: <Phone />,
             title: "Helpline",
-            details: ["+91 9884770108"]
+            details: ["+91 9884770108"],
+            link: "tel:+919884770108"
         },
-        {
-            icon: <Clock />,
-            title: "Office Hours",
-            details: ["Mon - Sat: 9:00 AM - 7:00 PM", "Sunday: 10:00 AM - 2:00 PM"]
-        }
     ]
 
     return (
@@ -43,24 +40,29 @@ const Contact = () => {
                     {/* Info Cards Side */}
                     <div className="order-2 lg:order-1">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            {contactInfo.map((item, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="bg-white p-6 rounded-2xl shadow-md border border-tvk-red/5 group hover:border-tvk-red/20 transition-all"
-                                >
-                                    <div className="w-12 h-12 bg-tvk-red/10 rounded-xl flex items-center justify-center text-tvk-red mb-4 group-hover:bg-tvk-red group-hover:text-white transition-all">
-                                        {React.cloneElement(item.icon, { size: 24 })}
-                                    </div>
-                                    <h3 className="font-bold text-lg mb-3">{item.title}</h3>
-                                    {item.details.map((line, idx) => (
-                                        <p key={idx} className="text-tvk-dark/60 text-sm leading-relaxed">{line}</p>
-                                    ))}
-                                </motion.div>
-                            ))}
+                            {contactInfo.map((item, i) => {
+                                const card = (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: i * 0.1 }}
+                                        className={`bg-white p-6 rounded-2xl shadow-md border border-tvk-red/5 group hover:border-tvk-red/20 transition-all${item.link ? ' cursor-pointer' : ''}`}
+                                    >
+                                        <div className="w-12 h-12 bg-tvk-red/10 rounded-xl flex items-center justify-center text-tvk-red mb-4 group-hover:bg-tvk-red group-hover:text-white transition-all">
+                                            {React.cloneElement(item.icon, { size: 24 })}
+                                        </div>
+                                        <h3 className="font-bold text-lg mb-3">{item.title}</h3>
+                                        {item.details.map((line, idx) => (
+                                            <p key={idx} className="text-tvk-dark/60 text-sm leading-relaxed">{line}</p>
+                                        ))}
+                                    </motion.div>
+                                )
+                                return item.link ? (
+                                    <a key={i} href={item.link} target="_blank" rel="noopener noreferrer">{card}</a>
+                                ) : card
+                            })}
                         </div>
 
                         {/* Map Placeholder */}

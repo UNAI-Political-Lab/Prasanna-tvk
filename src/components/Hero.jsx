@@ -172,9 +172,7 @@ const Hero = () => {
                             />
                         </div>
 
-                        {/* Decorative Cinematic Elements */}
-                        <div className="absolute w-[110%] h-[110%] border-2 border-dashed border-tvk-yellow/30 rounded-full animate-[spin_30s_linear_infinite]" />
-                        <div className="absolute w-[120%] h-[120%] border border-white/5 rounded-full animate-[spin_45s_linear_infinite_reverse]" />
+
 
                         {/* Ambient Glow */}
                         <div className="absolute w-full h-full bg-tvk-yellow/15 blur-[120px] -z-10 rounded-full" />
