@@ -82,26 +82,29 @@ const Navbar = () => {
                         exit={{ opacity: 0, height: 0 }}
                         className="md:hidden bg-tvk-red/95 backdrop-blur-lg border-b border-tvk-yellow/20 overflow-hidden shadow-2xl mx-4 my-2 rounded-2xl"
                     >
-                        <div className="flex flex-col p-4 gap-2">
+                        <div className="flex flex-col p-4 gap-3">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.path}
                                     to={link.path}
-                                    className={`text-lg font-black px-4 py-3 rounded-xl transition-all ${location.pathname === link.path
-                                        ? 'bg-tvk-yellow text-tvk-red'
+                                    className={`text-lg font-black px-5 py-4 rounded-2xl flex items-center gap-4 transition-all ${location.pathname === link.path
+                                        ? 'bg-tvk-yellow text-tvk-red shadow-lg'
                                         : 'text-white hover:bg-white/10'
                                         }`}
                                     onClick={() => setIsOpen(false)}
                                 >
+                                    <span className={location.pathname === link.path ? 'text-tvk-red' : 'text-tvk-yellow'}>
+                                        {link.icon}
+                                    </span>
                                     {link.name}
                                 </Link>
                             ))}
                             <Link
                                 to="/petition"
-                                className="bg-tvk-yellow text-tvk-red text-center mt-2 py-4 rounded-xl font-black uppercase tracking-widest"
+                                className="bg-tvk-yellow text-tvk-red text-center mt-3 py-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3"
                                 onClick={() => setIsOpen(false)}
                             >
-                                Action Center
+                                <Flag size={20} /> Action Center
                             </Link>
                         </div>
                     </motion.div>

@@ -152,10 +152,10 @@ const Home = () => {
 
 
             {/* ── Core Philosophy ── */}
-            <section className="py-24 bg-tvk-lightBg/50">
+            <section className="py-16 md:py-24 bg-tvk-lightBg/50">
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">Core <span className="text-tvk-red">Philosophy</span></h2>
+                    <div className="text-center mb-12 md:mb-16">
+                        <h2 className="text-3xl md:text-5xl font-bold mb-4">Core <span className="text-tvk-red">Philosophy</span></h2>
                         <div className="w-24 h-1.5 bg-tvk-red mx-auto mb-6 rounded-full" />
                         <p className="text-tvk-dark/60 max-w-2xl mx-auto text-lg">
                             Service with Commitment. Leadership with Responsibility. Politics with Purpose.
@@ -184,7 +184,7 @@ const Home = () => {
 
             {/* ── Photo Spotlight Strip (images 1–5) ── */}
             <section className="py-0 overflow-hidden">
-                <div className="flex gap-1">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-1">
                     {spotlightImages.map((img, i) => (
                         <motion.div
                             key={i}
@@ -192,7 +192,7 @@ const Home = () => {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.08 }}
-                            className="flex-1 h-64 md:h-96 overflow-hidden relative group"
+                            className={`h-48 md:h-96 overflow-hidden relative group ${i === 4 ? 'col-span-2 md:col-span-1' : ''}`}
                         >
                             <img
                                 src={img}
@@ -206,20 +206,20 @@ const Home = () => {
             </section>
 
             {/* ── About / Intro ── */}
-            <section className="py-28 bg-white relative overflow-hidden">
+            <section className="py-16 md:py-28 bg-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-tvk-yellow/5 blur-[120px] pointer-events-none" />
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="flex flex-col lg:flex-row items-center gap-16">
+                    <div className="flex flex-col lg:flex-row items-center gap-10 md:gap-16">
                         {/* Image collage */}
                         <motion.div
                             initial={{ opacity: 0, x: -40 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            className="w-full lg:w-1/2 grid grid-cols-2 gap-4"
+                            className="w-full lg:w-1/2 grid grid-cols-2 gap-3 md:gap-4"
                         >
-                            <img src={main6} alt="Prasanna in Action" className="rounded-2xl object-cover h-64 w-full shadow-lg col-span-2" />
-                            <img src={main7} alt="Community Work" className="rounded-2xl object-cover h-48 w-full shadow-md" />
-                            <img src={main8} alt="Party Event" className="rounded-2xl object-cover h-48 w-full shadow-md" />
+                            <img src={main6} alt="Prasanna in Action" className="rounded-2xl object-cover h-48 md:h-64 w-full shadow-lg col-span-2" />
+                            <img src={main7} alt="Community Work" className="rounded-2xl object-cover h-36 md:h-48 w-full shadow-md" />
+                            <img src={main8} alt="Party Event" className="rounded-2xl object-cover h-36 md:h-48 w-full shadow-md" />
                         </motion.div>
 
                         {/* Text */}
@@ -229,8 +229,8 @@ const Home = () => {
                             viewport={{ once: true }}
                             className="w-full lg:w-1/2"
                         >
-                            <p className="text-xs font-black text-tvk-red uppercase tracking-[0.3em] mb-4">Who We Are</p>
-                            <h2 className="text-4xl md:text-5xl font-extrabold text-tvk-dark mb-6 leading-tight">
+                            <p className="text-xs font-black text-tvk-red uppercase tracking-[0.3em] mb-4 text-center lg:text-left">Who We Are</p>
+                            <h2 className="text-3xl md:text-5xl font-extrabold text-tvk-dark mb-6 leading-tight text-center lg:text-left">
                                 A Leader Rooted in <span className="text-tvk-red">People</span>
                             </h2>
                             <p className="text-tvk-dark/65 text-lg leading-relaxed mb-6">
@@ -261,9 +261,9 @@ const Home = () => {
             </section>
 
             {/* ── Achievements Counter ── */}
-            <section className="bg-tvk-dark py-20">
+            <section className="bg-tvk-dark py-14 md:py-20">
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                         {achievements.map((a, i) => (
                             <motion.div
                                 key={i}
@@ -271,10 +271,10 @@ const Home = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="text-center border-l border-white/10 pl-8 first:border-0 first:pl-0"
+                                className="text-center border-l border-white/10 pl-4 md:pl-8 first:border-0 first:pl-0"
                             >
-                                <p className="text-5xl font-black text-tvk-yellow mb-2">{a.value}</p>
-                                <p className="text-white/50 font-black uppercase tracking-widest text-xs">{a.label}</p>
+                                <p className="text-4xl md:text-5xl font-black text-tvk-yellow mb-2">{a.value}</p>
+                                <p className="text-white/50 font-black uppercase tracking-widest text-[10px] md:text-xs">{a.label}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -282,11 +282,11 @@ const Home = () => {
             </section>
 
             {/* ── Campaign Priorities ── */}
-            <section className="py-28 bg-tvk-lightBg/40">
+            <section className="py-16 md:py-28 bg-tvk-lightBg/40">
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
+                    <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
                         <p className="text-xs font-black text-tvk-red uppercase tracking-[0.3em] mb-3">Our Agenda</p>
-                        <h2 className="text-4xl md:text-5xl font-extrabold text-tvk-dark mb-4">
+                        <h2 className="text-3xl md:text-5xl font-extrabold text-tvk-dark mb-4">
                             Campaign <span className="text-tvk-red">Priorities</span>
                         </h2>
                         <p className="text-tvk-dark/55 text-lg">Six areas where we will deliver measurable change from day one.</p>
@@ -313,15 +313,15 @@ const Home = () => {
             </section>
 
             {/* ── Moments Grid (images 9–11 + 6–8) ── */}
-            <section className="py-28 bg-white">
+            <section className="py-16 md:py-28 bg-white">
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="text-center max-w-xl mx-auto mb-14">
+                    <div className="text-center max-w-xl mx-auto mb-10 md:mb-14">
                         <p className="text-xs font-black text-tvk-red uppercase tracking-[0.3em] mb-3">Captured Moments</p>
-                        <h2 className="text-4xl md:text-5xl font-extrabold text-tvk-dark">
+                        <h2 className="text-3xl md:text-5xl font-extrabold text-tvk-dark">
                             On the <span className="text-tvk-red">Ground</span>
                         </h2>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                         {momentImages.map((img, i) => (
                             <motion.div
                                 key={i}
@@ -349,12 +349,12 @@ const Home = () => {
             </section>
 
             {/* ── Testimonials ── */}
-            <section className="py-28 bg-tvk-lightBg/50 relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-tvk-red/5 rounded-full blur-[120px] pointer-events-none" />
+            <section className="py-16 md:py-28 bg-tvk-lightBg/50 relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-tvk-red/5 rounded-full blur-[120px] pointer-events-none" />
                 <div className="container mx-auto px-4 md:px-6 relative z-10">
-                    <div className="text-center mb-14">
+                    <div className="text-center mb-10 md:mb-14">
                         <p className="text-xs font-black text-tvk-red uppercase tracking-[0.3em] mb-3">What People Say</p>
-                        <h2 className="text-4xl md:text-5xl font-extrabold text-tvk-dark">
+                        <h2 className="text-3xl md:text-5xl font-extrabold text-tvk-dark">
                             Voices of the <span className="text-tvk-red">Constituency</span>
                         </h2>
                     </div>
@@ -363,21 +363,21 @@ const Home = () => {
             </section>
 
             {/* ── Call to Action ── */}
-            <section className="py-32 bg-white overflow-hidden relative border-t border-tvk-red/5">
+            <section className="py-20 md:py-32 bg-white overflow-hidden relative border-t border-tvk-red/5">
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-tvk-yellow/5 blur-[120px] pointer-events-none -z-10" />
                 <div className="absolute bottom-0 left-0 w-1/3 h-full bg-tvk-red/5 blur-[100px] pointer-events-none -z-10" />
                 <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
-                    <h2 className="text-4xl md:text-6xl font-black text-tvk-dark mb-8 leading-tight">
+                    <h2 className="text-3xl md:text-6xl font-black text-tvk-dark mb-6 md:mb-8 leading-tight">
                         Ready to Make a <span className="text-tvk-red italic">Difference?</span>
                     </h2>
-                    <p className="text-tvk-dark/60 text-xl mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+                    <p className="text-tvk-dark/60 text-lg md:text-xl mb-10 md:mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
                         Your voice matters. Submit your petitions, share your concerns, and let's build a better future together for all citizens.
                     </p>
-                    <div className="flex flex-col sm:flex-row justify-center gap-8">
-                        <Link to="/petition" className="bg-tvk-yellow text-tvk-red font-black py-5 px-12 rounded-2xl shadow-[0_10px_30px_rgba(251,191,36,0.3)] hover:shadow-[0_15px_40px_rgba(251,191,36,0.4)] transition-all transform hover:-translate-y-1.5 text-lg">
+                    <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-8">
+                        <Link to="/petition" className="bg-tvk-yellow text-tvk-red font-black py-4 md:py-5 px-8 md:px-12 rounded-2xl shadow-[0_10px_30px_rgba(251,191,36,0.3)] hover:shadow-[0_15px_40px_rgba(251,191,36,0.4)] transition-all transform hover:-translate-y-1.5 text-base md:text-lg">
                             Submit Your Petition
                         </Link>
-                        <Link to="/contact" className="bg-white border-2 border-tvk-red/20 text-tvk-red font-black py-5 px-12 rounded-2xl hover:bg-tvk-red hover:text-white transition-all transform hover:-translate-y-1.5 text-lg shadow-xl">
+                        <Link to="/contact" className="bg-white border-2 border-tvk-red/20 text-tvk-red font-black py-4 md:py-5 px-8 md:px-12 rounded-2xl hover:bg-tvk-red hover:text-white transition-all transform hover:-translate-y-1.5 text-base md:text-lg shadow-xl">
                             Join the Campaign
                         </Link>
                     </div>

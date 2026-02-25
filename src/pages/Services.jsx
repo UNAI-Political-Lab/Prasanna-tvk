@@ -187,16 +187,16 @@ const Services = () => {
             <SEO title="Services & Initiatives" description="Explore the public welfare services, infrastructure projects, and community initiatives led by Prasanna TVK." url="/services" />
             {/* ── Services Grid ── */}
             <section className="container mx-auto px-4 md:px-6">
-                <div className="text-center max-w-3xl mx-auto mb-16">
+                <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16">
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-6xl font-extrabold mb-6 text-tvk-dark"
+                        className="text-3xl md:text-6xl font-extrabold mb-4 md:mb-6 text-tvk-dark"
                     >
                         Public <span className="text-tvk-red">Services</span>
                     </motion.h1>
-                    <div className="w-24 h-2 bg-tvk-red mx-auto mb-8 rounded-full" />
-                    <p className="text-lg text-tvk-dark/60 leading-relaxed">
+                    <div className="w-20 md:w-24 h-1.5 md:h-2 bg-tvk-red mx-auto mb-6 md:mb-8 rounded-full" />
+                    <p className="text-base md:text-lg text-tvk-dark/60 leading-relaxed">
                         Our commitment is to serve. Explore the various initiatives and support programs designed to improve the quality of life for every citizen in our constituency.
                     </p>
                 </div>
@@ -217,17 +217,17 @@ const Services = () => {
             </section>
 
             {/* ── Stats Bar ── */}
-            <section className="mt-24 bg-tvk-dark py-16">
+            <section className="mt-20 md:mt-24 bg-tvk-dark py-12 md:py-16">
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                         {[
                             { label: "Business Experience", value: "15+ Yrs" },
                             { label: "Premium Vehicles Sold", value: "5000+" },
                             { label: "Active TVK Members", value: "500+" },
                         ].map((stat, i) => (
-                            <div key={i} className="text-center border-l-2 border-tvk-yellow/30 pl-8 first:border-0">
-                                <p className="text-5xl font-black text-white mb-2">{stat.value}</p>
-                                <p className="text-tvk-yellow/60 font-black uppercase tracking-widest text-sm">{stat.label}</p>
+                            <div key={i} className={`text-center border-l-2 border-tvk-yellow/30 pl-4 md:pl-8 first:border-0 ${i === 2 ? 'col-span-2 md:col-span-1 border-l-0 md:border-l-2' : ''}`}>
+                                <p className="text-3xl md:text-5xl font-black text-white mb-1 md:mb-2">{stat.value}</p>
+                                <p className="text-tvk-yellow/60 font-black uppercase tracking-widest text-[10px] md:text-sm">{stat.label}</p>
                             </div>
                         ))}
                     </div>
@@ -235,9 +235,9 @@ const Services = () => {
             </section>
 
             {/* ── Gallery ── */}
-            <section className="container mx-auto px-4 md:px-6 mt-32">
+            <section className="container mx-auto px-4 md:px-6 mt-20 md:mt-32">
                 {/* Heading */}
-                <div className="text-center max-w-2xl mx-auto mb-14">
+                <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
                     <motion.p
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -251,7 +251,7 @@ const Services = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.05 }}
-                        className="text-4xl md:text-5xl font-extrabold text-tvk-dark mb-5"
+                        className="text-3xl md:text-5xl font-extrabold text-tvk-dark mb-4 md:mb-5"
                     >
                         Gallery of <span className="text-tvk-red">Impact</span>
                     </motion.h2>
@@ -359,17 +359,17 @@ const Services = () => {
             </AnimatePresence>
 
             {/* ── CTA ── */}
-            <section className="container mx-auto px-4 md:px-6 mt-32">
-                <div className="bg-tvk-dark border-2 border-tvk-red/10 rounded-[4rem] p-16 md:p-24 flex flex-col items-center text-center relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-tvk-yellow/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-tvk-red/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2" />
-                    <h2 className="text-4xl md:text-6xl font-black mb-8 leading-tight text-white">
+            <section className="container mx-auto px-4 md:px-6 mt-20 md:mt-32 pb-10">
+                <div className="bg-tvk-dark border-2 border-tvk-red/10 rounded-[2rem] md:rounded-[4rem] p-10 md:p-24 flex flex-col items-center text-center relative overflow-hidden shadow-2xl">
+                    <div className="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-tvk-yellow/5 blur-[80px] md:blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-0 w-48 md:w-64 h-48 md:h-64 bg-tvk-red/5 blur-[70px] md:blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2" />
+                    <h2 className="text-3xl md:text-6xl font-black mb-6 md:mb-8 leading-tight text-white">
                         Mobilizing for <span className="text-white">Empowerment</span>
                     </h2>
-                    <p className="text-white/80 text-xl mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+                    <p className="text-white/80 text-lg md:text-xl mb-10 md:mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
                         Mr. S. Prasanna is committed to leveraging his organizational strength to improve infrastructure and ensure immediate resolution of public grievances.
                     </p>
-                    <button className="bg-tvk-red text-white font-black py-5 px-12 rounded-2xl shadow-[0_10px_30px_rgba(145,9,5,0.2)] hover:shadow-[0_15px_40px_rgba(145,9,5,0.3)] transition-all transform hover:-translate-y-1.5 text-lg uppercase tracking-widest">
+                    <button className="bg-tvk-red text-white font-black py-4 md:py-5 px-8 md:px-12 rounded-xl md:rounded-2xl shadow-[0_10px_30px_rgba(145,9,5,0.2)] hover:shadow-[0_15px_40px_rgba(145,9,5,0.3)] transition-all transform hover:-translate-y-1.5 text-base md:text-lg uppercase tracking-widest w-full md:w-auto">
                         Contact Your Representative
                     </button>
                 </div>

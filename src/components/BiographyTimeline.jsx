@@ -4,9 +4,9 @@ import { Calendar, Award, Star, TrendingUp } from 'lucide-react'
 
 const TimelineItem = ({ year, title, description, icon, side }) => {
     return (
-        <div className={`mb-12 flex justify-between items-center w-full ${side === 'right' ? 'flex-row-reverse' : ''}`}>
+        <div className={`mb-12 flex justify-between items-center w-full ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
             <div className="hidden md:block w-5/12"></div>
-            <div className="z-20 flex items-center order-1 bg-white shadow-2xl w-14 h-14 rounded-full border-4 border-tvk-yellow group-hover:scale-110 transition-transform duration-500">
+            <div className="z-20 flex items-center order-1 bg-white shadow-2xl w-14 h-14 rounded-full border-4 border-tvk-yellow group-hover:scale-110 transition-transform duration-500 shrink-0 md:mx-0">
                 <div className="mx-auto text-tvk-red">
                     {icon}
                 </div>
@@ -16,7 +16,7 @@ const TimelineItem = ({ year, title, description, icon, side }) => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="order-1 glass-card w-full md:w-5/12 px-8 py-8"
+                className="order-1 glass-card w-[calc(100%-4rem)] md:w-5/12 px-6 md:px-8 py-6 md:py-8 ml-4 md:ml-0"
             >
                 <span className="mb-4 font-black text-tvk-red text-xs flex items-center gap-2 uppercase tracking-widest bg-tvk-red/5 w-fit px-3 py-1 rounded-full">
                     <Calendar size={14} /> {year}
