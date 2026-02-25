@@ -309,8 +309,8 @@ const Biography = () => {
                         <div className="w-full md:w-1/2 flex justify-center">
                             <div className="relative">
                                 <div className="absolute -inset-4 bg-tvk-yellow/10 rounded-full blur-2xl" />
-                                <div className="w-64 h-64 md:w-96 md:h-96 rounded-full border-[12px] border-white overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] relative z-10 bg-gray-50">
-                                    <img src="/thalapathy.png" alt="Thalapathy Vijay" className="w-full h-full object-cover" />
+                                <div className="w-64 h-64 md:w-[320px] md:h-[320px] rounded-full border-[8px] md:border-[12px] border-white overflow-hidden shadow-[0_15px_45px_rgba(0,0,0,0.1)] relative z-10 bg-white flex items-center justify-center">
+                                    <img src="/thalapathy.png" alt="Thalapathy Vijay" className="w-full h-full object-contain scale-125" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-tvk-red/5 to-transparent pointer-events-none" />
                                 </div>
                                 <div className="absolute -inset-8 border border-tvk-red/10 rounded-full animate-[spin_60s_linear_infinite] pointer-events-none" />

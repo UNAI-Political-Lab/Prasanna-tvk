@@ -24,24 +24,36 @@ const Navbar = () => {
         { name: 'Contact', path: '/contact' },
     ]
 
+
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'
             }`}>
             <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-                <Link to="/" className="group">
-                    <div className="h-12 md:h-16 flex items-center justify-center px-6 bg-white rounded-xl transition-transform group-hover:scale-105 shadow-lg">
-                        <div className="flex items-center gap-3">
-                            <img
-                                src={logo}
-                                alt="TVK Logo"
-                                className="h-10 md:h-14 w-auto object-contain"
-                            />
-                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border border-tvk-red/10">
-                                <img src="/symbol.png" alt="TVK Symbol" className="w-full h-full object-contain" />
+                <div className="flex items-center gap-4 flex-1">
+                    <Link to="/" className="shrink-0 group">
+                        <div className="h-12 md:h-16 flex items-center justify-center px-4 md:px-6 bg-white rounded-xl transition-transform group-hover:scale-105 shadow-lg">
+                            <div className="flex items-center gap-2 md:gap-3">
+                                <img
+                                    src={logo}
+                                    alt="TVK Logo"
+                                    className="h-8 md:h-14 w-auto object-contain"
+                                />
+                                <div className="w-6 h-6 md:w-10 md:h-10 rounded-full overflow-hidden border border-tvk-red/10">
+                                    <img src="/symbol.png" alt="TVK Symbol" className="w-full h-full object-contain" />
+                                </div>
                             </div>
                         </div>
+                    </Link>
+
+                    {/* Historic Leaders next to Logo */}
+                    <div className="flex h-20 md:h-28 items-center justify-center shrink-0 ml-1">
+                        <img
+                            src="/leaders.png"
+                            alt="Historic Leaders"
+                            className="h-full w-auto object-contain scale-110"
+                        />
                     </div>
-                </Link>
+                </div>
 
                 {/* Desktop Menu - UI Card Style */}
                 <div className="hidden md:flex items-center gap-2 bg-tvk-red/80 backdrop-blur-xl border border-tvk-yellow/20 p-2 rounded-2xl shadow-2xl">

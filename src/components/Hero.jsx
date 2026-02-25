@@ -64,67 +64,55 @@ const Hero = () => {
                         transition={{ duration: 0.8 }}
                         className="flex-1 text-center lg:text-left"
                     >
-                        <div className="flex items-center justify-center lg:justify-start gap-4 mb-4 lg:mb-8">
-                            <div className="bg-white px-6 py-2 rounded-full shadow-xl ring-1 ring-tvk-red/10">
-                                <span className="text-tvk-red font-black text-xs tracking-[0.2em] uppercase">Tamilaga Vettri Kazhagam</span>
-                            </div>
-                        </div>
 
-                        {/* Leader Portraits - Historic Legacy */}
-                        <div className="flex flex-wrap gap-2 md:gap-4 mb-6 lg:mb-10 justify-center lg:justify-start">
+
+                        {/* Primary Leaders Section */}
+                        <div className="flex flex-wrap gap-4 md:gap-8 mb-8 lg:mb-12 justify-center lg:justify-start">
                             {[
-                                { name: "Ambedkar", img: "/ambethkar.png" },
-                                { name: "EVR Periyar", img: "/EVRa.png" },
-                                { name: "Kamarajar", img: "/kamarajar.png" },
-                                { name: "Velu Nachiyar", img: "/velunachiyar.png" },
-                                { name: "Anjalai Ammal", img: "/anjalaiammal.png" }
+                                { name: "Anand", img: "/anandtvk.png", role: "General Secretary" },
+                                { name: "ECR Saravanan", img: "/ecrsaravanan.png", role: "State Secretary" }
                             ].map((leader, idx) => (
-                                <div key={idx} className="relative group">
-                                    <div className="w-10 h-10 md:w-16 md:h-16 rounded-full border-2 border-tvk-yellow overflow-hidden shadow-[0_0_15px_rgba(251,191,36,0.2)] group-hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] transition-all duration-500 cursor-help bg-white/5">
-                                        <img
-                                            src={leader.img}
-                                            alt={leader.name}
-                                            className="w-full h-full object-cover grayscale-[0.3] brightness-110 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-                                            onError={(e) => {
-                                                e.target.src = `https://placehold.co/100x100?text=${leader.name[0]}`
-                                            }}
-                                        />
-                                    </div>
-                                    {/* Tooltip on Hover */}
-                                    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-tvk-red text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest z-50">
-                                        {leader.name}
+                                <div key={idx} className="flex flex-col items-center gap-3">
+                                    <div className="relative group">
+                                        <div className="w-16 h-16 md:w-24 md:h-24 rounded-full border-4 border-tvk-yellow overflow-hidden shadow-[0_0_15px_rgba(251,191,36,0.3)] group-hover:shadow-[0_0_25px_rgba(251,191,36,0.5)] transition-all duration-500 bg-white/10 ring-4 ring-white/10">
+                                            <img
+                                                src={leader.img}
+                                                alt={leader.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                onError={(e) => {
+                                                    e.target.src = `https://placehold.co/200x200?text=${leader.name[0]}`
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        {/* Mobile Candidate Portrait */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className="lg:hidden mb-8 flex justify-center"
+                            className="lg:hidden mb-6 flex justify-center"
                         >
-                            <div className="relative z-10 w-48 h-48 rounded-full border-[8px] border-white shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden ring-4 ring-tvk-yellow/10">
+                            <div className="relative z-10 w-44 h-44 rounded-full border-[8px] border-white shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden ring-4 ring-tvk-yellow/10">
                                 <img
                                     src={candidateImg}
                                     alt="TVK Candidate"
                                     className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        if (e.target.src !== "https://placehold.co/800x800?text=CANDIDATE+PORTRAIT") {
-                                            e.target.src = "https://placehold.co/800x800?text=CANDIDATE+PORTRAIT";
-                                        }
-                                    }}
                                 />
                             </div>
                         </motion.div>
 
-                        <h1 className="text-3xl md:text-7xl font-black mb-4 md:mb-10 leading-[1.1] md:leading-none text-white drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] tracking-tighter">
+                        <h1 className="text-3xl md:text-7xl font-black mb-2 md:mb-4 leading-[1.1] md:leading-none text-white drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] tracking-tighter">
                             Mr. S. <span className="text-tvk-yellow">Prasanna</span>
                         </h1>
+                        <div className="flex items-center justify-center lg:justify-start mb-6 md:mb-8">
+                            <span className="text-white font-black text-sm md:text-xl uppercase tracking-[0.2em] drop-shadow-lg whitespace-nowrap">Sholinganallur <span className="text-tvk-yellow">North Zone Secretary</span></span>
+                        </div>
                         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 md:gap-4 mb-6 md:mb-8">
                             {['Entrepreneur', 'Social Worker', 'Political Activist'].map((title, i) => (
-                                <span key={i} className="text-tvk-yellow font-bold text-xs md:text-base uppercase tracking-widest border border-tvk-yellow/30 px-3 md:px-4 py-1 md:py-1.5 rounded-lg backdrop-blur-sm">
+                                <span key={i} className="text-tvk-yellow font-bold text-[10px] md:text-sm uppercase tracking-widest border border-tvk-yellow/30 px-3 md:px-4 py-1 md:py-1.5 rounded-lg backdrop-blur-sm">
                                     {title}
                                 </span>
                             ))}
@@ -180,9 +168,9 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                         animate={{ opacity: 1, scale: 1, rotate: 0 }}
                         transition={{ duration: 1.2, ease: "easeOut" }}
-                        className="hidden lg:flex flex-1 relative mt-6 lg:mt-0 items-center justify-center p-4"
+                        className="hidden lg:flex flex-1 relative mt-6 lg:mt-0 items-center justify-center p-8"
                     >
-                        <div className="relative z-10 w-48 h-48 md:w-[480px] md:h-[480px] rounded-full border-[8px] md:border-[12px] border-white shadow-[0_20px_100px_rgba(0,0,0,0.8)] overflow-hidden ring-4 md:ring-8 ring-tvk-yellow/10">
+                        <div className="relative z-10 w-[480px] h-[480px] rounded-full border-[12px] border-white shadow-[0_20px_100px_rgba(0,0,0,0.8)] overflow-hidden ring-8 ring-tvk-yellow/10">
                             <img
                                 src={candidateImg}
                                 alt="TVK Candidate"
