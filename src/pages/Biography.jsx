@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import SEO from '../components/SEO'
 import BiographyTimeline from '../components/BiographyTimeline'
 import { Target, Lightbulb, ShieldCheck, X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react'
 
@@ -205,6 +206,7 @@ const Biography = () => {
             exit={{ opacity: 0 }}
             className="pt-24 pb-20 bg-white"
         >
+            <SEO title="Biography" description="Learn about the personal and political journey of Prasanna TVK, his background, and his vision for the people." url="/biography" />
             {/* ── Bio Header ── */}
             <section className="container mx-auto px-4 md:px-6 mb-20">
                 <div className="flex flex-col md:flex-row items-center gap-12">
@@ -372,8 +374,8 @@ const Biography = () => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.96 }}
                                 className={`relative px-7 py-2.5 rounded-full text-sm font-black uppercase tracking-widest transition-all duration-300 ${activeCategory === cat
-                                        ? 'bg-tvk-red text-white shadow-[0_6px_24px_rgba(145,9,5,0.5)]'
-                                        : 'bg-white/8 text-white/50 hover:bg-white/15 hover:text-white border border-white/10'
+                                    ? 'bg-tvk-red text-white shadow-[0_6px_24px_rgba(145,9,5,0.5)]'
+                                    : 'bg-white/8 text-white/50 hover:bg-white/15 hover:text-white border border-white/10'
                                     }`}
                             >
                                 {cat}

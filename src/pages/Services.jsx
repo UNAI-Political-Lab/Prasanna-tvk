@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import SEO from '../components/SEO'
 import ServiceCard from '../components/ServiceCard'
 import {
     Users, BookOpen, Building2, Heart, Baby,
@@ -183,6 +184,7 @@ const Services = () => {
             exit={{ opacity: 0 }}
             className="pt-24 pb-20 bg-white"
         >
+            <SEO title="Services & Initiatives" description="Explore the public welfare services, infrastructure projects, and community initiatives led by Prasanna TVK." url="/services" />
             {/* ── Services Grid ── */}
             <section className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">

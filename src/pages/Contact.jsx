@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import SEO from '../components/SEO'
 import ContactForm from '../components/ContactForm'
 import { MapPin, Phone, Mail, ExternalLink } from 'lucide-react'
 
@@ -26,6 +27,7 @@ const Contact = () => {
             exit={{ opacity: 0 }}
             className="pt-24 pb-20 bg-white"
         >
+            <SEO title="Contact Us" description="Get in touch with Prasanna TVK. Find contact details, helpline numbers, and office locations to reach out or volunteer." url="/contact" />
             <section className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-2xl mx-auto mb-16">
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-tvk-dark">

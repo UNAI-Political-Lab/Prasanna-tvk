@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import SEO from '../components/SEO'
 import PetitionForm from '../components/PetitionForm'
 import { Shield, FileCheck, Users } from 'lucide-react'
 
@@ -11,6 +12,7 @@ const Petition = () => {
             exit={{ opacity: 0 }}
             className="pt-24 pb-20 bg-white"
         >
+            <SEO title="Submit a Petition" description="Voice your concerns and submit petitions directly to Prasanna TVK for community improvements and grievance resolution." url="/petition" />
             <section className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col lg:flex-row gap-16">
                     {/* Left Side: Info */}

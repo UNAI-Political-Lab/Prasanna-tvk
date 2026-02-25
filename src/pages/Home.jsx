@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import SEO from '../components/SEO'
 import Hero from '../components/Hero'
 import { Link } from 'react-router-dom'
 import {
@@ -104,6 +105,7 @@ const Home = () => {
 
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="bg-white">
+            <SEO title="Home" url="/" />
             <Hero />
 
             {/* ── Core Philosophy ── */}
