@@ -1,0 +1,30 @@
+{
+    "name": "Prasanna TVK - Official Website",
+    "short_name": "Prasanna TVK",
+    "description": "Official website of Prasanna TVK, Indian politician, TVK member and founder of Autobourn Cars.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#FFF9E6",
+    "theme_color": "#910905",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "politics",
+        "news",
+        "government"
+    ],
+    "lang": "en-IN",
+    "orientation": "portrait"
+}

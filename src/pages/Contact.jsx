@@ -27,7 +27,44 @@ const Contact = () => {
             exit={{ opacity: 0 }}
             className="pt-24 pb-20 bg-white"
         >
-            <SEO title="Contact Us" description="Get in touch with Prasanna TVK. Find contact details, helpline numbers, and office locations to reach out or volunteer." url="/contact" />
+            <SEO
+                title="Contact Prasanna TVK"
+                description="Get in touch with Prasanna TVK. Find contact details, helpline numbers, and office location in Velachery, Chennai to reach out or volunteer."
+                url="/contact"
+                schema={{
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        {
+                            "@type": "LocalBusiness",
+                            "name": "Prasanna TVK - Political Office",
+                            "description": "Constituency office of Prasanna TVK, TVK politician and founder of Autobourn Cars, based in Velachery, Chennai.",
+                            "url": "https://www.prasannatvk.com/contact",
+                            "telephone": "+91-9884770108",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "streetAddress": "No 27, 100 Feet Rd, Taramani Link Road, Velachery",
+                                "addressLocality": "Chennai",
+                                "addressRegion": "Tamil Nadu",
+                                "postalCode": "600042",
+                                "addressCountry": "IN"
+                            },
+                            "geo": {
+                                "@type": "GeoCoordinates",
+                                "latitude": "12.9791",
+                                "longitude": "80.2175"
+                            },
+                            "openingHours": "Mo-Sa 09:00-18:00",
+                            "contactPoint": {
+                                "@type": "ContactPoint",
+                                "telephone": "+91-9884770108",
+                                "contactType": "public inquiries",
+                                "availableLanguage": ["Tamil", "English"]
+                            }
+                        }
+                    ]
+                }}
+            />
+
             <section className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-2xl mx-auto mb-16">
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-tvk-dark">

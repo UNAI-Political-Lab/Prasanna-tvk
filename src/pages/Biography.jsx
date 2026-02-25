@@ -206,7 +206,88 @@ const Biography = () => {
             exit={{ opacity: 0 }}
             className="pt-24 pb-20 bg-white"
         >
-            <SEO title="Biography" description="Learn about the personal and political journey of Prasanna TVK, his background, and his vision for the people." url="/biography" />
+            <SEO
+                title="Biography of Prasanna TVK"
+                description="Learn about Prasanna TVK — Indian politician, TVK (Tamilaga Vettri Kazhagam) member, and founder of Autobourn Cars. Discover his personal journey, background, and vision for the people of Tamil Nadu."
+                url="/biography"
+                schema={{
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        {
+                            "@type": "Person",
+                            "@id": "https://www.prasannatvk.com/#prasannatvk",
+                            "name": "Prasanna TVK",
+                            "givenName": "Prasanna",
+                            "familyName": "S",
+                            "alternateName": ["TVK Prasanna", "S. Prasanna", "Prasanna Autobourn"],
+                            "description": "Prasanna TVK is an Indian politician, TVK (Tamilaga Vettri Kazhagam) member, and the founder of Autobourn Cars — a premium automobile dealership in Velachery, Chennai. He is a dedicated public servant committed to youth employment, women empowerment, and grassroots welfare.",
+                            "jobTitle": "Politician & Entrepreneur",
+                            "age": "35",
+                            "url": "https://www.prasannatvk.com/biography",
+                            "image": "https://www.prasannatvk.com/prasannatvk-bio.jpeg",
+                            "memberOf": {
+                                "@type": "Organization",
+                                "name": "Tamilaga Vettri Kazhagam (TVK)"
+                            },
+                            "founder": {
+                                "@type": "Organization",
+                                "name": "Autobourn Cars"
+                            },
+                            "address": {
+                                "@type": "PostalAddress",
+                                "addressLocality": "Velachery",
+                                "addressRegion": "Chennai, Tamil Nadu",
+                                "addressCountry": "IN"
+                            },
+                            "sameAs": [
+                                "https://www.linkedin.com/in/prasannatvk",
+                                "https://twitter.com/prasannatvk",
+                                "https://www.instagram.com/prasannatvk",
+                                "https://www.facebook.com/prasannatvk",
+                                "https://www.prasannatvk.com"
+                            ]
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": [
+                                {
+                                    "@type": "Question",
+                                    "name": "Who is Prasanna TVK?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Prasanna TVK is an Indian politician and member of Tamilaga Vettri Kazhagam (TVK). He is also the founder of Autobourn Cars, a premium automobile dealership in Velachery, Chennai. Known for his grassroots leadership, welfare initiatives, and commitment to youth empowerment, Prasanna TVK has organized 50+ welfare programmes and personally enrolled 500+ TVK members."
+                                    }
+                                },
+                                {
+                                    "@type": "Question",
+                                    "name": "What is Autobourn Cars and who founded it?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Autobourn Cars (also known as AUTO BOURN) is a premium automobile dealership located in Velachery, Chennai, Tamil Nadu. It was founded by Prasanna TVK, who has over 15 years of experience in the automobile industry and has sold more than 5000 premium vehicles."
+                                    }
+                                },
+                                {
+                                    "@type": "Question",
+                                    "name": "What party does Prasanna TVK belong to?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Prasanna TVK is a member of Tamilaga Vettri Kazhagam (TVK), a political party in Tamil Nadu, India. He is an active TVK member and candidate who has driven significant membership enrollment and organized mass-level events for the party."
+                                    }
+                                },
+                                {
+                                    "@type": "Question",
+                                    "name": "Where is Prasanna TVK based?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Prasanna TVK is based in Velachery, Chennai, Tamil Nadu, India. His office is located at No 27, 100 Feet Rd, Taramani Link Road, Velachery, Chennai – 600042."
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }}
+            />
+
             {/* ── Bio Header ── */}
             <section className="container mx-auto px-4 md:px-6 mb-20">
                 <div className="flex flex-col md:flex-row items-center gap-12">
