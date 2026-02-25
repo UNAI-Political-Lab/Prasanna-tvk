@@ -105,8 +105,51 @@ const Home = () => {
 
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="bg-white">
-            <SEO title="Home" url="/" />
+            <SEO
+                title="Home"
+                url="/"
+                description="Official website of Prasanna TVK, Indian politician, TVK (Tamilaga Vettri Kazhagam) member, and founder of Autobourn Cars. Committed to youth, welfare, and public service in Velachery, Chennai."
+                schema={{
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        {
+                            "@type": "Person",
+                            "@id": "https://www.prasannatvk.com/#prasannatvk",
+                            "name": "Prasanna TVK",
+                            "alternateName": ["TVK Prasanna", "S. Prasanna"],
+                            "description": "Prasanna TVK is an Indian politician, TVK (Tamilaga Vettri Kazhagam) member, and the founder of Autobourn Cars, known for his leadership, innovation, and commitment to public service in Tamil Nadu.",
+                            "jobTitle": "Politician & Entrepreneur",
+                            "url": "https://www.prasannatvk.com",
+                            "image": "https://www.prasannatvk.com/prasannatvk-bio.jpeg",
+                            "sameAs": [
+                                "https://www.linkedin.com/in/prasannatvk",
+                                "https://twitter.com/prasannatvk",
+                                "https://www.instagram.com/prasannatvk",
+                                "https://www.facebook.com/prasannatvk"
+                            ]
+                        },
+                        {
+                            "@type": "Organization",
+                            "name": "Autobourn Cars",
+                            "alternateName": "AUTO BOURN",
+                            "description": "Premium automobile dealership founded by Prasanna TVK, operating in Velachery, Chennai for over 15 years with 5000+ vehicles sold.",
+                            "founder": {
+                                "@type": "Person",
+                                "name": "Prasanna TVK",
+                                "url": "https://www.prasannatvk.com"
+                            },
+                            "address": {
+                                "@type": "PostalAddress",
+                                "addressLocality": "Velachery",
+                                "addressRegion": "Chennai, Tamil Nadu",
+                                "addressCountry": "IN"
+                            }
+                        }
+                    ]
+                }}
+            />
             <Hero />
+
 
             {/* ── Core Philosophy ── */}
             <section className="py-24 bg-tvk-lightBg/50">
