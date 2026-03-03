@@ -8,6 +8,7 @@ import {
     CheckCircle2, Quote, ChevronLeft, ChevronRight,
     ArrowRight, Lightbulb, Zap, Globe
 } from 'lucide-react'
+import JoinTVKCTA from '../components/JoinTVKCTA'
 
 // ── Prasanna-TVK-Main image imports ──────────────────────────────────────────
 import main1 from '../assets/Prasanna-TVK-Main/1.jpeg'
@@ -362,27 +363,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* ── Call to Action ── */}
-            <section className="py-20 md:py-32 bg-white overflow-hidden relative border-t border-tvk-red/5">
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-tvk-yellow/5 blur-[120px] pointer-events-none -z-10" />
-                <div className="absolute bottom-0 left-0 w-1/3 h-full bg-tvk-red/5 blur-[100px] pointer-events-none -z-10" />
-                <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
-                    <h2 className="text-3xl md:text-6xl font-black text-tvk-dark mb-6 md:mb-8 leading-tight">
-                        Ready to Make a <span className="text-tvk-red italic">Difference?</span>
-                    </h2>
-                    <p className="text-tvk-dark/60 text-lg md:text-xl mb-10 md:mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
-                        Your voice matters. Submit your petitions, share your concerns, and let's build a better future together for all citizens.
-                    </p>
-                    <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-8">
-                        <Link to="/petition" className="bg-tvk-yellow text-tvk-red font-black py-4 md:py-5 px-8 md:px-12 rounded-2xl shadow-[0_10px_30px_rgba(251,191,36,0.3)] hover:shadow-[0_15px_40px_rgba(251,191,36,0.4)] transition-all transform hover:-translate-y-1.5 text-base md:text-lg">
-                            Submit Your Petition
-                        </Link>
-                        <Link to="/contact" className="bg-white border-2 border-tvk-red/20 text-tvk-red font-black py-4 md:py-5 px-8 md:px-12 rounded-2xl hover:bg-tvk-red hover:text-white transition-all transform hover:-translate-y-1.5 text-base md:text-lg shadow-xl">
-                            Join the Campaign
-                        </Link>
-                    </div>
-                </div>
-            </section>
+            <JoinTVKCTA />
         </motion.div>
     )
 }

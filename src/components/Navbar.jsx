@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Flag } from 'lucide-react'
+import { Menu, X, Flag, User } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import logo from '../assets/logo.png'
 
@@ -26,19 +26,21 @@ const Navbar = () => {
 
 
     return (
-        <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'
+        <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled
+            ? 'bg-white/95 backdrop-blur-md shadow-lg py-2'
+            : 'bg-transparent py-4 md:py-6'
             }`}>
             <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
                 <div className="flex items-center gap-4 flex-1">
                     <Link to="/" className="shrink-0 group">
-                        <div className="h-12 md:h-16 flex items-center justify-center px-4 md:px-6 bg-white rounded-xl transition-transform group-hover:scale-105 shadow-lg">
-                            <div className="flex items-center gap-2 md:gap-3">
+                        <div className={`flex items-center justify-center px-3 md:px-4 bg-white rounded-xl transition-all duration-500 group-hover:scale-105 shadow-lg ${isScrolled ? 'h-10 md:h-12' : 'h-12 md:h-16'}`}>
+                            <div className="flex items-center gap-1.5 md:gap-2">
                                 <img
                                     src={logo}
                                     alt="TVK Logo"
                                     className="h-8 md:h-14 w-auto object-contain"
                                 />
-                                <div className="w-6 h-6 md:w-10 md:h-10 rounded-full overflow-hidden border border-tvk-red/10">
+                                <div className={`rounded-full overflow-hidden border border-tvk-red/10 transition-all duration-500 ${isScrolled ? 'w-5 h-5 md:w-8 md:h-8' : 'w-6 h-6 md:w-10 md:h-10'}`}>
                                     <img src="/symbol.png" alt="TVK Symbol" className="w-full h-full object-contain" />
                                 </div>
                             </div>
@@ -46,7 +48,7 @@ const Navbar = () => {
                     </Link>
 
                     {/* Historic Leaders next to Logo */}
-                    <div className="flex h-20 md:h-28 items-center justify-center shrink-0 ml-1">
+                    <div className={`flex items-center justify-center shrink-0 ml-1 transition-all duration-500 ${isScrolled ? 'h-16 md:h-20' : 'h-20 md:h-28'}`}>
                         <img
                             src="/leaders.png"
                             alt="Historic Leaders"
@@ -64,13 +66,16 @@ const Navbar = () => {
                                 to={link.path}
                                 className={`nav-link text-sm uppercase tracking-wider font-black transition-all duration-300 ${location.pathname === link.path
                                     ? 'text-tvk-yellow after:w-full scale-105'
-                                    : 'text-white hover:text-tvk-yellow hover:scale-105'
+                                    : (isScrolled || location.pathname !== '/' ? 'text-tvk-dark hover:text-tvk-red hover:scale-105' : 'text-white hover:text-tvk-yellow hover:scale-105')
                                     }`}
                             >
                                 {link.name}
                             </Link>
                         ))}
                     </div>
+                    <Link to="/join-tvk" className="bg-white text-tvk-red border-2 border-tvk-red py-2 px-5 text-sm rounded-xl font-black hover:bg-tvk-red hover:text-white transition-colors duration-300">
+                        Join TVK
+                    </Link>
                     <Link to="/petition" className="bg-tvk-yellow text-tvk-red py-2.5 px-6 text-sm rounded-xl font-black hover:bg-white transition-colors duration-300">
                         Action Center
                     </Link>
@@ -78,7 +83,7 @@ const Navbar = () => {
 
                 {/* Mobile Toggle */}
                 <button
-                    className={`md:hidden p-2 ${isScrolled ? 'text-tvk-dark' : 'text-white'}`}
+                    className={`md:hidden p-2 transition-colors duration-300 ${isScrolled || location.pathname !== '/' ? 'text-tvk-dark' : 'text-white'}`}
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -112,8 +117,15 @@ const Navbar = () => {
                                 </Link>
                             ))}
                             <Link
+                                to="/join-tvk"
+                                className="bg-white text-tvk-red text-center py-4 rounded-2xl font-black uppercase tracking-[0.2em] shadow-lg flex items-center justify-center gap-3 border-2 border-tvk-red/20"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <User size={20} /> Join TVK
+                            </Link>
+                            <Link
                                 to="/petition"
-                                className="bg-tvk-yellow text-tvk-red text-center mt-3 py-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3"
+                                className="bg-tvk-yellow text-tvk-red text-center py-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3"
                                 onClick={() => setIsOpen(false)}
                             >
                                 <Flag size={20} /> Action Center

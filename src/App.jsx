@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import Biography from './pages/Biography'
 import Services from './pages/Services'
 import Petition from './pages/Petition'
+import JoinTVK from './pages/JoinTVK'
 import Contact from './pages/Contact'
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                         <Route path="/biography" element={<Biography />} />
                         <Route path="/services" element={<Services />} />
                         <Route path="/petition" element={<Petition />} />
+                        <Route path="/join-tvk" element={<JoinTVK />} />
                         <Route path="/contact" element={<Contact />} />
                     </Routes>
                 </AnimatePresence>

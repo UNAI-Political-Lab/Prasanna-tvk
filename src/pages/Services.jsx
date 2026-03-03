@@ -7,6 +7,7 @@ import {
     GraduationCap, Zap, Globe,
     X, ChevronLeft, ChevronRight, ZoomIn
 } from 'lucide-react'
+import JoinTVKCTA from '../components/JoinTVKCTA'
 
 // ── Local image imports ────────────────────────────────────────────────────────
 import img1 from '../assets/Service-Img/1.jpeg'
@@ -182,7 +183,7 @@ const Services = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pt-24 pb-20 bg-white"
+            className="pt-32 md:pt-40 pb-20 bg-white"
         >
             <SEO title="Services & Initiatives" description="Explore the public welfare services, infrastructure projects, and community initiatives led by Prasanna TVK." url="/services" />
             {/* ── Services Grid ── */}
@@ -358,22 +359,7 @@ const Services = () => {
                 )}
             </AnimatePresence>
 
-            {/* ── CTA ── */}
-            <section className="container mx-auto px-4 md:px-6 mt-20 md:mt-32 pb-10">
-                <div className="bg-tvk-dark border-2 border-tvk-red/10 rounded-[2rem] md:rounded-[4rem] p-10 md:p-24 flex flex-col items-center text-center relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-tvk-yellow/5 blur-[80px] md:blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-                    <div className="absolute bottom-0 left-0 w-48 md:w-64 h-48 md:h-64 bg-tvk-red/5 blur-[70px] md:blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2" />
-                    <h2 className="text-3xl md:text-6xl font-black mb-6 md:mb-8 leading-tight text-white">
-                        Mobilizing for <span className="text-white">Empowerment</span>
-                    </h2>
-                    <p className="text-white/80 text-lg md:text-xl mb-10 md:mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
-                        Mr. S. Prasanna is committed to leveraging his organizational strength to improve infrastructure and ensure immediate resolution of public grievances.
-                    </p>
-                    <button className="bg-tvk-red text-white font-black py-4 md:py-5 px-8 md:px-12 rounded-xl md:rounded-2xl shadow-[0_10px_30px_rgba(145,9,5,0.2)] hover:shadow-[0_15px_40px_rgba(145,9,5,0.3)] transition-all transform hover:-translate-y-1.5 text-base md:text-lg uppercase tracking-widest w-full md:w-auto">
-                        Contact Your Representative
-                    </button>
-                </div>
-            </section>
+            <JoinTVKCTA />
         </motion.div>
     )
 }

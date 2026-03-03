@@ -8,7 +8,7 @@ const Hero = () => {
     const candidateImg = "/candidate.jpeg"
 
     return (
-        <section className="relative min-h-[100dvh] lg:min-h-[90vh] flex items-center pt-24 lg:pt-20 overflow-hidden bg-black py-10 lg:py-0">
+        <section className="relative min-h-[100dvh] lg:min-h-[90vh] flex items-center pt-40 lg:pt-48 overflow-hidden bg-black py-10 lg:py-0">
             {/* Cinematic Background Layer */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <video
@@ -16,19 +16,13 @@ const Hero = () => {
                     muted
                     loop
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover opacity-70"
+                    className="absolute inset-0 w-full h-full object-cover opacity-60 bg-tvk-dark"
                 >
                     <source src="/tvk-intro.mp4" type="video/mp4" />
-                    {/* Fallback image if video fails to load/not supported */}
                     <img
-                        src={heroBg}
+                        src="https://images.unsplash.com/photo-1614850523296-e811d9fab042?auto=format&fit=crop&q=80&w=2070"
                         alt="TVK Cinematic Background"
                         className="w-full h-full object-cover opacity-40"
-                        onError={(e) => {
-                            if (e.target.src !== "https://images.unsplash.com/photo-1614850523296-e811d9fab042?auto=format&fit=crop&q=80&w=2070") {
-                                e.target.src = "https://images.unsplash.com/photo-1614850523296-e811d9fab042?auto=format&fit=crop&q=80&w=2070";
-                            }
-                        }}
                     />
                 </video>
                 <motion.div
@@ -67,7 +61,7 @@ const Hero = () => {
 
 
                         {/* Primary Leaders Section */}
-                        <div className="flex flex-wrap gap-4 md:gap-8 mb-8 lg:mb-12 justify-center lg:justify-start">
+                        <div className="flex flex-wrap gap-4 md:gap-8 mb-6 lg:mb-8 justify-center lg:justify-start mt-8 lg:mt-6">
                             {[
                                 { name: "Anand", img: "/anandtvk.png", role: "General Secretary" },
                                 { name: "ECR Saravanan", img: "/ecrsaravanan.png", role: "State Secretary" }

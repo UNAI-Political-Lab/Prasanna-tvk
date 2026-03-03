@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import SEO from '../components/SEO'
 import BiographyTimeline from '../components/BiographyTimeline'
 import { Target, Lightbulb, ShieldCheck, X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react'
+import JoinTVKCTA from '../components/JoinTVKCTA'
 
 // ── Bio-Img imports ────────────────────────────────────────────────────────────
 import bio1 from '../assets/Bio-Img/1.jpeg'
@@ -204,7 +205,7 @@ const Biography = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pt-24 pb-20 bg-white"
+            className="pt-32 md:pt-40 pb-20 bg-white"
         >
             <SEO
                 title="Biography of Prasanna TVK"
@@ -543,6 +544,7 @@ const Biography = () => {
                     />
                 )}
             </AnimatePresence>
+            <JoinTVKCTA />
         </motion.div>
     )
 }

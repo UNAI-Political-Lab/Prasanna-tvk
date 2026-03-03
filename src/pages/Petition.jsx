@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import SEO from '../components/SEO'
 import PetitionForm from '../components/PetitionForm'
 import { Shield, FileCheck, Users } from 'lucide-react'
+import JoinTVKCTA from '../components/JoinTVKCTA'
 
 const Petition = () => {
     return (
@@ -10,7 +11,7 @@ const Petition = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pt-24 pb-20 bg-white"
+            className="pt-32 md:pt-40 pb-20 bg-white"
         >
             <SEO title="Submit a Petition" description="Voice your concerns and submit petitions directly to Prasanna TVK for community improvements and grievance resolution." url="/petition" />
             <section className="container mx-auto px-4 md:px-6">
@@ -60,6 +61,7 @@ const Petition = () => {
                     </div>
                 </div>
             </section>
+            <JoinTVKCTA />
         </motion.div>
     )
 }

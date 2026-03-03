@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import SEO from '../components/SEO'
 import ContactForm from '../components/ContactForm'
 import { MapPin, Phone, Mail, ExternalLink } from 'lucide-react'
+import JoinTVKCTA from '../components/JoinTVKCTA'
 
 const Contact = () => {
     const contactInfo = [
@@ -25,7 +26,7 @@ const Contact = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pt-24 pb-20 bg-white"
+            className="pt-32 md:pt-40 pb-20 bg-white"
         >
             <SEO
                 title="Contact Prasanna TVK"
@@ -126,6 +127,7 @@ const Contact = () => {
                     </div>
                 </div>
             </section>
+            <JoinTVKCTA />
         </motion.div>
     )
 }
