@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Award, Star, TrendingUp } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const TimelineItem = ({ year, title, description, icon, side }) => {
     return (
@@ -31,32 +32,42 @@ const TimelineItem = ({ year, title, description, icon, side }) => {
 }
 
 const BiographyTimeline = () => {
+    const { language } = useLanguage()
+
     const events = [
         {
-            year: "Dec 2023",
-            title: "Flood Relief Mission",
-            description: "Mobilized immediate relief and provided food for over 600 people during the devastating flood crisis.",
+            year: language === 'en' ? "Dec 2023" : "டிச 2023",
+            title: language === 'en' ? "Flood Relief Mission" : "வெள்ள நிவாரணப் பணி",
+            description: language === 'en'
+                ? "Mobilized immediate relief and provided food and essential supplies for over 600 families during the devastating flood crisis."
+                : "கடுமையான வெள்ளப் பெருக்கின் போது 600-க்கும் மேற்பட்ட குடும்பங்களுக்கு உடனடி நிவாரணப் பொருட்களை வழங்கி உதவினார்.",
             icon: <Star size={20} />,
             side: "left"
         },
         {
-            year: "Feb 2024",
-            title: "Community Empowerment",
-            description: "Donated 10 bicycles and 10 sewing machines on Anjalai Ammal Memorial Day to support local livelihoods.",
+            year: language === 'en' ? "Feb 2024" : "பிப் 2024",
+            title: language === 'en' ? "Community Empowerment" : "சமூக மேம்பாடு",
+            description: language === 'en'
+                ? "Donated 10 bicycles and 10 sewing machines on Anjalai Ammal Memorial Day to support and uplift local livelihoods."
+                : "அஞ்சலை அம்மாள் நினைவு நாளில் உள்ளூர் மக்களின் வாழ்வாதாரத்தை மேம்படுத்த 10 மிதிவண்டிகள் மற்றும் 10 தையல் இயந்திரங்களை வழங்கினார்.",
             icon: <TrendingUp size={20} />,
             side: "right"
         },
         {
-            year: "May 2024",
-            title: "Infrastructure & Welfare",
-            description: "Installed drinking water supply systems in 13 different locations to ensure basic accessibility for all.",
+            year: language === 'en' ? "May 2024" : "மே 2024",
+            title: language === 'en' ? "Infrastructure & Welfare" : "உட்கட்டமைப்பு & மக்கள் நலம்",
+            description: language === 'en'
+                ? "Successfully installed clean drinking water supply systems in 13 different public locations to ensure basic accessibility."
+                : "அடிப்படைத் தேவையைப் பூர்த்தி செய்யும் வகையில் 13 வெவ்வேறு பொது இடங்களில் குடிநீர் சுத்திகரிப்பு அமைப்புகளை நிறுவினார்.",
             icon: <Award size={20} />,
             side: "left"
         },
         {
-            year: "Oct 2024",
-            title: "TVK Membership Drive",
-            description: "Led a massive outreach campaign, successfully enrolling 500+ new members into the TVK movement.",
+            year: language === 'en' ? "Oct 2024" : "அக் 2024",
+            title: language === 'en' ? "TVK Membership Drive" : "உறுப்பினர் சேர்க்கை இயக்கம்",
+            description: language === 'en'
+                ? "Led a massive constituency-wide outreach campaign, successfully enrolling over 500+ new members into the TVK movement."
+                : "தொகுதி தழுவிய அளவில் ஒரு பெரிய பிரச்சாரத்தை முன்னெடுத்து 500-க்கும் மேற்பட்ட புதிய உறுப்பினர்களை TVK இயக்கத்தில் இணைத்தார்.",
             icon: <TrendingUp size={20} />,
             side: "right"
         }

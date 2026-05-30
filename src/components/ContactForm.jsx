@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, CheckCircle, AlertCircle } from 'lucide-react'
 import emailjs from '@emailjs/browser'
+import { useLanguage } from '../context/LanguageContext'
 
 // ─── EmailJS Configuration ───────────────────────────────────────────────────
 // 1. Sign up free at https://www.emailjs.com
@@ -16,6 +17,7 @@ const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'   // e.g. 'xxxxxxxxxxxxxxxxxxxx'
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ContactForm = () => {
+    const { language } = useLanguage()
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -45,7 +47,11 @@ const ContactForm = () => {
             setIsSubmitted(true)
         } catch (err) {
             console.error('EmailJS error:', err)
-            setError('Failed to send your message. Please try again or call us directly.')
+            setError(
+                language === 'en'
+                    ? 'Failed to send your message. Please try again or call us directly.'
+                    : 'உங்கள் செய்தியை அனுப்ப முடியவில்லை. மீண்டும் முயற்சிக்கவும் அல்லது எங்களை நேரடியாக தொடர்பு கொள்ளவும்.'
+            )
         } finally {
             setIsLoading(false)
         }
@@ -68,19 +74,23 @@ const ContactForm = () => {
                     >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-3">
-                                <label htmlFor="from_name" className="text-sm font-black text-tvk-dark uppercase tracking-widest">Your Name</label>
+                                <label htmlFor="from_name" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
+                                    {language === 'en' ? 'Your Name' : 'உங்கள் பெயர்'}
+                                </label>
                                 <input
                                     required
                                     type="text"
                                     id="from_name"
                                     value={formData.from_name}
                                     onChange={handleChange}
-                                    placeholder="Name"
+                                    placeholder={language === 'en' ? 'Name' : 'பெயர்'}
                                     className="w-full bg-tvk-lightBg/50 border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label htmlFor="phone" className="text-sm font-black text-tvk-dark uppercase tracking-widest">Phone Number</label>
+                                <label htmlFor="phone" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
+                                    {language === 'en' ? 'Phone Number' : 'தொலைபேசி எண்'}
+                                </label>
                                 <input
                                     required
                                     type="tel"
@@ -94,26 +104,30 @@ const ContactForm = () => {
                         </div>
 
                         <div className="space-y-3">
-                            <label htmlFor="from_email" className="text-sm font-black text-tvk-dark uppercase tracking-widest">Email (Optional)</label>
+                            <label htmlFor="from_email" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
+                                {language === 'en' ? 'Email (Optional)' : 'மின்னஞ்சல் (விருப்பத்திற்குரியது)'}
+                            </label>
                             <input
                                 type="email"
                                 id="from_email"
                                 value={formData.from_email}
                                 onChange={handleChange}
-                                placeholder="Email"
+                                placeholder={language === 'en' ? 'Email' : 'மின்னஞ்சல்'}
                                 className="w-full bg-tvk-lightBg/50 border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium"
                             />
                         </div>
 
                         <div className="space-y-3">
-                            <label htmlFor="message" className="text-sm font-black text-tvk-dark uppercase tracking-widest">How can we help you?</label>
+                            <label htmlFor="message" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
+                                {language === 'en' ? 'How can we help you?' : 'நாங்கள் உங்களுக்கு எவ்வாறு உதவ முடியும்?'}
+                            </label>
                             <textarea
                                 required
                                 id="message"
                                 value={formData.message}
                                 onChange={handleChange}
                                 rows="5"
-                                placeholder="Type your message here..."
+                                placeholder={language === 'en' ? 'Type your message here...' : 'உங்கள் செய்தியை இங்கே தட்டச்சு செய்யவும்...'}
                                 className="w-full bg-tvk-lightBg/50 border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium resize-none shadow-inner"
                             ></textarea>
                         </div>
@@ -125,7 +139,7 @@ const ContactForm = () => {
                             disabled={isLoading}
                             className={`w-full ${isLoading ? 'bg-tvk-dark/20' : 'bg-tvk-red'} text-white font-black py-5 text-lg rounded-2xl shadow-[0_10px_30px_rgba(145,9,5,0.2)] hover:shadow-[0_15px_40px_rgba(145,9,5,0.3)] transition-all flex items-center justify-center gap-3 uppercase tracking-widest disabled:cursor-not-allowed`}
                         >
-                            {isLoading ? 'Sending...' : 'Send Message'} <Send size={22} className={isLoading ? 'animate-pulse' : ''} />
+                            {isLoading ? (language === 'en' ? 'Sending...' : 'அனுப்பப்படுகிறது...') : (language === 'en' ? 'Send Message' : 'செய்தி அனுப்பவும்')} <Send size={22} className={isLoading ? 'animate-pulse' : ''} />
                         </motion.button>
 
                         <AnimatePresence>
@@ -152,13 +166,20 @@ const ContactForm = () => {
                         <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                             <CheckCircle size={40} />
                         </div>
-                        <h3 className="text-2xl font-bold mb-3">Message Sent!</h3>
-                        <p className="text-tvk-dark/60 mb-8">We've received your message and will get back to you shortly.</p>
+                        <h3 className="text-2xl font-bold mb-3">
+                            {language === 'en' ? 'Message Sent!' : 'செய்தி அனுப்பப்பட்டது!'}
+                        </h3>
+                        <p className="text-tvk-dark/60 mb-8">
+                            {language === 'en'
+                                ? "We've received your message and will get back to you shortly."
+                                : "உங்கள் செய்தியை நாங்கள் பெற்றுக்கொண்டோம், விரைவில் உங்களைத் தொடர்பு கொள்வோம்."
+                            }
+                        </p>
                         <button
                             onClick={() => { setIsSubmitted(false); setFormData({ from_name: '', phone: '', from_email: '', message: '' }) }}
                             className="text-tvk-red font-bold hover:underline"
                         >
-                            Send another message
+                            {language === 'en' ? 'Send another message' : 'மற்றொரு செய்தியை அனுப்பவும்'}
                         </button>
                     </motion.div>
                 )}

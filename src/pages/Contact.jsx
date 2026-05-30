@@ -2,20 +2,23 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import SEO from '../components/SEO'
 import ContactForm from '../components/ContactForm'
-import { MapPin, Phone, Mail, ExternalLink } from 'lucide-react'
+import { MapPin, Phone } from 'lucide-react'
 import JoinTVKCTA from '../components/JoinTVKCTA'
+import { useLanguage } from '../context/LanguageContext'
 
 const Contact = () => {
+    const { language } = useLanguage()
+
     const contactInfo = [
         {
             icon: <MapPin />,
-            title: "Main Office",
+            title: language === 'en' ? "Main Office" : "தலைமை அலுவலகம்",
             details: ["No 27 ,100 Feet Rd ,Taramani Link Road, Velachery, Chennai, Tamil Nadu 600042"],
             link: "https://maps.app.goo.gl/vT4vh4KcB7Cc8U3h6"
         },
         {
             icon: <Phone />,
-            title: "Helpline",
+            title: language === 'en' ? "Helpline" : "உதவி எண்",
             details: ["+91 9884770108"],
             link: "tel:+919884770108"
         },
@@ -29,8 +32,11 @@ const Contact = () => {
             className="pt-32 md:pt-40 pb-20 bg-white"
         >
             <SEO
-                title="Contact Prasanna TVK"
-                description="Get in touch with Prasanna TVK. Find contact details, helpline numbers, and office location in Velachery, Chennai to reach out or volunteer."
+                title={language === 'en' ? "Contact Prasanna TVK" : "தொடர்பு கொள்ள | பிரசன்னா TVK"}
+                description={language === 'en'
+                    ? "Get in touch with Mr. Prasanna TVK. Find office contact details, helpline numbers, and location in Velachery, Chennai."
+                    : "திரு. S. பிரசன்னா அவர்களின் தலைமை அலுவலக முகவரி, தொடர்பு எண் மற்றும் உதவி எண்களைத் தொடர்பு கொள்ளவும்."
+                }
                 url="/contact"
                 schema={{
                     "@context": "https://schema.org",
@@ -69,10 +75,17 @@ const Contact = () => {
             <section className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-2xl mx-auto mb-16">
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-tvk-dark">
-                        Get in <span className="text-tvk-red">Touch</span>
+                        {language === 'en' ? (
+                            <>Get in <span className="text-tvk-red">Touch</span></>
+                        ) : (
+                            <>தொடர்பு <span className="text-tvk-red">கொள்ளுங்கள்</span></>
+                        )}
                     </h1>
                     <p className="text-lg text-tvk-dark/60">
-                        Have questions or want to volunteer? Reach out to our office through any of the channels below.
+                        {language === 'en'
+                            ? "Have questions or want to volunteer? Reach out to our office through any of the channels below."
+                            : "கேள்விகள் உள்ளதா அல்லது தன்னார்வலராகப் பணியாற்ற விரும்புகிறீர்களா? கீழே உள்ள வழிகளில் எங்களை தொடர்பு கொள்ளவும்."
+                        }
                     </p>
                 </div>
 
@@ -105,7 +118,7 @@ const Contact = () => {
                             })}
                         </div>
 
-                        {/* Map Placeholder */}
+                        {/* Map Embedded */}
                         <div className="mt-10 rounded-2xl overflow-hidden shadow-lg border-4 border-white h-72 relative group bg-gray-100">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15551.488314156!2d80.20755!3d12.9791!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d8869c9b489%3A0x6bba46c53ed98322!2sVelachery%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
@@ -116,6 +129,7 @@ const Contact = () => {
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
                                 className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                                title="Map Location"
                             ></iframe>
                             <div className="absolute inset-0 pointer-events-none border-2 border-tvk-red/10 rounded-2xl"></div>
                         </div>

@@ -8,7 +8,7 @@
     }
 
     body {
-        @apply font-sans bg-white text-tvk-dark overflow-x-hidden;
+        @apply font-tamil bg-white text-tvk-dark overflow-x-hidden;
     }
 
     h1,
@@ -17,7 +17,7 @@
     h4,
     h5,
     h6 {
-        @apply font-heading tracking-tight text-tvk-dark;
+        @apply font-tamil tracking-tight text-tvk-dark;
     }
 }
 
@@ -32,6 +32,31 @@
 
     .nav-link {
         @apply text-tvk-dark/70 hover:text-tvk-red font-bold transition-all duration-300 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-tvk-red after:transition-all after:duration-300 hover:after:w-full;
+    }
+
+    /* Stats card */
+    .stat-card {
+        @apply flex items-center gap-3 bg-white rounded-2xl px-5 py-4 shadow-md border border-gray-100;
+    }
+
+    /* Category card */
+    .category-card {
+        @apply flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:border-tvk-red/20 transition-all duration-300 cursor-pointer;
+    }
+
+    /* Complaint form card */
+    .complaint-form-card {
+        @apply bg-tvk-red/5 rounded-3xl p-6 border border-tvk-red/10;
+    }
+
+    /* Quick access card */
+    .quick-card {
+        @apply flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center;
+    }
+
+    /* Tracking step */
+    .track-step {
+        @apply flex flex-col items-center gap-2 text-center;
     }
 }
 
@@ -50,4 +75,25 @@
 
 ::-webkit-scrollbar-thumb:hover {
     @apply bg-tvk-darkRed;
+}
+
+/* Animate counter */
+@keyframes countUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count {
+    animation: countUp 0.6s ease-out forwards;
+}
+
+/* Category card icon wrapper */
+.category-card .icon-wrap {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
 }

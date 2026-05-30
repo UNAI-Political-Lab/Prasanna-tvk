@@ -31,6 +31,7 @@ export default {
             fontFamily: {
                 sans: ['Inter', 'ui-sans-serif', 'system-ui'],
                 heading: ['Poppins', 'sans-serif'],
+                tamil: ['"Noto Sans Tamil"', 'Inter', 'sans-serif'],
             },
             borderRadius: {
                 '2xl': '1rem',

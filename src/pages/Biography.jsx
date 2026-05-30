@@ -4,6 +4,7 @@ import SEO from '../components/SEO'
 import BiographyTimeline from '../components/BiographyTimeline'
 import { Target, Lightbulb, ShieldCheck, X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react'
 import JoinTVKCTA from '../components/JoinTVKCTA'
+import { useLanguage } from '../context/LanguageContext'
 
 // ── Bio-Img imports ────────────────────────────────────────────────────────────
 import bio1 from '../assets/Bio-Img/1.jpeg'
@@ -46,54 +47,10 @@ import bio37 from '../assets/Bio-Img/37.jpeg'
 import bio38 from '../assets/Bio-Img/38.jpeg'
 import bio39 from '../assets/Bio-Img/39.jpeg'
 
-// ── Gallery data ───────────────────────────────────────────────────────────────
-const galleryItems = [
-    { id: 1, src: bio1, category: 'Public Life', title: 'Community Engagement — 1', tag: 'Public Life' },
-    { id: 2, src: bio2, category: 'Party Events', title: 'TVK Party Event — 2', tag: 'Party Events' },
-    { id: 3, src: bio3, category: 'Welfare', title: 'Welfare Initiative — 3', tag: 'Welfare' },
-    { id: 4, src: bio4, category: 'Public Life', title: 'Field Visit — 4', tag: 'Public Life' },
-    { id: 5, src: bio5, category: 'Party Events', title: 'Party Campaign — 5', tag: 'Party Events' },
-    { id: 6, src: bio6, category: 'Welfare', title: 'Aid Programme — 6', tag: 'Welfare' },
-    { id: 7, src: bio7, category: 'Public Life', title: 'Public Address — 7', tag: 'Public Life' },
-    { id: 8, src: bio8, category: 'Party Events', title: 'Constituency Meet — 8', tag: 'Party Events' },
-    { id: 9, src: bio9, category: 'Welfare', title: 'Community Service — 9', tag: 'Welfare' },
-    { id: 10, src: bio10, category: 'Public Life', title: 'Outreach Day — 10', tag: 'Public Life' },
-    { id: 11, src: bio11, category: 'Party Events', title: 'Cultural Event — 11', tag: 'Party Events' },
-    { id: 12, src: bio12, category: 'Welfare', title: 'Medical Camp — 12', tag: 'Welfare' },
-    { id: 13, src: bio13, category: 'Public Life', title: 'Public Gathering — 13', tag: 'Public Life' },
-    { id: 14, src: bio14, category: 'Party Events', title: 'Party Rally — 14', tag: 'Party Events' },
-    { id: 15, src: bio15, category: 'Welfare', title: 'Scheme Distribution — 15', tag: 'Welfare' },
-    { id: 16, src: bio16, category: 'Public Life', title: 'Interactive Session — 16', tag: 'Public Life' },
-    { id: 17, src: bio17, category: 'Party Events', title: 'State Conference — 17', tag: 'Party Events' },
-    { id: 18, src: bio18, category: 'Welfare', title: 'Youth Drive — 18', tag: 'Welfare' },
-    { id: 19, src: bio19, category: 'Public Life', title: 'Grassroots Connect — 19', tag: 'Public Life' },
-    { id: 20, src: bio20, category: 'Party Events', title: 'Inauguration Ceremony — 20', tag: 'Party Events' },
-    { id: 21, src: bio21, category: 'Welfare', title: 'Women Empowerment — 21', tag: 'Welfare' },
-    { id: 22, src: bio22, category: 'Public Life', title: 'Community Dialogue — 22', tag: 'Public Life' },
-    { id: 23, src: bio23, category: 'Party Events', title: 'Membership Drive — 23', tag: 'Party Events' },
-    { id: 24, src: bio24, category: 'Welfare', title: 'Awareness Camp — 24', tag: 'Welfare' },
-    { id: 25, src: bio25, category: 'Public Life', title: 'Constituency Walk — 25', tag: 'Public Life' },
-    { id: 26, src: bio26, category: 'Party Events', title: 'Campaign Launch — 26', tag: 'Party Events' },
-    { id: 27, src: bio27, category: 'Welfare', title: 'Relief Distribution — 27', tag: 'Welfare' },
-    { id: 28, src: bio28, category: 'Public Life', title: 'Civic Dialogue — 28', tag: 'Public Life' },
-    { id: 29, src: bio29, category: 'Party Events', title: 'TVK Meet — 29', tag: 'Party Events' },
-    { id: 30, src: bio30, category: 'Welfare', title: 'Health Initiative — 30', tag: 'Welfare' },
-    { id: 31, src: bio31, category: 'Public Life', title: 'Street Meeting — 31', tag: 'Public Life' },
-    { id: 32, src: bio32, category: 'Party Events', title: 'District Conference — 32', tag: 'Party Events' },
-    { id: 33, src: bio33, category: 'Welfare', title: 'Education Support — 33', tag: 'Welfare' },
-    { id: 34, src: bio34, category: 'Public Life', title: 'Public Felicitation — 34', tag: 'Public Life' },
-    { id: 35, src: bio35, category: 'Party Events', title: 'Awareness Rally — 35', tag: 'Party Events' },
-    { id: 36, src: bio36, category: 'Welfare', title: 'Aid Camp — 36', tag: 'Welfare' },
-    { id: 37, src: bio37, category: 'Public Life', title: 'Leadership Meet — 37', tag: 'Public Life' },
-    { id: 38, src: bio38, category: 'Party Events', title: 'Velachery Event — 38', tag: 'Party Events' },
-    { id: 39, src: bio39, category: 'Welfare', title: 'Community Aid — 39', tag: 'Welfare' },
-]
-
-const CATEGORIES = ['All', 'Public Life', 'Party Events', 'Welfare']
-
 // ── Bio Lightbox ───────────────────────────────────────────────────────────────
 const BioLightbox = ({ items, index, onClose, onPrev, onNext }) => {
     const item = items[index]
+    const { language } = useLanguage()
 
     useEffect(() => {
         const handleKey = (e) => {
@@ -104,6 +61,15 @@ const BioLightbox = ({ items, index, onClose, onPrev, onNext }) => {
         window.addEventListener('keydown', handleKey)
         return () => window.removeEventListener('keydown', handleKey)
     }, [onClose, onPrev, onNext])
+
+    // Localize tags for caption bar
+    const getLocalTag = (tag) => {
+        if (language === 'en') return tag
+        if (tag === 'Public Life') return 'பொது வாழ்க்கை'
+        if (tag === 'Party Events') return 'கட்சி நிகழ்வுகள்'
+        if (tag === 'Welfare') return 'மக்கள் நலம்'
+        return tag
+    }
 
     return (
         <motion.div
@@ -160,13 +126,13 @@ const BioLightbox = ({ items, index, onClose, onPrev, onNext }) => {
                 >
                     <img
                         src={item.src}
-                        alt={item.title}
+                        alt={language === 'en' ? item.titleEn : item.titleTa}
                         className="w-full max-h-[78vh] object-contain rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.6)]"
                     />
                     {/* Caption bar */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent rounded-b-2xl px-6 py-5">
-                        <span className="text-[11px] font-black text-tvk-yellow uppercase tracking-widest">{item.tag}</span>
-                        <p className="text-white font-bold text-lg mt-0.5">{item.title}</p>
+                        <span className="text-[11px] font-black text-tvk-yellow uppercase tracking-widest">{getLocalTag(item.tag)}</span>
+                        <p className="text-white font-bold text-lg mt-0.5">{language === 'en' ? item.titleEn : item.titleTa}</p>
                         <p className="text-white/40 text-sm mt-1">{index + 1} / {items.length}</p>
                     </div>
                 </motion.div>
@@ -188,12 +154,68 @@ const BioLightbox = ({ items, index, onClose, onPrev, onNext }) => {
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 const Biography = () => {
+    const { language } = useLanguage()
     const [activeCategory, setActiveCategory] = useState('All')
     const [lightboxIndex, setLightboxIndex] = useState(null)
 
-    const filtered = activeCategory === 'All'
+    // ── Gallery data ───────────────────────────────────────────────────────────────
+    const galleryItems = [
+        { id: 1, src: bio1, category: 'Public Life', titleEn: 'Community Engagement — 1', titleTa: 'சமூக ஈடுபாடு — 1', tag: 'Public Life' },
+        { id: 2, src: bio2, category: 'Party Events', titleEn: 'TVK Party Event — 2', titleTa: 'TVK கட்சி நிகழ்வு — 2', tag: 'Party Events' },
+        { id: 3, src: bio3, category: 'Welfare', titleEn: 'Welfare Initiative — 3', titleTa: 'நலத்திட்ட உதவி — 3', tag: 'Welfare' },
+        { id: 4, src: bio4, category: 'Public Life', titleEn: 'Field Visit — 4', titleTa: 'கள ஆய்வு — 4', tag: 'Public Life' },
+        { id: 5, src: bio5, category: 'Party Events', titleEn: 'Party Campaign — 5', titleTa: 'கட்சி பிரச்சாரம் — 5', tag: 'Party Events' },
+        { id: 6, src: bio6, category: 'Welfare', titleEn: 'Aid Programme — 6', titleTa: 'உதவித் திட்டம் — 6', tag: 'Welfare' },
+        { id: 7, src: bio7, category: 'Public Life', titleEn: 'Public Address — 7', titleTa: 'பொது உரையாடல் — 7', tag: 'Public Life' },
+        { id: 8, src: bio8, category: 'Party Events', titleEn: 'Constituency Meet — 8', titleTa: 'தொகுதி மக்கள் சந்திப்பு — 8', tag: 'Party Events' },
+        { id: 9, src: bio9, category: 'Welfare', titleEn: 'Community Service — 9', titleTa: 'சமூக சேவை — 9', tag: 'Welfare' },
+        { id: 10, src: bio10, category: 'Public Life', titleEn: 'Outreach Day — 10', titleTa: 'மக்கள் தொடர்பு நாள் — 10', tag: 'Public Life' },
+        { id: 11, src: bio11, category: 'Party Events', titleEn: 'Cultural Event — 11', titleTa: 'கலாச்சார விழா — 11', tag: 'Party Events' },
+        { id: 12, src: bio12, category: 'Welfare', titleEn: 'Medical Camp — 12', titleTa: 'இலவச மருத்துவ முகாம் — 12', tag: 'Welfare' },
+        { id: 13, src: bio13, category: 'Public Life', titleEn: 'Public Gathering — 13', titleTa: 'பொதுக்கூட்டம் — 13', tag: 'Public Life' },
+        { id: 14, src: bio14, category: 'Party Events', titleEn: 'Party Rally — 14', titleTa: 'கட்சி பேரணி — 14', tag: 'Party Events' },
+        { id: 15, src: bio15, category: 'Welfare', titleEn: 'Scheme Distribution — 15', titleTa: 'நலத்திட்ட வழங்கல் — 15', tag: 'Welfare' },
+        { id: 16, src: bio16, category: 'Public Life', titleEn: 'Interactive Session — 16', titleTa: 'கலந்துரையாடல் — 16', tag: 'Public Life' },
+        { id: 17, src: bio17, category: 'Party Events', titleEn: 'State Conference — 17', titleTa: 'மாநில மாநாடு — 17', tag: 'Party Events' },
+        { id: 18, src: bio18, category: 'Welfare', titleEn: 'Youth Drive — 18', titleTa: 'இளைஞர் மேம்பாட்டு பணி — 18', tag: 'Welfare' },
+        { id: 19, src: bio19, category: 'Public Life', titleEn: 'Grassroots Connect — 19', titleTa: 'மக்களுடன் நேரடித் தொடர்பு — 19', tag: 'Public Life' },
+        { id: 20, src: bio20, category: 'Party Events', titleEn: 'Inauguration Ceremony — 20', titleTa: 'துவக்க விழா — 20', tag: 'Party Events' },
+        { id: 21, src: bio21, category: 'Welfare', titleEn: 'Women Empowerment — 21', titleTa: 'பெண்கள் மேம்பாட்டு விழா — 21', tag: 'Welfare' },
+        { id: 22, src: bio22, category: 'Public Life', titleEn: 'Community Dialogue — 22', titleTa: 'சமூக உரையாடல் — 22', tag: 'Public Life' },
+        { id: 23, src: bio23, category: 'Party Events', titleEn: 'Membership Drive — 23', titleTa: 'உறுப்பினர் சேர்க்கை முகாம் — 23', tag: 'Party Events' },
+        { id: 24, src: bio24, category: 'Welfare', titleEn: 'Awareness Camp — 24', titleTa: 'விழிப்புணர்வு முகாம் — 24', tag: 'Welfare' },
+        { id: 25, src: bio25, category: 'Public Life', titleEn: 'Constituency Walk — 25', titleTa: 'தொகுதி நடைபயணம் — 25', tag: 'Public Life' },
+        { id: 26, src: bio26, category: 'Party Events', titleEn: 'Campaign Launch — 26', titleTa: 'தேர்தல் பிரச்சார துவக்கம் — 26', tag: 'Party Events' },
+        { id: 27, src: bio27, category: 'Welfare', titleEn: 'Relief Distribution — 27', titleTa: 'நிவாரணப் பொருட்கள் விநியோகம் — 27', tag: 'Welfare' },
+        { id: 28, src: bio28, category: 'Public Life', titleEn: 'Civic Dialogue — 28', titleTa: 'பொதுமக்கள் நலக் கூட்டம் — 28', tag: 'Public Life' },
+        { id: 29, src: bio29, category: 'Party Events', titleEn: 'TVK Meet — 29', titleTa: 'TVK ஆலோசனைக் கூட்டம் — 29', tag: 'Party Events' },
+        { id: 30, src: bio30, category: 'Welfare', titleEn: 'Health Initiative — 30', titleTa: 'சுகாதாரத் திட்டம் — 30', tag: 'Welfare' },
+        { id: 31, src: bio31, category: 'Public Life', titleEn: 'Street Meeting — 31', titleTa: 'தெருமுனைக் கூட்டம் — 31', tag: 'Public Life' },
+        { id: 32, src: bio32, category: 'Party Events', titleEn: 'District Conference — 32', titleTa: 'மாவட்ட மாநாடு — 32', tag: 'Party Events' },
+        { id: 33, src: bio33, category: 'Welfare', titleEn: 'Education Support — 33', titleTa: 'கல்வி உதவித் திட்டம் — 33', tag: 'Welfare' },
+        { id: 34, src: bio34, category: 'Public Life', titleEn: 'Public Felicitation — 34', titleTa: 'மக்கள் பாராட்டு விழா — 34', tag: 'Public Life' },
+        { id: 35, src: bio35, category: 'Party Events', titleEn: 'Awareness Rally — 35', titleTa: 'விழிப்புணர்வு பேரணி — 35', tag: 'Party Events' },
+        { id: 36, src: bio36, category: 'Welfare', titleEn: 'Aid Camp — 36', titleTa: 'நல உதவி முகாம் — 36', tag: 'Welfare' },
+        { id: 37, src: bio37, category: 'Public Life', titleEn: 'Leadership Meet — 37', titleTa: 'தலைவர்கள் சந்திப்பு — 37', tag: 'Public Life' },
+        { id: 38, src: bio38, category: 'Party Events', titleEn: 'Velachery Event — 38', titleTa: 'வேளாச்சேரி நிகழ்ச்சி — 38', tag: 'Party Events' },
+        { id: 39, src: bio39, category: 'Welfare', titleEn: 'Community Aid — 39', titleTa: 'சமூக உதவி முகாம் — 39', tag: 'Welfare' },
+    ]
+
+    const CATEGORIES = language === 'en'
+        ? ['All', 'Public Life', 'Party Events', 'Welfare']
+        : ['அனைத்தும்', 'பொது வாழ்க்கை', 'கட்சி நிகழ்வுகள்', 'மக்கள் நலம்']
+
+    const getRawCategory = (cat) => {
+        if (cat === 'அனைத்தும்') return 'All'
+        if (cat === 'பொது வாழ்க்கை') return 'Public Life'
+        if (cat === 'கட்சி நிகழ்வுகள்') return 'Party Events'
+        if (cat === 'மக்கள் நலம்') return 'Welfare'
+        return cat
+    }
+
+    const filtered = activeCategory === 'All' || activeCategory === 'அனைத்தும்'
         ? galleryItems
-        : galleryItems.filter(g => g.category === activeCategory)
+        : galleryItems.filter(g => g.category === getRawCategory(activeCategory))
 
     const openLightbox = (idx) => setLightboxIndex(idx)
     const closeLightbox = useCallback(() => setLightboxIndex(null), [])
@@ -208,8 +230,11 @@ const Biography = () => {
             className="pt-32 md:pt-40 pb-20 bg-white"
         >
             <SEO
-                title="Biography of Prasanna TVK"
-                description="Learn about Prasanna TVK — Indian politician, TVK (Tamilaga Vettri Kazhagam) member, and founder of Autobourn Cars. Discover his personal journey, background, and vision for the people of Tamil Nadu."
+                title={language === 'en' ? "Biography of Prasanna TVK" : "வாழ்க்கை வரலாறு | பிரசன்னா TVK"}
+                description={language === 'en'
+                    ? "Learn about Mr. Prasanna S — Indian entrepreneur, dedicated TVK politician, and founder of Autobourn Cars. Explore his personal journey and social service milestones."
+                    : "திரு. S. பிரசன்னா அவர்களின் வாழ்க்கை வரலாறு, சமூகச் சேவை மற்றும் தமிழக வெற்றி கழகத்தில் அவரது பணிகள் பற்றி அறியவும்."
+                }
                 url="/biography"
                 schema={{
                     "@context": "https://schema.org",
@@ -221,69 +246,11 @@ const Biography = () => {
                             "givenName": "Prasanna",
                             "familyName": "S",
                             "alternateName": ["TVK Prasanna", "S. Prasanna", "Prasanna Autobourn"],
-                            "description": "Prasanna TVK is an Indian politician, TVK (Tamilaga Vettri Kazhagam) member, and the founder of Autobourn Cars — a premium automobile dealership in Velachery, Chennai. He is a dedicated public servant committed to youth employment, women empowerment, and grassroots welfare.",
+                            "description": "Prasanna TVK is an Indian politician, TVK (Tamilaga Vettri Kazhagam) member, and founder of Autobourn Cars.",
                             "jobTitle": "Politician & Entrepreneur",
                             "age": "35",
                             "url": "https://www.prasannatvk.com/biography",
                             "image": "https://www.prasannatvk.com/prasannatvk-bio.jpeg",
-                            "memberOf": {
-                                "@type": "Organization",
-                                "name": "Tamilaga Vettri Kazhagam (TVK)"
-                            },
-                            "founder": {
-                                "@type": "Organization",
-                                "name": "Autobourn Cars"
-                            },
-                            "address": {
-                                "@type": "PostalAddress",
-                                "addressLocality": "Velachery",
-                                "addressRegion": "Chennai, Tamil Nadu",
-                                "addressCountry": "IN"
-                            },
-                            "sameAs": [
-                                "https://www.linkedin.com/in/prasannatvk",
-                                "https://twitter.com/prasannatvk",
-                                "https://www.instagram.com/prasannatvk",
-                                "https://www.facebook.com/prasannatvk",
-                                "https://www.prasannatvk.com"
-                            ]
-                        },
-                        {
-                            "@type": "FAQPage",
-                            "mainEntity": [
-                                {
-                                    "@type": "Question",
-                                    "name": "Who is Prasanna TVK?",
-                                    "acceptedAnswer": {
-                                        "@type": "Answer",
-                                        "text": "Prasanna TVK is an Indian politician and member of Tamilaga Vettri Kazhagam (TVK). He is also the founder of Autobourn Cars, a premium automobile dealership in Velachery, Chennai. Known for his grassroots leadership, welfare initiatives, and commitment to youth empowerment, Prasanna TVK has organized 50+ welfare programmes and personally enrolled 500+ TVK members."
-                                    }
-                                },
-                                {
-                                    "@type": "Question",
-                                    "name": "What is Autobourn Cars and who founded it?",
-                                    "acceptedAnswer": {
-                                        "@type": "Answer",
-                                        "text": "Autobourn Cars (also known as AUTO BOURN) is a premium automobile dealership located in Velachery, Chennai, Tamil Nadu. It was founded by Prasanna TVK, who has over 15 years of experience in the automobile industry and has sold more than 5000 premium vehicles."
-                                    }
-                                },
-                                {
-                                    "@type": "Question",
-                                    "name": "What party does Prasanna TVK belong to?",
-                                    "acceptedAnswer": {
-                                        "@type": "Answer",
-                                        "text": "Prasanna TVK is a member of Tamilaga Vettri Kazhagam (TVK), a political party in Tamil Nadu, India. He is an active TVK member and candidate who has driven significant membership enrollment and organized mass-level events for the party."
-                                    }
-                                },
-                                {
-                                    "@type": "Question",
-                                    "name": "Where is Prasanna TVK based?",
-                                    "acceptedAnswer": {
-                                        "@type": "Answer",
-                                        "text": "Prasanna TVK is based in Velachery, Chennai, Tamil Nadu, India. His office is located at No 27, 100 Feet Rd, Taramani Link Road, Velachery, Chennai – 600042."
-                                    }
-                                }
-                            ]
                         }
                     ]
                 }}
@@ -303,30 +270,54 @@ const Biography = () => {
                             className="w-full h-full object-cover"
                         />
                         <div className="absolute top-4 right-4 bg-tvk-yellow text-tvk-red font-bold px-4 py-1 rounded-full text-xs uppercase tracking-tighter">
-                            A Leader for All
+                            {language === 'en' ? 'A Leader for All' : 'அனைவருக்குமான தலைவர்'}
                         </div>
                     </motion.div>
 
                     <div className="w-full md:w-2/3">
                         <div className="flex flex-wrap items-center gap-4 mb-6">
-                            <span className="bg-tvk-red/10 text-tvk-red font-black px-4 py-1 rounded-lg text-sm uppercase">Age: 35</span>
-                            <span className="bg-tvk-red/10 text-tvk-red font-black px-4 py-1 rounded-lg text-sm uppercase">Father's Name: Mr. L. Sekar</span>
+                            <span className="bg-tvk-red/10 text-tvk-red font-black px-4 py-1 rounded-lg text-sm uppercase">
+                                {language === 'en' ? 'Age: 35' : 'வயது: 35'}
+                            </span>
+                            <span className="bg-tvk-red/10 text-tvk-red font-black px-4 py-1 rounded-lg text-sm uppercase">
+                                {language === 'en' ? "Father's Name: Mr. L. Sekar" : "தந்தையின் பெயர்: திரு. L. சேகர்"}
+                            </span>
                         </div>
                         <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-tvk-dark leading-tight">
-                            Mr. S. <span className="text-tvk-red italic">Prasanna</span>
+                            {language === 'en' ? (
+                                <>Mr. S. <span className="text-tvk-red italic">Prasanna</span></>
+                            ) : (
+                                <>திரு. S. <span className="text-tvk-red italic">பிரசன்னா</span></>
+                            )}
                         </h1>
                         <p className="text-xl text-tvk-dark/80 mb-8 leading-relaxed font-medium">
-                            A dynamic entrepreneur and committed social activist with over 15 years of experience in the premium automobile industry.
+                            {language === 'en'
+                                ? "A dynamic entrepreneur and committed social activist with over 15 years of experience in the premium automobile industry."
+                                : "15 ஆண்டுகளுக்கும் மேலான அனுபவத்துடன் கூடிய ஒரு ஆற்றல்மிக்க தொழிலதிபர் மற்றும் சமூக ஆர்வலர்."
+                            }
                         </p>
                         <p className="text-tvk-dark/60 leading-relaxed mb-10">
-                            Operating under the leadership of his business <strong>AUTO BOURN</strong> in Velachery, Mr. Prasanna has built a reputation for trust, transparency, and excellence. His journey reflects a perfect blend of professional success and a deep-rooted commitment to public welfare and social justice.
+                            {language === 'en' ? (
+                                <>Operating under the leadership of his business <strong>AUTO BOURN</strong> in Velachery, Mr. Prasanna has built a reputation for trust, transparency, and excellence. His journey reflects a perfect blend of professional success and a deep-rooted commitment to public welfare and social justice.</>
+                            ) : (
+                                <>வேளாச்சேரியில் உள்ள தனது <strong>AUTO BOURN</strong> நிறுவனத்தின் மூலம், திரு. பிரசன்னா மக்கள் மத்தியில் பெரும் நம்பிக்கையையும் நேர்மையையும் சம்பாதித்துள்ளார். அவரது பயணம் வெற்றிகரமான தொழிலையும் சமூகத்தின் மீதான அர்ப்பணிப்பையும் ஒருங்கே பிரதிபலிக்கிறது.</>
+                            )}
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                             {[
-                                { label: "Business Experience", value: "15+ Years" },
-                                { label: "Premium Vehicles Sold", value: "5000+" },
-                                { label: "New Party Members", value: "500+" }
+                                {
+                                    label: language === 'en' ? "Business Experience" : "தொழில் அனுபவம்",
+                                    value: language === 'en' ? "15+ Years" : "15+ ஆண்டுகள்"
+                                },
+                                {
+                                    label: language === 'en' ? "Premium Vehicles Sold" : "விற்கப்பட்ட வாகனங்கள்",
+                                    value: "5000+"
+                                },
+                                {
+                                    label: language === 'en' ? "New Party Members" : "புதிய உறுப்பினர்கள்",
+                                    value: "500+"
+                                }
                             ].map((stat, i) => (
                                 <div key={i} className="bg-white p-6 rounded-3xl border-2 border-tvk-red/5 shadow-[0_10px_30px_rgba(0,0,0,0.03)] flex flex-col items-center group hover:border-tvk-yellow/30 transition-colors">
                                     <p className="text-tvk-red font-black text-3xl mb-1 group-hover:scale-110 transition-transform">{stat.value}</p>
@@ -343,9 +334,20 @@ const Biography = () => {
                 <div className="absolute top-0 left-0 w-full h-full bg-tvk-red/5 blur-[120px] -z-10 pointer-events-none" />
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="text-center mb-20">
-                        <h2 className="text-4xl md:text-5xl font-black mb-6 text-tvk-dark">Social <span className="text-tvk-red italic">Impact</span></h2>
+                        <h2 className="text-4xl md:text-5xl font-black mb-6 text-tvk-dark">
+                            {language === 'en' ? (
+                                <>Social <span className="text-tvk-red italic">Impact</span></>
+                            ) : (
+                                <>சமூக <span className="text-tvk-red italic">தாக்கம்</span></>
+                            )}
+                        </h2>
                         <div className="w-24 h-2 bg-tvk-yellow mx-auto mb-6 rounded-full" />
-                        <p className="text-tvk-dark/60 font-medium text-lg">A consistent record of grassroots development and public engagement.</p>
+                        <p className="text-tvk-dark/60 font-medium text-lg">
+                            {language === 'en'
+                                ? "A consistent record of grassroots development, welfare schemes, and active public engagement."
+                                : "அடித்தட்டு மக்கள் மேம்பாடு, நலத்திட்டங்கள் மற்றும் பொது ஈடுபாட்டின் நிலையான பதிவு."
+                            }
+                        </p>
                     </div>
                     <BiographyTimeline />
                 </div>
@@ -356,9 +358,27 @@ const Biography = () => {
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[
-                            { icon: <Target />, title: "Vision", desc: "Generating youth employment and supporting small/micro businesses to build a self-reliant Tamil Nadu." },
-                            { icon: <Lightbulb />, title: "Mission", desc: "Action-driven resolution of public grievances and improving core infrastructure like drinking water accessibility." },
-                            { icon: <ShieldCheck />, title: "Philosophy", desc: "Service with Commitment. Leadership with Responsibility. Politics with Purpose." },
+                            {
+                                icon: <Target />,
+                                title: language === 'en' ? "Vision" : "நோக்கு",
+                                desc: language === 'en'
+                                    ? "Generating youth employment and supporting small/micro businesses to build a self-reliant Tamil Nadu."
+                                    : "இளைஞர் வேலைவாய்ப்பை உருவாக்குதல் மற்றும் சிறு/குறு தொழில்களை ஆதரித்து ஒரு சுயசார்புடைய தமிழ்நாட்டை உருவாக்குதல்."
+                            },
+                            {
+                                icon: <Lightbulb />,
+                                title: language === 'en' ? "Mission" : "பணி",
+                                desc: language === 'en'
+                                    ? "Action-driven resolution of public grievances and improving core infrastructure like clean drinking water accessibility."
+                                    : "மக்கள் குறைகளைத் தீர்ப்பதோடு, சுத்தமான குடிநீர் வசதி போன்ற அடிப்படை உள்கட்டமைப்பை போர்க்கால அடிப்படையில் மேம்படுத்துவது."
+                            },
+                            {
+                                icon: <ShieldCheck />,
+                                title: language === 'en' ? "Philosophy" : "கொள்கை",
+                                desc: language === 'en'
+                                    ? "Service with Commitment. Leadership with Responsibility. Politics with Purpose."
+                                    : "அர்ப்பணிப்புடன் கூடிய சேவை. பொறுப்புடன் கூடிய தலைமை. நோக்கத்துடன் கூடிய அரசியல்."
+                            },
                         ].map((item, i) => (
                             <div key={i} className="text-center group">
                                 <div className="w-20 h-20 bg-tvk-red/10 rounded-3xl flex items-center justify-center text-tvk-red mx-auto mb-8 group-hover:bg-tvk-red group-hover:text-white transition-all duration-300">
@@ -373,19 +393,30 @@ const Biography = () => {
             </section>
 
             {/* ── Leader Section ── */}
-            <section className="bg-white py-32 text-tvk-dark overflow-hidden relative border-t border-tvk-red/5">
+            <section id="leader" className="bg-white py-32 text-tvk-dark overflow-hidden relative border-t border-tvk-red/5">
                 <div className="absolute bottom-0 left-0 w-1/3 h-full bg-tvk-yellow/5 blur-[120px] pointer-events-none -z-10" />
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-tvk-red/5 blur-[100px] pointer-events-none -z-10" />
                 <div className="container mx-auto px-4 md:px-6 relative z-10">
                     <div className="flex flex-col md:flex-row items-center gap-20">
                         <div className="w-full md:w-1/2">
-                            <h2 className="text-4xl md:text-6xl font-black mb-10 text-tvk-red leading-tight">Politics with <span className="text-tvk-dark italic">Purpose</span></h2>
+                            <h2 className="text-4xl md:text-6xl font-black mb-10 text-tvk-red leading-tight">
+                                {language === 'en' ? (
+                                    <>Politics with <span className="text-tvk-dark italic">Purpose</span></>
+                                ) : (
+                                    <>நோக்கத்துடன் <span className="text-tvk-dark italic">கூடிய அரசியல்</span></>
+                                )}
+                            </h2>
                             <p className="text-tvk-dark/70 text-xl leading-relaxed mb-10 font-medium italic border-l-4 border-tvk-yellow pl-8">
-                                "Our strength lies in our field-level participation and our ability to mobilize for the common good. We lead through action and accountability."
+                                {language === 'en'
+                                    ? '"Our strength lies in our field-level participation and our ability to mobilize for the common good. We lead through action and accountability."'
+                                    : '"நமது பலம் களப்பணியிலும் பொது நலனுக்காக மக்களை அணிதிரட்டுவதிலும் உள்ளது. நாம் செயல்கள் மூலமாகவும் பொறுப்புணர்ச்சி மூலமாகவும் வழிநடத்துகிறோம்."'
+                                }
                             </p>
                             <div className="flex items-center gap-6">
                                 <div className="w-16 h-2 bg-tvk-red rounded-full" />
-                                <span className="font-black text-2xl uppercase tracking-widest text-tvk-dark/40">The Leadership Vision</span>
+                                <span className="font-black text-2xl uppercase tracking-widest text-tvk-dark/40">
+                                    {language === 'en' ? 'The Leadership Vision' : 'தலைமைத்துவ நோக்கு'}
+                                </span>
                             </div>
                         </div>
                         <div className="w-full md:w-1/2 flex justify-center">
@@ -402,9 +433,7 @@ const Biography = () => {
                 </div>
             </section>
 
-            {/* ══════════════════════════════════════════════════════════════════
-                ── IMMERSIVE GALLERY ──
-            ══════════════════════════════════════════════════════════════════ */}
+            {/* ── IMMERSIVE GALLERY ── */}
             <section className="py-32 bg-tvk-dark relative overflow-hidden">
                 {/* Ambient glows */}
                 <div className="absolute top-0 left-0 w-96 h-96 bg-tvk-red/10 blur-[140px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
@@ -420,7 +449,7 @@ const Biography = () => {
                             viewport={{ once: true }}
                             className="text-xs font-black text-tvk-yellow uppercase tracking-[0.35em] mb-4"
                         >
-                            Life in Pictures
+                            {language === 'en' ? 'Life in Pictures' : 'புகைப்படங்களில் வாழ்க்கை'}
                         </motion.p>
                         <motion.h2
                             initial={{ opacity: 0, y: 20 }}
@@ -429,7 +458,11 @@ const Biography = () => {
                             transition={{ delay: 0.06 }}
                             className="text-4xl md:text-5xl font-extrabold text-white mb-5"
                         >
-                            The <span className="text-tvk-red">Journey</span> Gallery
+                            {language === 'en' ? (
+                                <>The <span className="text-tvk-red">Journey</span> Gallery</>
+                            ) : (
+                                <>பயணக் <span className="text-tvk-red">காட்சியகம்</span></>
+                            )}
                         </motion.h2>
                         <motion.p
                             initial={{ opacity: 0 }}
@@ -438,7 +471,10 @@ const Biography = () => {
                             transition={{ delay: 0.12 }}
                             className="text-white/50 text-lg leading-relaxed"
                         >
-                            From grassroots campaigns to party events — an intimate visual record of Mr. S. Prasanna's public life and leadership.
+                            {language === 'en'
+                                ? "From grassroots campaigns to party events — an intimate visual record of Mr. S. Prasanna's public life and leadership."
+                                : "அடித்தட்டு பிரச்சாரங்கள் முதல் கட்சி நிகழ்வுகள் வரை - திரு. S. பிரசன்னாவின் பொது வாழ்க்கையின் ஒரு காட்சிப் பதிவு."
+                            }
                         </motion.p>
                     </div>
 
@@ -487,7 +523,7 @@ const Biography = () => {
                                 >
                                     <img
                                         src={item.src}
-                                        alt={item.title}
+                                        alt={language === 'en' ? item.titleEn : item.titleTa}
                                         className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
                                         loading="lazy"
                                     />
@@ -499,8 +535,10 @@ const Biography = () => {
                                             whileHover={{ y: 0, opacity: 1 }}
                                             transition={{ duration: 0.25 }}
                                         >
-                                            <span className="text-[10px] font-black text-tvk-yellow uppercase tracking-widest">{item.tag}</span>
-                                            <p className="text-white font-bold text-sm mt-0.5 leading-snug">{item.title}</p>
+                                            <span className="text-[10px] font-black text-tvk-yellow uppercase tracking-widest">
+                                                {language === 'en' ? item.tag : (item.tag === 'Public Life' ? 'பொது வாழ்க்கை' : (item.tag === 'Party Events' ? 'கட்சி நிகழ்வுகள்' : 'மக்கள் நலம்'))}
+                                            </span>
+                                            <p className="text-white font-bold text-sm mt-0.5 leading-snug">{language === 'en' ? item.titleEn : item.titleTa}</p>
                                         </motion.div>
                                         <div className="absolute top-3 right-3 w-8 h-8 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center">
                                             <ZoomIn size={14} className="text-white" />
@@ -509,7 +547,7 @@ const Biography = () => {
 
                                     {/* Category chip */}
                                     <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        {item.category}
+                                        {language === 'en' ? item.category : (item.category === 'Public Life' ? 'பொது வாழ்க்கை' : (item.category === 'Party Events' ? 'கட்சி நிகழ்வுகள்' : 'மக்கள் நலம்'))}
                                     </div>
                                 </motion.div>
                             ))}
@@ -517,7 +555,9 @@ const Biography = () => {
                     </motion.div>
 
                     {filtered.length === 0 && (
-                        <p className="text-center text-white/30 mt-16 font-bold">No photos in this category.</p>
+                        <p className="text-center text-white/30 mt-16 font-bold">
+                            {language === 'en' ? 'No photos in this category.' : 'இந்த பிரிவில் புகைப்படங்கள் இல்லை.'}
+                        </p>
                     )}
 
                     {/* Photo count */}
@@ -527,7 +567,7 @@ const Biography = () => {
                         viewport={{ once: true }}
                         className="text-center text-white/25 text-sm font-bold mt-10 uppercase tracking-widest"
                     >
-                        {filtered.length} Photo{filtered.length !== 1 ? 's' : ''}
+                        {filtered.length} {language === 'en' ? `Photo${filtered.length !== 1 ? 's' : ''}` : 'புகைப்படங்கள்'}
                     </motion.p>
                 </div>
             </section>

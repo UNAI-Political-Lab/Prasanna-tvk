@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Flag, User } from 'lucide-react'
+import { Menu, X, FileText } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import logo from '../assets/logo.png'
+import { useLanguage } from '../context/LanguageContext'
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -17,77 +18,123 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    const { language, toggleLanguage } = useLanguage()
+
     const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'Biography', path: '/biography' },
-        { name: 'Services', path: '/services' },
-        { name: 'Contact', path: '/contact' },
+        { name: language === 'en' ? 'Home' : 'முகப்பு', path: '/' },
+        { name: language === 'en' ? 'About' : 'எங்களைப் பற்றி', path: '/biography' },
+        { name: language === 'en' ? 'Our Leader' : 'எங்கள் தலைவர்', path: '/biography#leader' },
+        { name: language === 'en' ? 'Services' : 'சேவைகள்', path: '/services' },
+        { name: language === 'en' ? 'Gallery' : 'புகைப்படங்கள்', path: '/services#gallery' },
+        { name: language === 'en' ? 'Contact' : 'தொடர்பு கொள்ளுங்கள்', path: '/contact' },
     ]
 
+    const isLinkActive = (linkPath) => {
+        const hashIdx = linkPath.indexOf('#')
+        const linkPathname = hashIdx !== -1 ? linkPath.substring(0, hashIdx) : linkPath
+        const linkHash = hashIdx !== -1 ? linkPath.substring(hashIdx) : ''
+
+        if (linkHash) {
+            return location.pathname === linkPathname && location.hash === linkHash
+        } else {
+            if (location.pathname !== linkPathname) return false
+            if (linkPathname === '/biography') {
+                return location.hash !== '#leader'
+            }
+            if (linkPathname === '/services') {
+                return location.hash !== '#gallery'
+            }
+            return !location.hash
+        }
+    }
 
     return (
         <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-lg py-2'
-            : 'bg-transparent py-4 md:py-6'
+            ? 'bg-white shadow-lg py-1'
+            : 'bg-white/95 backdrop-blur-md py-2'
             }`}>
-            <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-                <div className="flex items-center gap-4 flex-1">
-                    <Link to="/" className="shrink-0 group">
-                        <div className={`flex items-center justify-center px-3 md:px-4 bg-white rounded-xl transition-all duration-500 group-hover:scale-105 shadow-lg ${isScrolled ? 'h-10 md:h-12' : 'h-12 md:h-16'}`}>
-                            <div className="flex items-center gap-1.5 md:gap-2">
-                                <img
-                                    src={logo}
-                                    alt="TVK Logo"
-                                    className="h-8 md:h-14 w-auto object-contain"
-                                />
-                                <div className={`rounded-full overflow-hidden border border-tvk-red/10 transition-all duration-500 ${isScrolled ? 'w-5 h-5 md:w-8 md:h-8' : 'w-6 h-6 md:w-10 md:h-10'}`}>
+
+            {/* Main Navigation Bar */}
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="flex items-center justify-between py-2">
+                    {/* Logo + Leaders */}
+                    <div className="flex items-center gap-3">
+                        <Link to="/" className="shrink-0 flex items-center gap-2">
+                            <div className={`flex items-center gap-1 transition-all duration-500 ${isScrolled ? 'h-8 md:h-9' : 'h-10 md:h-12'}`}>
+                                <img src={logo} alt="TVK Logo" className="h-full w-auto object-contain" />
+                                <div className="hidden sm:block w-6 h-6 md:w-8 md:h-8 rounded-full overflow-hidden border border-tvk-red/10">
                                     <img src="/symbol.png" alt="TVK Symbol" className="w-full h-full object-contain" />
                                 </div>
                             </div>
+                            <div className="border-l border-gray-200 pl-2">
+                                <p className="text-xs md:text-sm font-extrabold text-tvk-red leading-tight">
+                                    {language === 'en' ? 'S. Prasanna' : 'S. பிரசன்னா'}
+                                </p>
+                                <p className="text-[8px] md:text-[9px] text-gray-500 font-medium">
+                                    {language === 'en' ? 'Tamilaga Vettri Kazhagam' : 'தமிழக வெற்றிக் கழகம்'}
+                                </p>
+                            </div>
+                        </Link>
+                        <div className={`hidden xl:block transition-all duration-500 ${isScrolled ? 'h-10' : 'h-14'}`}>
+                            <img src="/leaders.png" alt="Historic Leaders" className="h-full w-auto object-contain pl-2" />
                         </div>
-                    </Link>
-
-                    {/* Historic Leaders next to Logo */}
-                    <div className={`flex items-center justify-center shrink-0 ml-1 transition-all duration-500 ${isScrolled ? 'h-16 md:h-20' : 'h-20 md:h-28'}`}>
-                        <img
-                            src="/leaders.png"
-                            alt="Historic Leaders"
-                            className="h-full w-auto object-contain scale-110"
-                        />
                     </div>
-                </div>
 
-                {/* Desktop Menu - UI Card Style */}
-                <div className="hidden md:flex items-center gap-2 bg-tvk-red/80 backdrop-blur-xl border border-tvk-yellow/20 p-2 rounded-2xl shadow-2xl">
-                    <div className="flex items-center gap-6 px-6">
+                    {/* Desktop Nav Links */}
+                    <div className="hidden lg:flex items-center gap-1">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
-                                className={`nav-link text-sm uppercase tracking-wider font-black transition-all duration-300 ${location.pathname === link.path
-                                    ? 'text-tvk-yellow after:w-full scale-105'
-                                    : (isScrolled || location.pathname !== '/' ? 'text-tvk-dark hover:text-tvk-red hover:scale-105' : 'text-white hover:text-tvk-yellow hover:scale-105')
+                                className={`text-xs font-bold px-3 py-2 rounded-lg transition-all duration-300 ${isLinkActive(link.path)
+                                    ? 'bg-tvk-red text-white shadow-sm'
+                                    : 'text-tvk-dark/70 hover:bg-tvk-red/5 hover:text-tvk-red'
                                     }`}
                             >
                                 {link.name}
                             </Link>
                         ))}
                     </div>
-                    <Link to="/join-tvk" className="bg-white text-tvk-red border-2 border-tvk-red py-2 px-5 text-sm rounded-xl font-black hover:bg-tvk-red hover:text-white transition-colors duration-300">
-                        Join TVK
-                    </Link>
-                    <Link to="/petition" className="bg-tvk-yellow text-tvk-red py-2.5 px-6 text-sm rounded-xl font-black hover:bg-white transition-colors duration-300">
-                        Action Center
-                    </Link>
-                </div>
 
-                {/* Mobile Toggle */}
-                <button
-                    className={`md:hidden p-2 transition-colors duration-300 ${isScrolled || location.pathname !== '/' ? 'text-tvk-dark' : 'text-white'}`}
-                    onClick={() => setIsOpen(!isOpen)}
-                >
-                    {isOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
+                    {/* Desktop CTAs */}
+                    <div className="hidden lg:flex items-center gap-2">
+                        <button
+                            onClick={toggleLanguage}
+                            className="text-xs font-bold text-tvk-dark border border-gray-200 bg-gray-50 py-2 px-3 rounded-lg hover:bg-gray-100 transition-all flex items-center gap-1.5 shadow-sm mr-1"
+                        >
+                            🌐 {language === 'en' ? 'தமிழ்' : 'English'}
+                        </button>
+                        <Link
+                            to="/join-tvk"
+                            className="text-xs font-bold text-tvk-red border border-tvk-red/20 py-2 px-4 rounded-lg hover:bg-tvk-red hover:text-white transition-all"
+                        >
+                            {language === 'en' ? 'Join TVK' : 'உறுப்பினர் சேர'}
+                        </Link>
+                        <Link
+                            to="/petition"
+                            className="text-xs font-bold bg-tvk-red text-white py-2 px-4 rounded-lg hover:bg-tvk-darkRed transition-all flex items-center gap-1.5"
+                        >
+                            <FileText size={13} />
+                            {language === 'en' ? 'Complaint Portal' : 'புகார் பதிவு'}
+                        </Link>
+                    </div>
+
+                    {/* Mobile Toggle with Language Button */}
+                    <div className="flex items-center gap-2 lg:hidden">
+                        <button
+                            onClick={toggleLanguage}
+                            className="text-[10px] font-extrabold text-tvk-red bg-tvk-red/5 border border-tvk-red/10 py-1.5 px-2.5 rounded-lg shadow-sm"
+                        >
+                            🌐 {language === 'en' ? 'தமிழ்' : 'EN'}
+                        </button>
+                        <button
+                            className="p-2 text-tvk-dark"
+                            onClick={() => setIsOpen(!isOpen)}
+                        >
+                            {isOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {/* Mobile Menu */}
@@ -97,39 +144,39 @@ const Navbar = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-tvk-red/95 backdrop-blur-lg border-b border-tvk-yellow/20 overflow-hidden shadow-2xl mx-4 my-2 rounded-2xl"
+                        className="lg:hidden bg-white border-t border-gray-100 overflow-hidden shadow-xl"
                     >
-                        <div className="flex flex-col p-4 gap-3">
+                        <div className="flex flex-col p-4 gap-1">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.path}
                                     to={link.path}
-                                    className={`text-lg font-black px-5 py-4 rounded-2xl flex items-center gap-4 transition-all ${location.pathname === link.path
-                                        ? 'bg-tvk-yellow text-tvk-red shadow-lg'
-                                        : 'text-white hover:bg-white/10'
+                                    className={`text-sm font-bold px-4 py-3 rounded-xl transition-all ${isLinkActive(link.path)
+                                        ? 'bg-tvk-red text-white'
+                                        : 'text-tvk-dark/70 hover:bg-tvk-red/5'
                                         }`}
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    <span className={location.pathname === link.path ? 'text-tvk-red' : 'text-tvk-yellow'}>
-                                        {link.icon}
-                                    </span>
-                                    {link.name}
+                                    <span className="mr-2">{link.name}</span>
                                 </Link>
                             ))}
-                            <Link
-                                to="/join-tvk"
-                                className="bg-white text-tvk-red text-center py-4 rounded-2xl font-black uppercase tracking-[0.2em] shadow-lg flex items-center justify-center gap-3 border-2 border-tvk-red/20"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                <User size={20} /> Join TVK
-                            </Link>
-                            <Link
-                                to="/petition"
-                                className="bg-tvk-yellow text-tvk-red text-center py-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                <Flag size={20} /> Action Center
-                            </Link>
+                            <div className="flex gap-2 mt-3">
+                                <Link
+                                    to="/join-tvk"
+                                    className="flex-1 text-center bg-white text-tvk-red border-2 border-tvk-red py-3 rounded-xl font-bold text-sm"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {language === 'en' ? 'Join TVK' : 'உறுப்பினர் சேர'}
+                                </Link>
+                                <Link
+                                    to="/petition"
+                                    className="flex-1 text-center bg-tvk-red text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <FileText size={14} />
+                                    {language === 'en' ? 'Complaint Portal' : 'புகார் பதிவு'}
+                                </Link>
+                            </div>
                         </div>
                     </motion.div>
                 )}
