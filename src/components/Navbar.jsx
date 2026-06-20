@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, FileText } from 'lucide-react'
+import { Menu, X, FileText, Globe } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import logo from '../assets/logo.png'
 import { useLanguage } from '../context/LanguageContext'
@@ -102,7 +102,8 @@ const Navbar = () => {
                             onClick={toggleLanguage}
                             className="text-xs font-bold text-tvk-dark border border-gray-200 bg-gray-50 py-2 px-3 rounded-lg hover:bg-gray-100 transition-all flex items-center gap-1.5 shadow-sm mr-1"
                         >
-                            🌐 {language === 'en' ? 'தமிழ்' : 'English'}
+                            <Globe size={14} className="text-[#3b82f6] shrink-0" />
+                            <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
                         </button>
                         <Link
                             to="/join-tvk"
@@ -125,7 +126,8 @@ const Navbar = () => {
                             onClick={toggleLanguage}
                             className="text-[10px] font-extrabold text-tvk-red bg-tvk-red/5 border border-tvk-red/10 py-1.5 px-2.5 rounded-lg shadow-sm"
                         >
-                            🌐 {language === 'en' ? 'தமிழ்' : 'EN'}
+                            <Globe size={12} className="text-[#3b82f6] shrink-0" />
+                            <span>{language === 'en' ? 'தமிழ்' : 'EN'}</span>
                         </button>
                         <button
                             className="p-2 text-tvk-dark"

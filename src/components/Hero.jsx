@@ -77,7 +77,7 @@ const Hero = () => {
 
                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                                 <Link
-                                    to="/services"
+                                    to="/join-tvk"
                                     className="flex items-center justify-center gap-2 bg-tvk-yellow/20 backdrop-blur-sm text-tvk-yellow font-bold py-3.5 px-7 rounded-xl border border-tvk-yellow/30 hover:bg-tvk-yellow/30 transition-all text-sm"
                                 >
                                     <HelpCircle size={18} />
@@ -185,7 +185,7 @@ const Hero = () => {
 
                     <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="w-full sm:w-auto">
                         <Link
-                            to="/services"
+                            to="/join-tvk"
                             className="flex items-center justify-center gap-2 bg-tvk-yellow text-tvk-dark font-black py-3.5 px-7 rounded-xl border border-tvk-yellow hover:bg-yellow-400 transition-all text-sm shadow-md"
                         >
                             <HelpCircle size={18} className="text-tvk-red shrink-0" />

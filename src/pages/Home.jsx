@@ -5,7 +5,6 @@ import Hero from '../components/Hero'
 import StatsDashboard from '../components/StatsDashboard'
 import IssueCategories from '../components/IssueCategories'
 import ComplaintTracker from '../components/ComplaintTracker'
-import AreaMap from '../components/AreaMap'
 import QuickAccessBar from '../components/QuickAccessBar'
 import PetitionForm from '../components/PetitionForm'
 import { Link } from 'react-router-dom'
@@ -237,11 +236,8 @@ const Home = () => {
                         <div className="lg:col-span-3 space-y-8">
                             <IssueCategories />
 
-                            {/* Tracking + Map Row */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <ComplaintTracker />
-                                <AreaMap />
-                            </div>
+                            {/* Tracking Row */}
+                            <ComplaintTracker />
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react'
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react'
 import logo from '../assets/logo.png'
 import { useLanguage } from '../context/LanguageContext'
 
@@ -132,19 +132,27 @@ const Footer = () => {
                     <p>© 2026 TVK – {language === 'en' ? 'Sholinganallur ECR' : 'சோலிங்கநல்லூர் ECR'}. {language === 'en' ? 'All rights reserved.' : 'அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.'}</p>
                     <div className="flex flex-col items-center md:items-end gap-3">
                         <div className="flex gap-8">
-                            <a href="#" className="hover:text-tvk-red transition-colors">{language === 'en' ? 'Privacy Policy' : 'தனியுரிமை கொள்கை'}</a>
-                            <a href="#" className="hover:text-tvk-red transition-colors">{language === 'en' ? 'Terms of Service' : 'சேவை விதிமுறைகள்'}</a>
+                            <Link to="/privacy-policy" className="hover:text-tvk-red transition-colors">{language === 'en' ? 'Privacy Policy' : 'தனியுரிமை கொள்கை'}</Link>
+                            <Link to="/terms-of-service" className="hover:text-tvk-red transition-colors">{language === 'en' ? 'Terms of Service' : 'சேவை விதிமுறைகள்'}</Link>
                         </div>
                         <a
                             href="https://www.unaitech.com/services"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 group transition-all"
+                            className="inline-flex items-center gap-5 bg-[#FAF8F5] border border-tvk-red/10 rounded-2xl py-3 px-5 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 group shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
                         >
-                            <span className="text-[10px] uppercase tracking-widest font-black text-tvk-dark/50 group-hover:text-tvk-red transition-colors">
-                                {language === 'en' ? 'Created by' : 'உருவாக்கியது'}
-                            </span>
-                            <img src="/Unaiwebbg.png" alt="Unai Tech" className="h-14 object-contain grayscale group-hover:grayscale-0 transition-all opacity-80 group-hover:opacity-100" />
+                            <div className="flex flex-col text-left">
+                                <span className="text-[9px] uppercase tracking-[0.25em] font-extrabold text-tvk-dark/40 group-hover:text-tvk-red transition-colors">
+                                    {language === 'en' ? 'Crafted by' : 'உருவாக்கியது'}
+                                </span>
+                                <span className="text-base font-black tracking-tight leading-none mt-0.5">
+                                    <span className="text-tvk-red">UNAI</span>
+                                    <span className="text-tvk-dark">TECH</span>
+                                </span>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-[#EDEAE4] group-hover:bg-tvk-red/10 flex items-center justify-center text-tvk-red transition-colors">
+                                <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </div>
                         </a>
                     </div>
                 </div>

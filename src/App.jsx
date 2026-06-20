@@ -9,6 +9,8 @@ import Services from './pages/Services'
 import Petition from './pages/Petition'
 import JoinTVK from './pages/JoinTVK'
 import Contact from './pages/Contact'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
 
 function App() {
     const location = useLocation();
@@ -40,6 +42,8 @@ function App() {
                         <Route path="/petition" element={<Petition />} />
                         <Route path="/join-tvk" element={<JoinTVK />} />
                         <Route path="/contact" element={<Contact />} />
+                        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                        <Route path="/terms-of-service" element={<TermsOfService />} />
                     </Routes>
                 </AnimatePresence>
             </main>

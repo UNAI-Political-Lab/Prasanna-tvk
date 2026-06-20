@@ -40,7 +40,7 @@ const IssueCategories = () => {
                         viewport={{ once: true }}
                         transition={{ delay: i * 0.04 }}
                     >
-                        <Link to="/petition" className="category-card">
+                        <Link to={`/petition?category=${encodeURIComponent(cat.label)}`} className="category-card">
                             <div className={`icon-wrap ${cat.color} group-hover:text-white`}>
                                 {cat.icon}
                             </div>

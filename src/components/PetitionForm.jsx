@@ -1,10 +1,12 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, CheckCircle, AlertCircle, Paperclip, X, FileText, Image, Video, File, User, Phone, MapPin, Tag } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 
 const PetitionForm = ({ compact = false }) => {
     const { language } = useLanguage()
+    const [searchParams] = useSearchParams()
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -13,9 +15,16 @@ const PetitionForm = ({ compact = false }) => {
         phone: '',
         email: '',
         area: '',
-        title: '',
+        title: searchParams.get('category') || '',
         description: ''
     })
+
+    useEffect(() => {
+        const category = searchParams.get('category')
+        if (category) {
+            setFormData(prev => ({ ...prev, title: category }))
+        }
+    }, [searchParams])
     const [mediaFiles, setMediaFiles] = useState([])
     const [isDragging, setIsDragging] = useState(false)
     const [fileError, setFileError] = useState(null)
