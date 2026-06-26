@@ -64,7 +64,7 @@ const ComplaintTracker = () => {
     }
 
     return (
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-md p-6 md:p-8">
+        <div id="track" className="bg-white rounded-3xl border border-gray-100 shadow-md p-6 md:p-8">
             <h3 className="text-lg md:text-xl font-extrabold text-tvk-dark mb-2">
                 {language === 'en' ? 'Track Your Complaint Status' : 'உங்கள் புகாரின் நிலையை கண்காணிக்கவும்'}
             </h3>

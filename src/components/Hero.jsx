@@ -64,7 +64,7 @@ const Hero = () => {
  
                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                                 <Link
-                                    to="/petition"
+                                    to="/#track"
                                     className="flex items-center justify-center gap-2 bg-white/15 backdrop-blur-sm text-white font-bold py-3.5 px-7 rounded-xl border border-white/20 hover:bg-white/25 transition-all text-sm"
                                 >
                                     <Search size={18} />
@@ -172,7 +172,7 @@ const Hero = () => {
 
                     <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="w-full sm:w-auto">
                         <Link
-                            to="/petition"
+                            to="/#track"
                             className="flex items-center justify-center gap-2 bg-white text-tvk-dark font-bold py-3.5 px-7 rounded-xl border-2 border-tvk-red/10 hover:bg-gray-50 hover:border-tvk-red/20 transition-all text-sm shadow-sm"
                         >
                             <Search size={18} className="text-tvk-red" />
