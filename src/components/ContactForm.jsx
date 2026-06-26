@@ -1,19 +1,8 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, CheckCircle, AlertCircle } from 'lucide-react'
-import emailjs from '@emailjs/browser'
 import { useLanguage } from '../context/LanguageContext'
-
-// ─── EmailJS Configuration ───────────────────────────────────────────────────
-// 1. Sign up free at https://www.emailjs.com
-// 2. Add a service (Gmail) and connect prasannatvkmla@gmail.com
-// 3. Create an email template — use these variables in the template body:
-//      {{from_name}}, {{phone}}, {{from_email}}, {{message}}
-//    Set the "To Email" in the template to: prasannatvkmla@gmail.com
-// 4. Replace the three placeholders below with your real IDs
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'   // e.g. 'service_xxxxxxx'
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'  // e.g. 'template_xxxxxxx'
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'   // e.g. 'xxxxxxxxxxxxxxxxxxxx'
+import { contactService } from '../services/contactService'
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ContactForm = () => {
@@ -38,15 +27,10 @@ const ContactForm = () => {
         setError(null)
 
         try {
-            await emailjs.send(
-                EMAILJS_SERVICE_ID,
-                EMAILJS_TEMPLATE_ID,
-                formData,
-                EMAILJS_PUBLIC_KEY
-            )
+            await contactService.submitContactMessage(formData)
             setIsSubmitted(true)
         } catch (err) {
-            console.error('EmailJS error:', err)
+            console.error('Contact submission error:', err)
             setError(
                 language === 'en'
                     ? 'Failed to send your message. Please try again or call us directly.'

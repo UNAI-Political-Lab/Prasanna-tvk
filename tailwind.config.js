@@ -14,6 +14,9 @@ export default {
                     accentYellow: '#FCD34D',
                     dark: '#1A1A1A',
                     lightBg: '#FFFFFF',
+                    'admin-bg': '#0F172A',
+                    'admin-surface': '#1E293B',
+                    'admin-accent': '#3B82F6',
                 }
             },
             backgroundImage: {

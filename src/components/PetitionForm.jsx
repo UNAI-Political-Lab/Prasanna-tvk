@@ -1,8 +1,20 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, CheckCircle, AlertCircle, Paperclip, X, FileText, Image, Video, File, User, Phone, MapPin, Tag } from 'lucide-react'
+import { Send, CheckCircle, AlertCircle, Paperclip, X, FileText, Image, Video, File, User, Phone, MapPin, Tag, Copy, Check } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
+import { grievanceService } from '../services/grievanceService'
+
+const FALLBACK_CATEGORIES = [
+    { id: 'water', name_en: 'Water Supply', name_ta: 'குடிநீர்', icon: 'Droplets' },
+    { id: 'roads', name_en: 'Roads', name_ta: 'சாலைகள்', icon: 'Construction' },
+    { id: 'health', name_en: 'Healthcare', name_ta: 'மருத்துவ வசதிகள்', icon: 'Stethoscope' },
+    { id: 'enquiry', name_en: 'Enquiry', name_ta: 'தேர்வு விசாரணை', icon: 'Search' },
+    { id: 'rural', name_en: 'Rural Plan', name_ta: 'ஊரக அமைப்பு', icon: 'Building2' },
+    { id: 'youth', name_en: 'Youth', name_ta: 'இளைஞர்', icon: 'Users' },
+    { id: 'women', name_en: 'Women', name_ta: 'பெண்கள் புரவலர்', icon: 'HeartHandshake' },
+    { id: 'sanitation', name_en: 'Sanitation', name_ta: 'சுகாதாரம்', icon: 'Recycle' }
+]
 
 const PetitionForm = ({ compact = false }) => {
     const { language } = useLanguage()
@@ -10,21 +22,52 @@ const PetitionForm = ({ compact = false }) => {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [submittedData, setSubmittedData] = useState(null)
+    const [copied, setCopied] = useState(false)
+    const [categories, setCategories] = useState(FALLBACK_CATEGORIES)
+    
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
         email: '',
         area: '',
-        title: searchParams.get('category') || '',
+        category_id: '',
+        title: '',
         description: ''
     })
 
+    // Fetch categories on mount
     useEffect(() => {
-        const category = searchParams.get('category')
-        if (category) {
-            setFormData(prev => ({ ...prev, title: category }))
+        const fetchCategories = async () => {
+            try {
+                const dbCats = await grievanceService.getCategories()
+                if (dbCats && dbCats.length > 0) {
+                    setCategories(dbCats)
+                }
+            } catch (err) {
+                console.warn('Failed to fetch categories from database, using fallbacks.', err)
+            }
         }
-    }, [searchParams])
+        fetchCategories()
+    }, [])
+
+    // Handle query param category selection
+    useEffect(() => {
+        const categoryParam = searchParams.get('category')
+        if (categoryParam && categories.length > 0) {
+            const matched = categories.find(
+                cat => cat.name_en === categoryParam || cat.name_ta === categoryParam
+            )
+            if (matched) {
+                setFormData(prev => ({
+                    ...prev,
+                    category_id: matched.id,
+                    title: language === 'en' ? matched.name_en : matched.name_ta
+                }))
+            }
+        }
+    }, [searchParams, categories, language])
+
     const [mediaFiles, setMediaFiles] = useState([])
     const [isDragging, setIsDragging] = useState(false)
     const [fileError, setFileError] = useState(null)
@@ -74,33 +117,40 @@ const PetitionForm = ({ compact = false }) => {
         setFileError(null)
     }
 
-    // GOOGLE APPS SCRIPT WEB APP URL
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIoHOUMvA5rgy0EZnLGgw5z0_cJVT6W4l2Gt1UIUtDB-ovfHDAvTKKbeEtk7cen9SQ/exec'
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
         setError(null)
 
         try {
-            const params = new URLSearchParams()
-            for (const key in formData) {
-                params.append(key, formData[key])
-            }
-            if (mediaFiles.length > 0) {
-                params.append('attachments', mediaFiles.map(f => f.name).join(', '))
+            // Find selected category details
+            const selectedCat = categories.find(cat => cat.id === formData.category_id)
+            
+            // Prepare submission payload
+            const payload = {
+                ...formData,
+                // Ensure title has a value (either selected category name or custom title)
+                title: formData.title || (selectedCat ? (language === 'en' ? selectedCat.name_en : selectedCat.name_ta) : 'Grievance'),
+                // If it is fallback local category (UUID check), set category_id to null or try parsing
+                category_id: (formData.category_id && formData.category_id.length === 36) ? formData.category_id : null
             }
 
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: params.toString()
-            })
-
+            const result = await grievanceService.submitGrievance(payload, mediaFiles)
+            
+            setSubmittedData(result)
             setIsSubmitted(true)
+            
+            // Clear form
+            setFormData({
+                name: '',
+                phone: '',
+                email: '',
+                area: '',
+                category_id: '',
+                title: '',
+                description: ''
+            })
+            setMediaFiles([])
         } catch (err) {
             console.error('Submission error:', err)
             setError(language === 'en' ? 'Failed to submit grievance. Please try again later.' : 'புகார் சமர்ப்பிப்பதில் பிழை ஏற்பட்டது. தயவுசெய்து பின்னர் முயற்சிக்கவும்.')
@@ -110,8 +160,37 @@ const PetitionForm = ({ compact = false }) => {
     }
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value })
+        const { id, value } = e.target
+        
+        if (id === 'category_id') {
+            const selected = categories.find(cat => cat.id === value)
+            setFormData(prev => ({
+                ...prev,
+                category_id: value,
+                title: selected ? (language === 'en' ? selected.name_en : selected.name_ta) : ''
+            }))
+        } else {
+            setFormData(prev => ({ ...prev, [id]: value }))
+        }
     }
+
+    const copyReferenceId = () => {
+        if (submittedData?.reference_id) {
+            navigator.clipboard.writeText(submittedData.reference_id)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+        }
+    }
+
+    // Areas list (centralized for dropdowns)
+    const areas = [
+        { value: 'Sholinganallur', en: 'Sholinganallur', ta: 'சோலிங்கநல்லூர்' },
+        { value: 'Karapakkam', en: 'Karapakkam', ta: 'கரப்பாக்கம்' },
+        { value: 'Perungudi', en: 'Perungudi', ta: 'பெருங்குடி' },
+        { value: 'Okkiyam Thoraipakkam', en: 'Okkiyam Thoraipakkam', ta: 'ஓக்கியம் தொரைப்பாக்கம்' },
+        { value: 'Navalur', en: 'Navalur', ta: 'நாவலூர்' },
+        { value: 'ECR', en: 'ECR Corridor', ta: 'ECR' }
+    ]
 
     // Compact version for Home page sidebar
     if (compact) {
@@ -165,12 +244,11 @@ const PetitionForm = ({ compact = false }) => {
                                 className="w-full pl-10 pr-4 py-3 bg-white border-2 border-tvk-red/10 rounded-xl outline-none focus:border-tvk-red/30 text-sm font-medium transition-all appearance-none"
                             >
                                 <option value="">{language === 'en' ? 'Select Area / Location' : 'பகுதியை தேர்வு செய்யவும்'}</option>
-                                <option value="Sholinganallur">{language === 'en' ? 'Sholinganallur' : 'சோலிங்கநல்லூர்'}</option>
-                                <option value="Karapakkam">{language === 'en' ? 'Karapakkam' : 'கரப்பாக்கம்'}</option>
-                                <option value="Perungudi">{language === 'en' ? 'Perungudi' : 'பெருங்குடி'}</option>
-                                <option value="Okkiyam Thoraipakkam">{language === 'en' ? 'Okkiyam Thoraipakkam' : 'ஓக்கியம் தொரைப்பாக்கம்'}</option>
-                                <option value="Navalur">{language === 'en' ? 'Navalur' : 'நாவலூர்'}</option>
-                                <option value="ECR">{language === 'en' ? 'ECR Corridor' : 'ECR'}</option>
+                                {areas.map(a => (
+                                    <option key={a.value} value={a.value}>
+                                        {language === 'en' ? a.en : a.ta}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
@@ -178,21 +256,37 @@ const PetitionForm = ({ compact = false }) => {
                         <div className="relative">
                             <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-tvk-dark/30" />
                             <select
-                                id="title"
-                                value={formData.title}
+                                required
+                                id="category_id"
+                                value={formData.category_id}
                                 onChange={handleChange}
                                 className="w-full pl-10 pr-4 py-3 bg-white border-2 border-tvk-red/10 rounded-xl outline-none focus:border-tvk-red/30 text-sm font-medium transition-all appearance-none"
                             >
                                 <option value="">{language === 'en' ? 'Select Issue Category' : 'சிக்கலின் வகையை தேர்வு செய்க'}</option>
-                                <option value="குடிநீர்">{language === 'en' ? 'Water Supply' : 'குடிநீர்'}</option>
-                                <option value="சாலைகள்">{language === 'en' ? 'Roads' : 'சாலைகள்'}</option>
-                                <option value="மருத்துவம்">{language === 'en' ? 'Healthcare' : 'மருத்துவ வசதிகள்'}</option>
-                                <option value="சுகாதாரம்">{language === 'en' ? 'Sanitation' : 'சுகாதாரம்'}</option>
-                                <option value="இளைஞர்">{language === 'en' ? 'Youth Welfare' : 'இளைஞர் நலன்'}</option>
-                                <option value="பெண்கள் பாதுகாப்பு">{language === 'en' ? 'Women Safety' : 'பெண்கள் பாதுகாப்பு'}</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {language === 'en' ? cat.name_en : cat.name_ta}
+                                    </option>
+                                ))}
                                 <option value="other">{language === 'en' ? 'Other Issue' : 'பிற'}</option>
                             </select>
                         </div>
+
+                        {/* Custom Title Input if "other" is selected */}
+                        {formData.category_id === 'other' && (
+                            <div className="relative">
+                                <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-tvk-dark/30" />
+                                <input
+                                    required
+                                    type="text"
+                                    id="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    placeholder={language === 'en' ? 'Enter Issue Title' : 'சிக்கலின் தலைப்பை உள்ளிடுக'}
+                                    className="w-full pl-10 pr-4 py-3 bg-white border-2 border-tvk-red/10 rounded-xl outline-none focus:border-tvk-red/30 focus:ring-2 focus:ring-tvk-red/10 text-sm font-medium transition-all"
+                                />
+                            </div>
+                        )}
 
                         {/* Description */}
                         <textarea
@@ -267,8 +361,32 @@ const PetitionForm = ({ compact = false }) => {
                         <h3 className="text-xl font-bold mb-2">
                             {language === 'en' ? 'Grievance Registered Successfully!' : 'புகார் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!'}
                         </h3>
-                        <p className="text-tvk-dark/60 text-sm mb-4">
-                            {language === 'en' ? 'Thank you. Our volunteer team will review it and contact you soon.' : 'நன்றி. நாங்கள் விரைவில் உங்களைத் தொடர்பு கொள்வோம்.'}
+                        
+                        {submittedData?.reference_id && (
+                            <div className="bg-tvk-red/5 border border-tvk-red/10 rounded-xl p-3 my-3 w-full flex flex-col items-center gap-1">
+                                <span className="text-[10px] uppercase tracking-wider text-tvk-red font-bold">
+                                    {language === 'en' ? 'Your Complaint ID' : 'உங்கள் புகார் எண்'}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-base font-extrabold text-tvk-dark select-all">
+                                        {submittedData.reference_id}
+                                    </span>
+                                    <button 
+                                        onClick={copyReferenceId}
+                                        type="button" 
+                                        className="p-1 hover:bg-tvk-red/10 rounded transition-colors text-tvk-red"
+                                        title={language === 'en' ? 'Copy Complaint ID' : 'நகலெடுக்க'}
+                                    >
+                                        {copied ? <Check size={16} /> : <Copy size={16} />}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        <p className="text-tvk-dark/60 text-xs mb-4">
+                            {language === 'en' 
+                                ? 'Use the ID above in the Complaint Tracker on the homepage to monitor resolution progress.' 
+                                : 'புகார் தீர்க்கப்படும் முன்னேற்றத்தைக் கண்காணிக்க முகப்பு பக்கத்தில் உள்ள கண்காணிப்பானில் இந்த எண்ணைப் பயன்படுத்தவும்.'}
                         </p>
                         <button onClick={() => setIsSubmitted(false)} className="text-tvk-red font-bold text-sm hover:underline">
                             {language === 'en' ? 'Submit Another Grievance' : 'மற்றொரு புகார் சமர்ப்பிக்க'}
@@ -342,31 +460,62 @@ const PetitionForm = ({ compact = false }) => {
                                 <label htmlFor="area" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
                                     {language === 'en' ? 'Area / Location' : 'பகுதி / இடம்'}
                                 </label>
-                                <input
+                                <select
                                     required
-                                    type="text"
                                     id="area"
                                     value={formData.area}
                                     onChange={handleChange}
-                                    placeholder={language === 'en' ? 'Enter your ward or area' : 'எந்த பகுதியில் இருந்து?'}
-                                    className="w-full bg-white border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm"
-                                />
+                                    className="w-full bg-white border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm appearance-none cursor-pointer"
+                                >
+                                    <option value="">{language === 'en' ? 'Select Area / Location' : 'பகுதியை தேர்வு செய்யவும்'}</option>
+                                    {areas.map(a => (
+                                        <option key={a.value} value={a.value}>
+                                            {language === 'en' ? a.en : a.ta}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
-                        <div className="space-y-3">
-                            <label htmlFor="title" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
-                                {language === 'en' ? 'Grievance Title' : 'புகார் தலைப்பு'}
-                            </label>
-                            <input
-                                required
-                                type="text"
-                                id="title"
-                                value={formData.title}
-                                onChange={handleChange}
-                                placeholder={language === 'en' ? 'Enter a brief title of the grievance' : 'உங்கள் புகாரின் சுருக்கமான தலைப்பு'}
-                                className="w-full bg-white border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm"
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Category Dropdown */}
+                            <div className="space-y-3">
+                                <label htmlFor="category_id" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
+                                    {language === 'en' ? 'Grievance Category' : 'புகார் வகை'}
+                                </label>
+                                <select
+                                    required
+                                    id="category_id"
+                                    value={formData.category_id}
+                                    onChange={handleChange}
+                                    className="w-full bg-white border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm appearance-none cursor-pointer"
+                                >
+                                    <option value="">{language === 'en' ? 'Select Category' : 'வகை தேர்ந்தெடுக்கவும்'}</option>
+                                    {categories.map(cat => (
+                                        <option key={cat.id} value={cat.id}>
+                                            {language === 'en' ? cat.name_en : cat.name_ta}
+                                        </option>
+                                    ))}
+                                    <option value="other">{language === 'en' ? 'Other Issue' : 'பிற'}</option>
+                                </select>
+                            </div>
+
+                            {/* Grievance Title */}
+                            <div className="space-y-3">
+                                <label htmlFor="title" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
+                                    {language === 'en' ? 'Grievance Title' : 'புகார் தலைப்பு'}
+                                </label>
+                                <input
+                                    required
+                                    type="text"
+                                    id="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    disabled={formData.category_id !== 'other' && formData.category_id !== ''}
+                                    placeholder={language === 'en' ? 'Enter a brief title of the grievance' : 'உங்கள் புகாரின் சுருக்கமான தலைப்பு'}
+                                    className="w-full bg-white border-2 border-tvk-red/5 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/20 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-100"
+                                />
+                            </div>
                         </div>
 
                         <div className="space-y-3">
@@ -521,6 +670,33 @@ const PetitionForm = ({ compact = false }) => {
                         <h2 className="text-3xl font-bold mb-4">
                             {language === 'en' ? 'Grievance Registered Successfully!' : 'புகார் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!'}
                         </h2>
+
+                        {submittedData?.reference_id && (
+                            <div className="bg-tvk-red/5 border border-tvk-red/10 rounded-2xl p-6 my-6 max-w-md w-full flex flex-col items-center gap-2 shadow-sm">
+                                <span className="text-xs uppercase tracking-widest text-tvk-red font-black">
+                                    {language === 'en' ? 'Your Unique Complaint ID' : 'உங்கள் தனித்துவமான புகார் எண்'}
+                                </span>
+                                <div className="flex items-center gap-3 mt-1 bg-white px-5 py-3 rounded-xl border border-gray-100 shadow-inner">
+                                    <span className="text-2xl font-black text-tvk-dark select-all tracking-wider font-mono">
+                                        {submittedData.reference_id}
+                                    </span>
+                                    <button 
+                                        onClick={copyReferenceId}
+                                        type="button" 
+                                        className="p-2 hover:bg-tvk-red/10 rounded-lg transition-colors text-tvk-red"
+                                        title={language === 'en' ? 'Copy Complaint ID' : 'நகலெடுக்க'}
+                                    >
+                                        {copied ? <Check size={20} /> : <Copy size={20} />}
+                                    </button>
+                                </div>
+                                <p className="text-xs text-tvk-dark/50 mt-2 text-center leading-relaxed">
+                                    {language === 'en'
+                                        ? 'Please save this ID to track your complaint status on the homepage tracker.'
+                                        : 'உங்கள் புகாரின் நிலையைக் கண்காணிக்க இந்த எண்ணைச் சேமித்து முகப்பு பக்கத்தில் உள்ள கண்காணிப்பானில் பயன்படுத்தவும்.'}
+                                </p>
+                            </div>
+                        )}
+
                         <p className="text-tvk-dark/60 max-w-md mx-auto mb-10 text-lg">
                             {language === 'en' 
                                 ? 'Thank you for raising your voice. We have securely registered your grievance and our ward volunteer network will review it shortly.' 

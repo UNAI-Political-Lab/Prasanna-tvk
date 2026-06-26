@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, CheckCircle, AlertCircle, User, Phone, Mail, Calendar, MapPin, GraduationCap, MessageSquare, CreditCard, Hash } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { membershipService } from '../services/membershipService'
 
 const JoinTVKForm = () => {
     const { language } = useLanguage()
@@ -21,31 +22,13 @@ const JoinTVKForm = () => {
         message: ''
     })
 
-    // Using the same SCRIPT_URL as PetitionForm for now, 
-    // though in a real scenario this might point to a different sheet/endpoint
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIoHOUMvA5rgy0EZnLGgw5z0_cJVT6W4l2Gt1UIUtDB-ovfHDAvTKKbeEtk7cen9SQ/exec'
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
         setError(null)
 
         try {
-            const params = new URLSearchParams()
-            params.append('formType', 'Membership') // Distinguish from Petition
-            for (const key in formData) {
-                params.append(key, formData[key])
-            }
-
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: params.toString()
-            })
-
+            await membershipService.submitMembership(formData)
             setIsSubmitted(true)
         } catch (err) {
             console.error('Submission error:', err)

@@ -9,7 +9,7 @@ const Hero = () => {
     const candidateImg = "/candidate.jpeg"
 
     return (
-        <section className="relative min-h-[85vh] lg:min-h-[80vh] flex items-center pt-28 sm:pt-32 lg:pt-36 overflow-hidden bg-tvk-dark">
+        <section className="relative min-h-[85vh] lg:min-h-[80vh] flex items-center pt-20 sm:pt-28 lg:pt-36 pb-8 lg:pb-0 overflow-hidden bg-tvk-dark">
             {/* Background Video */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <video
@@ -25,9 +25,9 @@ const Hero = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-tvk-red/80 via-tvk-red/50 to-transparent z-10" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-10" />
             </div>
-
+ 
             <div className="container mx-auto px-4 md:px-6 relative z-20">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-8 lg:gap-12">
                     {/* Left Content */}
                     <motion.div
                         initial={{ opacity: 0, x: -40 }}
@@ -36,17 +36,17 @@ const Hero = () => {
                         className="flex-1 text-center lg:text-left"
                     >
                         {/* Tagline */}
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-3 leading-[1.15] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-2 sm:mb-3 leading-[1.15] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
                             {language === 'en' ? 'Your Voice.' : 'உங்கள் குரல்.'}
                             <br />
                             <span className="text-tvk-yellow">{language === 'en' ? 'Our Responsibility.' : 'எங்கள் பொறுப்பு.'}</span>
                         </h1>
-                        <p className="text-white/80 text-base md:text-lg mb-8 max-w-xl leading-relaxed font-medium">
+                        <p className="text-white/80 text-sm sm:text-base md:text-lg mb-4 sm:mb-8 max-w-xl leading-relaxed font-medium">
                             {language === 'en' 
                                 ? 'Your voice, our responsibility. Together, let us build a better Sholinganallur ECR.' 
                                 : 'உங்கள் குரல், எங்கள் பொறுப்பு. இணைந்து, சிறந்த சோலிங்கநல்லூர் ECR-ஐ உருவாக்குவோம்.'}
                         </p>
-
+ 
                         {/* CTA Buttons */}
                         <div className="hidden lg:flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
@@ -61,7 +61,7 @@ const Hero = () => {
                                     </div>
                                 </Link>
                             </motion.div>
-
+ 
                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                                 <Link
                                     to="/petition"
@@ -74,7 +74,7 @@ const Hero = () => {
                                     </div>
                                 </Link>
                             </motion.div>
-
+ 
                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                                 <Link
                                     to="/join-tvk"
@@ -89,7 +89,7 @@ const Hero = () => {
                             </motion.div>
                         </div>
                     </motion.div>
-
+ 
                     {/* Right Content - MLA Portrait + Quote */}
                     <motion.div
                         initial={{ opacity: 0, x: 40 }}
@@ -97,10 +97,10 @@ const Hero = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="flex-shrink-0 w-full lg:w-auto max-w-[450px]"
                     >
-                        <div className="bg-white/10 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-white/15 shadow-2xl">
+                        <div className="bg-white/10 backdrop-blur-md rounded-[32px] p-4 sm:p-8 border border-white/15 shadow-2xl">
                             {/* Candidate info */}
-                            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6 text-center sm:text-left">
-                                <div className="w-24 h-24 sm:w-28 md:w-32 sm:h-28 md:h-32 rounded-2xl overflow-hidden border-4 border-tvk-yellow shadow-xl bg-white shrink-0">
+                            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4 sm:mb-6 text-center sm:text-left">
+                                <div className="w-20 h-20 sm:w-28 md:w-32 sm:h-20 md:h-32 rounded-2xl overflow-hidden border-4 border-tvk-yellow shadow-xl bg-white shrink-0">
                                     <img
                                         src={candidateImg}
                                         alt={language === 'en' ? 'S. Prasanna' : 'S. பிரசன்னா'}
@@ -108,19 +108,19 @@ const Hero = () => {
                                     />
                                 </div>
                                 <div>
-                                    <h2 className="text-white font-black text-xl sm:text-2xl md:text-3xl leading-tight">
+                                    <h2 className="text-white font-black text-lg sm:text-2xl md:text-3xl leading-tight">
                                         {language === 'en' ? 'S. Prasanna' : 'S. பிரசன்னா'}
                                     </h2>
-                                    <p className="text-tvk-yellow text-xs sm:text-sm md:text-base font-extrabold mt-1">
+                                    <p className="text-tvk-yellow text-[11px] sm:text-sm md:text-base font-extrabold mt-1">
                                         {language === 'en' ? 'Sholinganallur North Zone Secretary' : 'சோலிங்கநல்லூர் வட மண்டல செயலாளர்'}
                                     </p>
                                 </div>
                             </div>
-
+ 
                             {/* Quote */}
-                            <div className="relative mb-6">
+                            <div className="relative mb-4 sm:mb-6">
                                 <span className="text-tvk-yellow text-5xl sm:text-7xl font-black leading-none absolute -top-3 sm:-top-5 -left-1 sm:-left-2 opacity-40">"</span>
-                                <p className="text-white/95 text-sm sm:text-base md:text-lg leading-relaxed pl-6 sm:pl-8 italic font-semibold">
+                                <p className="text-white/95 text-xs sm:text-base md:text-lg leading-relaxed pl-6 sm:pl-8 italic font-semibold">
                                     {language === 'en' ? (
                                         <>
                                             Your Trust,
@@ -138,9 +138,9 @@ const Hero = () => {
                                     )}
                                 </p>
                             </div>
-
+ 
                             {/* Leaders Row */}
-                            <div className="flex items-center justify-center sm:justify-start gap-3 sm:gap-4 mt-6 pt-5 border-t border-white/10">
+                            <div className="flex items-center justify-center sm:justify-start gap-3 sm:gap-4 mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-white/10">
                                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-tvk-yellow bg-white shrink-0">
                                     <img src="/anandtvk.png" alt="Anand TVK" className="w-full h-full object-cover" />
                                 </div>

@@ -5,9 +5,9 @@ import { useLanguage } from '../context/LanguageContext'
 
 const TimelineItem = ({ year, title, description, icon, side }) => {
     return (
-        <div className={`mb-12 flex justify-between items-center w-full ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
+        <div className={`mb-12 flex justify-start md:justify-between items-center w-full ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
             <div className="hidden md:block w-5/12"></div>
-            <div className="z-20 flex items-center order-1 bg-white shadow-2xl w-14 h-14 rounded-full border-4 border-tvk-yellow group-hover:scale-110 transition-transform duration-500 shrink-0 md:mx-0">
+            <div className="z-20 flex items-center justify-center bg-white shadow-2xl w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-tvk-yellow group-hover:scale-110 transition-transform duration-500 shrink-0 md:mx-0">
                 <div className="mx-auto text-tvk-red">
                     {icon}
                 </div>
@@ -17,13 +17,13 @@ const TimelineItem = ({ year, title, description, icon, side }) => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="order-1 glass-card w-[calc(100%-4rem)] md:w-5/12 px-6 md:px-8 py-6 md:py-8 ml-4 md:ml-0"
+                className="glass-card flex-1 md:flex-initial md:w-5/12 px-5 md:px-8 py-5 md:py-8 ml-4 md:ml-0"
             >
                 <span className="mb-4 font-black text-tvk-red text-xs flex items-center gap-2 uppercase tracking-widest bg-tvk-red/5 w-fit px-3 py-1 rounded-full">
                     <Calendar size={14} /> {year}
                 </span>
-                <h4 className="mb-4 font-black text-2xl text-tvk-dark">{title}</h4>
-                <p className="text-base leading-relaxed text-tvk-dark/60 font-medium">
+                <h4 className="mb-4 font-black text-xl md:text-2xl text-tvk-dark">{title}</h4>
+                <p className="text-sm md:text-base leading-relaxed text-tvk-dark/60 font-medium">
                     {description}
                 </p>
             </motion.div>
@@ -74,9 +74,9 @@ const BiographyTimeline = () => {
     ]
 
     return (
-        <div className="relative wrap overflow-hidden p-10 h-full">
+        <div className="relative wrap overflow-hidden px-4 md:px-10 py-10 h-full">
             <div className="absolute border-opacity-20 border-tvk-red h-full border-2 left-1/2 -translate-x-1/2 hidden md:block"></div>
-            <div className="absolute border-opacity-20 border-tvk-red h-full border-2 left-10 md:hidden"></div>
+            <div className="absolute border-opacity-20 border-tvk-red h-full border-2 left-[40px] md:hidden"></div>
 
             {events.map((event, index) => (
                 <TimelineItem

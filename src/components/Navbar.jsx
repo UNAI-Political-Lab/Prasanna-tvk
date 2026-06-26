@@ -66,7 +66,7 @@ const Navbar = () => {
                                     <img src="/symbol.png" alt="TVK Symbol" className="w-full h-full object-contain" />
                                 </div>
                             </div>
-                            <div className="border-l border-gray-200 pl-2">
+                            <div className="hidden sm:block border-l border-gray-200 pl-2">
                                 <p className="text-xs md:text-sm font-extrabold text-tvk-red leading-tight">
                                     {language === 'en' ? 'S. Prasanna' : 'S. பிரசன்னா'}
                                 </p>
@@ -124,13 +124,13 @@ const Navbar = () => {
                     <div className="flex items-center gap-2 lg:hidden">
                         <button
                             onClick={toggleLanguage}
-                            className="text-[10px] font-extrabold text-tvk-red bg-tvk-red/5 border border-tvk-red/10 py-1.5 px-2.5 rounded-lg shadow-sm"
+                            className="text-[10px] font-extrabold text-tvk-red bg-tvk-red/5 border border-tvk-red/10 py-1.5 px-2.5 rounded-lg shadow-sm flex items-center gap-1 shrink-0"
                         >
                             <Globe size={12} className="text-[#3b82f6] shrink-0" />
                             <span>{language === 'en' ? 'தமிழ்' : 'EN'}</span>
                         </button>
                         <button
-                            className="p-2 text-tvk-dark"
+                            className="p-2 text-tvk-dark shrink-0"
                             onClick={() => setIsOpen(!isOpen)}
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}

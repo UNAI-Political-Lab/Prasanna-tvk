@@ -12,8 +12,19 @@ import Contact from './pages/Contact'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 
+// Admin imports
+import ProtectedRoute from './components/admin/ProtectedRoute'
+import AdminLayout from './components/admin/AdminLayout'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminGrievances from './pages/admin/AdminGrievances'
+import AdminMemberships from './pages/admin/AdminMemberships'
+import AdminMessages from './pages/admin/AdminMessages'
+import AdminNotifications from './pages/admin/AdminNotifications'
+
 function App() {
     const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith('/admin');
 
     useEffect(() => {
         if (location.hash) {
@@ -30,6 +41,25 @@ function App() {
         }
     }, [location]);
 
+    // Admin routes — rendered without public Navbar/Footer
+    if (isAdminRoute) {
+        return (
+            <Routes location={location}>
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<ProtectedRoute />}>
+                    <Route element={<AdminLayout />}>
+                        <Route index element={<AdminDashboard />} />
+                        <Route path="grievances" element={<AdminGrievances />} />
+                        <Route path="memberships" element={<AdminMemberships />} />
+                        <Route path="messages" element={<AdminMessages />} />
+                        <Route path="notifications" element={<AdminNotifications />} />
+                    </Route>
+                </Route>
+            </Routes>
+        )
+    }
+
+    // Public routes
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
