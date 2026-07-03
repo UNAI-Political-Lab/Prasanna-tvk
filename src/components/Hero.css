@@ -1,0 +1,251 @@
+/* ===== Hero Section Custom Styles ===== */
+
+/* --- Gold Wave Background Pattern --- */
+.hero-gold-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 180px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-gold-wave svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Red Bottom Ribbon Curve --- */
+.hero-red-ribbon {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* --- Radial Glow Behind Politician --- */
+.hero-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* --- Floating Particles --- */
+.hero-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(216, 156, 0, 0.3);
+    pointer-events: none;
+}
+
+.hero-particle:nth-child(1) {
+    left: 60%;
+    bottom: 20%;
+    animation: particleDrift 10s linear infinite;
+    animation-delay: 0s;
+}
+
+.hero-particle:nth-child(2) {
+    left: 70%;
+    bottom: 10%;
+    width: 6px;
+    height: 6px;
+    background: rgba(165, 0, 0, 0.15);
+    animation: particleDrift 14s linear infinite;
+    animation-delay: 3s;
+}
+
+.hero-particle:nth-child(3) {
+    left: 55%;
+    bottom: 30%;
+    width: 3px;
+    height: 3px;
+    animation: particleDrift 11s linear infinite;
+    animation-delay: 5s;
+}
+
+.hero-particle:nth-child(4) {
+    left: 75%;
+    bottom: 15%;
+    width: 5px;
+    height: 5px;
+    background: rgba(244, 208, 111, 0.3);
+    animation: particleDrift 13s linear infinite;
+    animation-delay: 2s;
+}
+
+.hero-particle:nth-child(5) {
+    left: 65%;
+    bottom: 5%;
+    width: 3px;
+    height: 3px;
+    background: rgba(165, 0, 0, 0.12);
+    animation: particleDrift 15s linear infinite;
+    animation-delay: 7s;
+}
+
+@keyframes particleDrift {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-450px) translateX(50px);
+        opacity: 0;
+    }
+}
+
+/* --- Soft abstract wave pattern overlay --- */
+.hero-wave-pattern {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* --- Floating photo card rotation --- */
+.hero-floating-photo {
+    transform: rotate(4deg);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-floating-photo:hover {
+    transform: rotate(0deg) scale(1.08);
+    box-shadow: 0 30px 60px rgba(165, 0, 0, 0.25);
+}
+
+/* --- Leaders strip card --- */
+.hero-leaders-strip {
+    backdrop-filter: blur(8px);
+}
+
+/* --- CTA Card styles --- */
+.hero-cta-card {
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-cta-card:hover {
+    transform: translateY(-4px);
+}
+
+.hero-cta-card-red {
+    background: linear-gradient(135deg, #A50000, #C61F1F);
+    color: white;
+}
+
+.hero-cta-card-red:hover {
+    box-shadow: 0 12px 40px rgba(165, 0, 0, 0.35);
+}
+
+.hero-cta-card-white {
+    background: white;
+    color: #1F1F1F;
+    border: 1.5px solid #e5e5e5;
+}
+
+.hero-cta-card-white:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    border-color: #A50000;
+}
+
+.hero-cta-card-gold {
+    background: linear-gradient(135deg, #D89C00, #F4D06F);
+    color: white;
+}
+
+.hero-cta-card-gold:hover {
+    box-shadow: 0 12px 40px rgba(216, 156, 0, 0.35);
+}
+
+/* --- Flag gentle wave --- */
+.hero-flag {
+    transform-origin: bottom center;
+    animation: flagGentle 4s ease-in-out infinite;
+}
+
+@keyframes flagGentle {
+    0%, 100% {
+        transform: rotate(-2deg) scaleX(1);
+    }
+    25% {
+        transform: rotate(1deg) scaleX(1.01);
+    }
+    50% {
+        transform: rotate(2deg) scaleX(1.02);
+    }
+    75% {
+        transform: rotate(0deg) scaleX(1.01);
+    }
+}
+
+/* --- Glow pulse behind politician --- */
+.hero-glow-pulse {
+    animation: glowPulseCustom 4s ease-in-out infinite;
+}
+
+@keyframes glowPulseCustom {
+    0%, 100% {
+        opacity: 0.35;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
+/* --- Party ribbon badge --- */
+.hero-ribbon-badge {
+    background: linear-gradient(135deg, #A50000, #C61F1F);
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+    padding: 8px 28px 8px 16px;
+}
+
+/* --- Responsive typography scale --- */
+@media (max-width: 768px) {
+    .hero-heading-name {
+        font-size: 2.5rem !important;
+        letter-spacing: 0.02em;
+    }
+    .hero-heading-title {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-heading-name {
+        font-size: 2rem !important;
+    }
+    .hero-heading-title {
+        font-size: 0.85rem !important;
+    }
+}
+
+/* --- Motto banner --- */
+.hero-motto-banner {
+    background: linear-gradient(135deg, #A50000, #c41e1e);
+    clip-path: polygon(3% 0, 100% 0, 97% 100%, 0% 100%);
+}
