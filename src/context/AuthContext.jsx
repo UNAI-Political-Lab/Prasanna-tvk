@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
 
 const AuthContext = createContext(null)
 
@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true)
 
     const fetchAdminRole = useCallback(async (userId) => {
+        if (!isSupabaseConfigured) return null
         try {
             // Use RPC function (SECURITY DEFINER) to bypass RLS
             const { data, error } = await supabase.rpc('get_my_admin_role')
@@ -28,6 +29,12 @@ export function AuthProvider({ children }) {
     }, [])
 
     useEffect(() => {
+        // If Supabase is not configured, skip auth entirely
+        if (!isSupabaseConfigured) {
+            setLoading(false)
+            return
+        }
+
         // Check initial session
         const initAuth = async () => {
             try {

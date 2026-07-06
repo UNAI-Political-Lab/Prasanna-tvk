@@ -1,10 +1,14 @@
-import { supabase } from '../lib/supabaseClient'
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
 
 export const membershipService = {
     /**
      * Submit membership application
      */
     async submitMembership(formData) {
+        if (!isSupabaseConfigured) {
+            throw new Error('Supabase is not configured. Cannot submit memberships in offline mode.')
+        }
+
         const { data, error } = await supabase
             .from('memberships')
             .insert({

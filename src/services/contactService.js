@@ -1,10 +1,14 @@
-import { supabase } from '../lib/supabaseClient'
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
 
 export const contactService = {
     /**
      * Submit a contact message
      */
     async submitContactMessage(formData) {
+        if (!isSupabaseConfigured) {
+            throw new Error('Supabase is not configured. Cannot submit contact messages in offline mode.')
+        }
+
         const { data, error } = await supabase
             .from('contact_messages')
             .insert({

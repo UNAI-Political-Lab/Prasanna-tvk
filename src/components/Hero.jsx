@@ -59,7 +59,7 @@ const BackgroundGradients = () => (
 
 /** Top-center leaders and motto composite image */
 const TopLeadersMotto = () => (
-    <div className="absolute top-24 sm:top-28 left-1/2 -translate-x-1/2 z-30 w-[110px] sm:w-[140px] md:w-[185px] lg:w-[230px] pointer-events-none">
+    <div className="hidden lg:block absolute top-24 sm:top-28 left-1/2 -translate-x-1/2 z-30 w-[110px] sm:w-[140px] md:w-[185px] lg:w-[230px] pointer-events-none">
         <motion.div
             variants={popIn}
             initial="hidden"
@@ -67,7 +67,7 @@ const TopLeadersMotto = () => (
             custom={0.3}
         >
             <img
-                src="/tvk-leaders-motto.png"
+                src="/tvk-leaders-motto.webp"
                 alt="TVK Leaders and Motto"
                 className="w-full h-auto object-contain drop-shadow-sm"
                 loading="eager"
@@ -224,10 +224,10 @@ const LeadersRibbonLeft = () => (
         initial="hidden"
         animate="visible"
         custom={0.2}
-        className="absolute top-24 left-2 sm:left-4 lg:left-12 z-20 w-[90px] sm:w-[125px] md:w-[155px] lg:w-[180px] pointer-events-none"
+        className="hidden lg:block absolute top-24 left-2 sm:left-4 lg:left-12 z-20 w-[90px] sm:w-[125px] md:w-[155px] lg:w-[180px] pointer-events-none"
     >
         <img
-            src="/tvk-leaders-ribbon.png"
+            src="/tvk-leaders-ribbon.webp"
             alt="TVK Leaders and District Ribbon Banner"
             className="w-full h-auto object-contain drop-shadow-md"
             loading="eager"
@@ -242,10 +242,10 @@ const LeadersRightCorner = () => (
         initial="hidden"
         animate="visible"
         custom={0.2}
-        className="absolute top-24 right-2 sm:right-4 lg:right-12 z-20 w-[90px] sm:w-[125px] md:w-[155px] lg:w-[180px] pointer-events-none"
+        className="hidden lg:block absolute top-24 right-2 sm:right-4 lg:right-12 z-20 w-[90px] sm:w-[125px] md:w-[155px] lg:w-[180px] pointer-events-none"
     >
         <img
-            src="/tvk-leader-right.png"
+            src="/tvk-leader-right.webp"
             alt="TVK Leader Right"
             className="w-full h-auto object-contain drop-shadow-sm"
             loading="eager"
@@ -268,9 +268,9 @@ const PoliticianImageWithFlag = () => (
             className="relative z-[5] w-[95%] sm:w-[85%] lg:w-full max-w-[560px] flex items-end pointer-events-none"
         >
             <img
-                src="/prasanna-flag.png"
+                src="/prasanna-flag.webp"
                 alt="S. Prasanna with TVK Flag"
-                className="w-full h-auto object-contain -mt-[22%] sm:-mt-[18%] lg:mt-0 pointer-events-none"
+                className="w-full h-auto object-contain pointer-events-none"
                 loading="eager"
             />
         </motion.div>
@@ -297,7 +297,7 @@ const Hero = () => {
     return (
         <section
             id="hero"
-            className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-center pt-24 lg:pt-20 pb-0 overflow-hidden"
+            className="relative min-h-[90vh] lg:min-h-screen flex items-start lg:items-center justify-center pt-[76px] md:pt-[80px] lg:pt-20 pb-0 overflow-hidden"
             style={{
                 backgroundImage: 'url(/hero-bg.png)',
                 backgroundSize: 'cover',
@@ -324,7 +324,7 @@ const Hero = () => {
                     <div className="flex-shrink-0 w-[48%] text-left items-start flex flex-col pb-16 -translate-y-16">
                         <HeroHeading language={language} />
                         <HeroParagraph language={language} />
-                        
+
                         <div className="w-full">
                             <CTACards language={language} />
                         </div>
@@ -340,7 +340,35 @@ const Hero = () => {
                 </div>
 
                 {/* ── Mobile Layout (under lg) ── */}
-                <div className="flex lg:hidden flex-col items-center gap-6 pt-24 sm:pt-28 md:pt-32 pb-12">
+                <div className="flex lg:hidden flex-col items-center gap-6 pt-2 pb-12">
+                    {/* Top Leaders Row using Flexbox (No overlays) */}
+                    <div className="w-full max-w-3xl flex flex-row items-center justify-between gap-4 px-2 sm:px-6 md:px-8 mb-2">
+                        {/* Left Ribbon */}
+                        <div className="w-[25%] sm:w-[22%] max-w-[130px]">
+                            <img
+                                src="/tvk-leaders-ribbon.webp"
+                                alt="TVK Leaders and District Ribbon Banner"
+                                className="w-full h-auto object-contain drop-shadow-md"
+                            />
+                        </div>
+                        {/* Center Motto */}
+                        <div className="w-[42%] sm:w-[38%] max-w-[200px]">
+                            <img
+                                src="/tvk-leaders-motto.webp"
+                                alt="TVK Leaders and Motto"
+                                className="w-full h-auto object-contain drop-shadow-sm"
+                            />
+                        </div>
+                        {/* Right Leader */}
+                        <div className="w-[25%] sm:w-[22%] max-w-[130px]">
+                            <img
+                                src="/tvk-leader-right.webp"
+                                alt="TVK Leader Right"
+                                className="w-full h-auto object-contain drop-shadow-sm"
+                            />
+                        </div>
+                    </div>
+
                     {/* 1. Politician Image + Standing Card */}
                     <div className="w-full relative flex flex-col items-center justify-center">
                         <PoliticianImageWithFlag />

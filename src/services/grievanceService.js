@@ -1,10 +1,14 @@
-import { supabase } from '../lib/supabaseClient'
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
 
 export const grievanceService = {
     /**
      * Fetch all active categories from Supabase
      */
     async getCategories() {
+        if (!isSupabaseConfigured) {
+            return null // Let callers fall back to defaults
+        }
+
         const { data, error } = await supabase
             .from('complaint_categories')
             .select('*')
@@ -22,6 +26,10 @@ export const grievanceService = {
      * Submit a grievance, upload files to Supabase Storage, and trigger WhatsApp notification
      */
     async submitGrievance(formData, files = []) {
+        if (!isSupabaseConfigured) {
+            throw new Error('Supabase is not configured. Cannot submit grievances in offline mode.')
+        }
+
         // 1. Insert grievance record to generate ID
         const { data: grievance, error: insertError } = await supabase
             .from('grievances')
@@ -147,6 +155,10 @@ export const grievanceService = {
      * Track a grievance by its reference ID
      */
     async trackGrievance(referenceId) {
+        if (!isSupabaseConfigured) {
+            throw new Error('Supabase is not configured. Cannot track grievances in offline mode.')
+        }
+
         const { data, error } = await supabase
             .from('grievances')
             .select('*, complaint_categories(name_en, name_ta)')
@@ -164,6 +176,10 @@ export const grievanceService = {
      * Get live grievance statistics via Postgres function RPC
      */
     async getGrievanceStats() {
+        if (!isSupabaseConfigured) {
+            return null // Let callers fall back to defaults
+        }
+
         const { data, error } = await supabase.rpc('get_grievance_stats')
 
         if (error) {
