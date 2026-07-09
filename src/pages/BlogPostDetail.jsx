@@ -186,8 +186,8 @@ const BlogPostDetail = () => {
                         </div>
 
                         <h1 
-                            className="text-2xl md:text-4xl lg:text-5xl font-bold text-tvk-dark leading-[1.8] md:leading-[1.8]"
-                            style={{ fontFamily: "'Noto Sans Tamil', 'Inter', sans-serif" }}
+                            className="text-2xl md:text-4xl lg:text-5xl font-bold text-tvk-dark"
+                            style={{ fontFamily: "'Noto Sans Tamil', 'Inter', sans-serif", lineHeight: '1.5' }}
                         >
                             {blog.title}
                         </h1>

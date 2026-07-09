@@ -98,8 +98,8 @@ export const BlogCard = ({ blog, language, onDelete, isAdminView = false }) => {
                         </div>
 
                         <h3 
-                            className="text-lg font-bold text-tvk-dark leading-[1.7] mb-2 group-hover:text-tvk-red transition-colors duration-300 line-clamp-2"
-                            style={{ fontFamily: "'Noto Sans Tamil', 'Inter', sans-serif" }}
+                            className="text-lg font-bold text-tvk-dark mb-2 group-hover:text-tvk-red transition-colors duration-300 line-clamp-2"
+                            style={{ fontFamily: "'Noto Sans Tamil', 'Inter', sans-serif", lineHeight: '1.5' }}
                         >
                             {blog.title}
                         </h3>
@@ -178,7 +178,10 @@ export const BlogDetailModal = ({ blog, language, onClose }) => {
                         </span>
                     </div>
 
-                    <h1 className="text-2xl md:text-3xl font-black text-tvk-dark leading-tight mb-6">
+                    <h1 
+                        className="text-2xl md:text-3xl font-black text-tvk-dark mb-6"
+                        style={{ fontFamily: "'Noto Sans Tamil', 'Inter', sans-serif", lineHeight: '1.5' }}
+                    >
                         {blog.title}
                     </h1>
 
