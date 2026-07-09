@@ -29,16 +29,21 @@ export function AuthProvider({ children }) {
     }, [])
 
     useEffect(() => {
-        // Load persisted mock admin user if available
+        // Load persisted mock admin user if available, but only if Supabase is offline
         const storedUser = localStorage.getItem('tvk_admin_user')
         if (storedUser) {
-            try {
-                const parsed = JSON.parse(storedUser)
-                setUser(parsed)
-                setAdminRole({ role: 'admin', display_name: 'Prasanna TVK' })
-                setLoading(false)
-                return
-            } catch (e) {
+            if (!isSupabaseConfigured) {
+                try {
+                    const parsed = JSON.parse(storedUser)
+                    setUser(parsed)
+                    setAdminRole({ role: 'admin', display_name: 'Prasanna TVK' })
+                    setLoading(false)
+                    return
+                } catch (e) {
+                    localStorage.removeItem('tvk_admin_user')
+                }
+            } else {
+                // Clear the mock session if we are transitioning to a real Supabase setup
                 localStorage.removeItem('tvk_admin_user')
             }
         }
@@ -88,15 +93,15 @@ export function AuthProvider({ children }) {
 
     const signIn = async (email, password) => {
         const cleanEmail = email.trim().toLowerCase()
-        if (cleanEmail === 'prasannatvkmla@gmail.com' && password === 'TVK@2026') {
-            const mockUser = { email: cleanEmail, id: 'admin-id' }
-            setUser(mockUser)
-            setAdminRole({ role: 'admin', display_name: 'Prasanna TVK' })
-            localStorage.setItem('tvk_admin_user', JSON.stringify(mockUser))
-            return { user: mockUser }
-        }
-
+        
         if (!isSupabaseConfigured) {
+            if (cleanEmail === 'prasannatvkmla@gmail.com' && password === 'TVK@2026') {
+                const mockUser = { email: cleanEmail, id: 'admin-id' }
+                setUser(mockUser)
+                setAdminRole({ role: 'admin', display_name: 'Prasanna TVK' })
+                localStorage.setItem('tvk_admin_user', JSON.stringify(mockUser))
+                return { user: mockUser }
+            }
             throw new Error('Supabase is not configured. Local credentials prasannatvkmla@gmail.com are required.')
         }
 

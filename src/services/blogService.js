@@ -52,7 +52,7 @@ const uploadBase64Image = async (base64Str, pathPrefix = 'blogs') => {
         const path = `${pathPrefix}/${fileName}`
 
         const { data, error } = await supabase.storage
-            .from('evidence-media')
+            .from('blog-media')
             .upload(path, blob, {
                 contentType,
                 cacheControl: '3600',
@@ -63,7 +63,7 @@ const uploadBase64Image = async (base64Str, pathPrefix = 'blogs') => {
 
         // Get public URL
         const { data: { publicUrl } } = supabase.storage
-            .from('evidence-media')
+            .from('blog-media')
             .getPublicUrl(path)
 
         return publicUrl
