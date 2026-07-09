@@ -10,13 +10,15 @@ import {
     LogOut,
     Menu,
     X,
-    ChevronRight
+    ChevronRight,
+    BookOpen
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import logo from '../../assets/logo.png'
 
 const navItems = [
     { path: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
+    { path: '/admin/blogs', label: 'Blogs', icon: BookOpen },
     { path: '/admin/grievances', label: 'Grievances', icon: FileText },
     { path: '/admin/memberships', label: 'Memberships', icon: Users },
     { path: '/admin/messages', label: 'Messages', icon: MessageSquare },

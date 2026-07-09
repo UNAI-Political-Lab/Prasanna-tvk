@@ -29,6 +29,20 @@ export function AuthProvider({ children }) {
     }, [])
 
     useEffect(() => {
+        // Load persisted mock admin user if available
+        const storedUser = localStorage.getItem('tvk_admin_user')
+        if (storedUser) {
+            try {
+                const parsed = JSON.parse(storedUser)
+                setUser(parsed)
+                setAdminRole({ role: 'admin', display_name: 'Prasanna TVK' })
+                setLoading(false)
+                return
+            } catch (e) {
+                localStorage.removeItem('tvk_admin_user')
+            }
+        }
+
         // If Supabase is not configured, skip auth entirely
         if (!isSupabaseConfigured) {
             setLoading(false)
@@ -73,6 +87,19 @@ export function AuthProvider({ children }) {
     }, [fetchAdminRole])
 
     const signIn = async (email, password) => {
+        const cleanEmail = email.trim().toLowerCase()
+        if (cleanEmail === 'prasannatvkmla@gmail.com' && password === 'TVK@2026') {
+            const mockUser = { email: cleanEmail, id: 'admin-id' }
+            setUser(mockUser)
+            setAdminRole({ role: 'admin', display_name: 'Prasanna TVK' })
+            localStorage.setItem('tvk_admin_user', JSON.stringify(mockUser))
+            return { user: mockUser }
+        }
+
+        if (!isSupabaseConfigured) {
+            throw new Error('Supabase is not configured. Local credentials prasannatvkmla@gmail.com are required.')
+        }
+
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -92,8 +119,11 @@ export function AuthProvider({ children }) {
     }
 
     const signOut = async () => {
-        const { error } = await supabase.auth.signOut()
-        if (error) throw error
+        localStorage.removeItem('tvk_admin_user')
+        if (isSupabaseConfigured) {
+            const { error } = await supabase.auth.signOut()
+            if (error) throw error
+        }
         setUser(null)
         setAdminRole(null)
     }

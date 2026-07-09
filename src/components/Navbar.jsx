@@ -23,7 +23,7 @@ const Navbar = () => {
     const navLinks = [
         { name: language === 'en' ? 'Home' : 'முகப்பு', path: '/' },
         { name: language === 'en' ? 'About' : 'எங்களைப் பற்றி', path: '/biography' },
-        { name: language === 'en' ? 'Our Leader' : 'எங்கள் தலைவர்', path: '/biography#leader' },
+        { name: language === 'en' ? 'Blogs' : 'வலைப்பதிவுகள்', path: '/blogs' },
         { name: language === 'en' ? 'Services' : 'சேவைகள்', path: '/services' },
         { name: language === 'en' ? 'Gallery' : 'புகைப்படங்கள்', path: '/services#gallery' },
         { name: language === 'en' ? 'Contact' : 'தொடர்பு கொள்ளுங்கள்', path: '/contact' },
