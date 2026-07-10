@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
     ArrowLeft, Calendar, User, Tag, BookOpen, ChevronLeft, ChevronRight,
-    MessageSquare, Share2, Facebook, Twitter, Link as LinkIcon
+    MessageSquare, Share2, Facebook, Twitter, Link as LinkIcon, Clock
 } from 'lucide-react'
 import SEO from '../components/SEO'
 import { useLanguage } from '../context/LanguageContext'
@@ -179,6 +179,15 @@ const BlogPostDetail = () => {
                                 <Calendar size={12} />
                                 {formattedDate}
                             </span>
+                            {blog.updatedAt && new Date(blog.updatedAt).getTime() - new Date(blog.createdAt).getTime() > 60000 && (
+                                <span className="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full font-bold normal-case">
+                                    <Clock size={12} />
+                                    {language === 'en' ? 'Last edited: ' : 'கடைசியாக திருத்தப்பட்டது: '}
+                                    {new Date(blog.updatedAt).toLocaleDateString(language === 'en' ? 'en-IN' : 'ta-IN', {
+                                        year: 'numeric', month: 'long', day: 'numeric'
+                                    })}
+                                </span>
+                            )}
                             <span className="flex items-center gap-1">
                                 <User size={12} />
                                 {blog.author || 'S. Prasanna'}

@@ -27,7 +27,7 @@ export const saveBlogs = (blogs) => {
 }
 
 // ── Blog Card Component ─────────────────────────────────────────────────────
-export const BlogCard = ({ blog, language, onDelete, isAdminView = false }) => {
+export const BlogCard = ({ blog, language, onDelete, onEdit, isAdminView = false }) => {
     const date = new Date(blog.createdAt)
     const formattedDate = date.toLocaleDateString(language === 'en' ? 'en-IN' : 'ta-IN', {
         year: 'numeric', month: 'long', day: 'numeric'
@@ -66,20 +66,34 @@ export const BlogCard = ({ blog, language, onDelete, isAdminView = false }) => {
                             {blog.category}
                         </span>
                     )}
-                    {/* Delete button (only for admin view) */}
+                    {/* Admin Actions (only for admin view) */}
                     {isAdminView && (
-                        <button
-                            type="button"
-                            onClick={(e) => { 
-                                e.preventDefault(); 
-                                e.stopPropagation(); 
-                                onDelete(blog.id); 
-                            }}
-                            className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-md z-10"
-                            title={language === 'en' ? 'Delete' : 'நீக்கு'}
-                        >
-                            <Trash2 size={14} />
-                        </button>
+                        <div className="absolute top-3 right-3 flex items-center gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button
+                                type="button"
+                                onClick={(e) => { 
+                                    e.preventDefault(); 
+                                    e.stopPropagation(); 
+                                    onEdit(blog); 
+                                }}
+                                className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-md"
+                                title={language === 'en' ? 'Edit' : 'தொகு'}
+                            >
+                                <Edit3 size={14} />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={(e) => { 
+                                    e.preventDefault(); 
+                                    e.stopPropagation(); 
+                                    onDelete(blog.id); 
+                                }}
+                                className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-md"
+                                title={language === 'en' ? 'Delete' : 'நீக்கு'}
+                            >
+                                <Trash2 size={14} />
+                            </button>
+                        </div>
                     )}
                 </div>
 
@@ -172,6 +186,15 @@ export const BlogDetailModal = ({ blog, language, onClose }) => {
                             <Calendar size={12} />
                             {formattedDate}
                         </span>
+                        {blog.updatedAt && new Date(blog.updatedAt).getTime() - new Date(blog.createdAt).getTime() > 60000 && (
+                            <span className="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full font-bold">
+                                <Clock size={12} />
+                                {language === 'en' ? 'Last edited: ' : 'கடைசியாக திருத்தப்பட்டது: '}
+                                {new Date(blog.updatedAt).toLocaleDateString(language === 'en' ? 'en-IN' : 'ta-IN', {
+                                    year: 'numeric', month: 'long', day: 'numeric'
+                                })}
+                            </span>
+                        )}
                         <span className="flex items-center gap-1">
                             <User size={12} />
                             {blog.author || 'S. Prasanna'}
@@ -194,16 +217,25 @@ export const BlogDetailModal = ({ blog, language, onClose }) => {
     )
 }
 
-export const CreateBlogForm = ({ language, onSubmit, onCancel }) => {
-    const [title, setTitle] = useState('')
-    const [content, setContent] = useState('')
-    const [category, setCategory] = useState('')
-    const [author, setAuthor] = useState('')
-    const [customDate, setCustomDate] = useState(new Date().toISOString().split('T')[0])
+export const CreateBlogForm = ({ language, onSubmit, onCancel, blog }) => {
+    const [title, setTitle] = useState(blog ? blog.title : '')
+    const [content, setContent] = useState(blog ? blog.content : '')
+    const [category, setCategory] = useState(blog ? blog.category || '' : '')
+    const [author, setAuthor] = useState(blog ? blog.author || '' : '')
+    const [customDate, setCustomDate] = useState(() => {
+        try {
+            if (blog && blog.createdAt) {
+                return new Date(blog.createdAt).toISOString().split('T')[0]
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return new Date().toISOString().split('T')[0]
+    })
     
     // Split image uploads
-    const [coverImage, setCoverImage] = useState(null)
-    const [eventPhotos, setEventPhotos] = useState([])
+    const [coverImage, setCoverImage] = useState(blog ? blog.image : null)
+    const [eventPhotos, setEventPhotos] = useState(blog ? blog.images || [] : [])
     
     const [isDraggingCover, setIsDraggingCover] = useState(false)
     const [isDraggingEvents, setIsDraggingEvents] = useState(false)
@@ -251,14 +283,14 @@ export const CreateBlogForm = ({ language, onSubmit, onCancel }) => {
         if (!title.trim() || !content.trim()) return
 
         onSubmit({
-            id: Date.now().toString(),
+            id: blog ? blog.id : Date.now().toString(),
             title: title.trim(),
             content: content.trim(),
             category: category.trim() || null,
             author: author.trim() || 'S. Prasanna',
             image: coverImage,
             images: eventPhotos,
-            createdAt: customDate ? new Date(customDate).toISOString() : new Date().toISOString()
+            createdAt: customDate ? new Date(customDate).toISOString() : (blog ? blog.createdAt : new Date().toISOString())
         })
     }
 
@@ -287,10 +319,14 @@ export const CreateBlogForm = ({ language, onSubmit, onCancel }) => {
                         </div>
                         <div>
                             <h2 className="text-lg font-black">
-                                {language === 'en' ? 'Create New Blog Post' : 'புதிய வலைப்பதிவு உருவாக்கவும்'}
+                                {blog 
+                                    ? (language === 'en' ? 'Edit Blog Post' : 'வலைப்பதிவை திருத்தவும்')
+                                    : (language === 'en' ? 'Create New Blog Post' : 'புதிய வலைப்பதிவு உருவாக்கவும்')}
                             </h2>
                             <p className="text-white/70 text-xs">
-                                {language === 'en' ? 'Share your thoughts with the community' : 'சமூகத்துடன் உங்கள் எண்ணங்களைப் பகிரவும்'}
+                                {blog
+                                    ? (language === 'en' ? 'Modify the contents of this blog post' : 'இந்த வலைப்பதிவின் உள்ளடக்கங்களை மாற்றவும்')
+                                    : (language === 'en' ? 'Share your thoughts with the community' : 'சமூகத்துடன் உங்கள் எண்ணங்களைப் பகிரவும்')}
                             </p>
                         </div>
                     </div>
@@ -521,7 +557,9 @@ export const CreateBlogForm = ({ language, onSubmit, onCancel }) => {
                             className="flex-1 py-3 px-6 rounded-xl bg-tvk-red text-white font-bold text-sm hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                         >
                             <Sparkles size={16} />
-                            {language === 'en' ? 'Publish Blog' : 'வலைப்பதிவை வெளியிடு'}
+                            {blog 
+                                ? (language === 'en' ? 'Save Changes' : 'மாற்றங்களைச் சேமி') 
+                                : (language === 'en' ? 'Publish Blog' : 'வலைப்பதிவை வெளியிடு')}
                         </button>
                     </div>
                 </div>

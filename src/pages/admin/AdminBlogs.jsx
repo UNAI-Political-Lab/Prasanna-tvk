@@ -18,6 +18,7 @@ const AdminBlogs = () => {
     const [loading, setLoading] = useState(true)
     const [actionLoading, setActionLoading] = useState(false)
     const [showCreateForm, setShowCreateForm] = useState(false)
+    const [editingBlog, setEditingBlog] = useState(null)
     const [selectedBlog, setSelectedBlog] = useState(null)
     const [searchQuery, setSearchQuery] = useState('')
 
@@ -56,6 +57,20 @@ const AdminBlogs = () => {
         } catch (err) {
             console.error('Failed to create blog:', err)
             alert(language === 'en' ? 'Failed to create blog post.' : 'வலைப்பதிவை உருவாக்க முடியவில்லை.')
+        } finally {
+            setActionLoading(false)
+        }
+    }
+
+    const handleEdit = async (updatedBlogData) => {
+        setActionLoading(true)
+        try {
+            const updated = await blogService.updateBlog(updatedBlogData.id, updatedBlogData)
+            setBlogs(prev => prev.map(b => b.id === updated.id ? updated : b))
+            setEditingBlog(null)
+        } catch (err) {
+            console.error('Failed to edit blog:', err)
+            alert(language === 'en' ? 'Failed to update blog post.' : 'வலைப்பதிவை புதுப்பிக்க முடியவில்லை.')
         } finally {
             setActionLoading(false)
         }
@@ -205,6 +220,7 @@ const AdminBlogs = () => {
                                 language={language}
                                 onView={setSelectedBlog}
                                 onDelete={handleDelete}
+                                onEdit={setEditingBlog}
                                 isAdminView={true}
                             />
                         ))}
@@ -219,6 +235,17 @@ const AdminBlogs = () => {
                         language={language}
                         onSubmit={handleCreate}
                         onCancel={() => setShowCreateForm(false)}
+                    />
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {editingBlog && (
+                    <CreateBlogForm
+                        blog={editingBlog}
+                        language={language}
+                        onSubmit={handleEdit}
+                        onCancel={() => setEditingBlog(null)}
                     />
                 )}
             </AnimatePresence>

@@ -85,10 +85,11 @@ export const blogService = {
                 .order('created_at', { ascending: false })
 
             if (error) throw error
-            // Map created_at to createdAt for frontend compatibility
+            // Map created_at and updated_at for frontend compatibility
             return data.map(b => ({
                 ...b,
-                createdAt: b.created_at
+                createdAt: b.created_at,
+                updatedAt: b.updated_at
             }))
         } catch (err) {
             console.error('Error getting blogs from Supabase, falling back to local storage:', err)
@@ -121,7 +122,8 @@ export const blogService = {
             if (error) throw error
             return {
                 ...data,
-                createdAt: data.created_at
+                createdAt: data.created_at,
+                updatedAt: data.updated_at
             }
         } catch (err) {
             console.error(`Error getting blog by id ${id} from Supabase, falling back:`, err)
@@ -227,6 +229,110 @@ export const blogService = {
             const updated = local.filter(b => b.id !== id)
             saveLocalBlogs(updated)
             return true
+        }
+    },
+
+    async updateBlog(id, blogData) {
+        // Upload images if there are any new ones (base64)
+        let coverUrl = blogData.image || null
+        if (coverUrl && coverUrl.startsWith('data:')) {
+            coverUrl = await uploadBase64Image(coverUrl, 'blogs/covers')
+        }
+
+        let eventPhotosUrls = []
+        if (blogData.images && Array.isArray(blogData.images)) {
+            for (const img of blogData.images) {
+                if (img && img.startsWith('data:')) {
+                    const uploadedUrl = await uploadBase64Image(img, 'blogs/events')
+                    eventPhotosUrls.push(uploadedUrl)
+                } else {
+                    eventPhotosUrls.push(img)
+                }
+            }
+        }
+
+        const updatedFields = {
+            title: blogData.title,
+            content: blogData.content,
+            category: blogData.category,
+            author: blogData.author,
+            image: coverUrl,
+            images: eventPhotosUrls,
+            created_at: blogData.createdAt || new Date().toISOString()
+        }
+
+        if (!isSupabaseConfigured) {
+            const local = loadLocalBlogs()
+            const index = local.findIndex(b => b.id === id)
+            if (index !== -1) {
+                const updatedPost = {
+                    ...local[index],
+                    ...updatedFields,
+                    updatedAt: new Date().toISOString()
+                }
+                local[index] = updatedPost
+                saveLocalBlogs(local)
+                return {
+                    ...updatedPost,
+                    createdAt: updatedPost.created_at
+                }
+            }
+            throw new Error('Blog not found')
+        }
+
+        try {
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+            if (!uuidRegex.test(id)) {
+                // If it's not a UUID, check local blogs first as fallback
+                const local = loadLocalBlogs()
+                const index = local.findIndex(b => b.id === id)
+                if (index !== -1) {
+                    const updatedPost = {
+                        ...local[index],
+                        ...updatedFields,
+                        updatedAt: new Date().toISOString()
+                    }
+                    local[index] = updatedPost
+                    saveLocalBlogs(local)
+                    return {
+                        ...updatedPost,
+                        createdAt: updatedPost.created_at
+                    }
+                }
+                throw new Error('Blog not found')
+            }
+
+            const { data, error } = await supabase
+                .from('blogs')
+                .update(updatedFields)
+                .eq('id', id)
+                .select()
+                .single()
+
+            if (error) throw error
+            return {
+                ...data,
+                createdAt: data.created_at,
+                updatedAt: data.updated_at
+            }
+        } catch (err) {
+            console.error(`Error updating blog ${id} in Supabase, falling back:`, err)
+            const local = loadLocalBlogs()
+            const index = local.findIndex(b => b.id === id)
+            if (index !== -1) {
+                const updatedPost = {
+                    ...local[index],
+                    ...updatedFields,
+                    updatedAt: new Date().toISOString()
+                }
+                local[index] = updatedPost
+                saveLocalBlogs(local)
+                return {
+                    ...updatedPost,
+                    createdAt: updatedPost.created_at
+                }
+            }
+            throw err
         }
     }
 }
