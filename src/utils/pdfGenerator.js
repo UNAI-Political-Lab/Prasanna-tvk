@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import logoImg from '../assets/logo.png'
 
 /**
  * Format date string for display
@@ -37,20 +38,21 @@ export const getCategoryCodeAndName = (item) => {
 
   // Smart fallback mapping for legacy database records
   const lower = titleOrCat.toLowerCase()
-  if (lower.includes('road') || lower.includes('corporation')) return { code: 'A', name: 'A - Corporation complain / Road' }
-  if (lower.includes('eb') || lower.includes('electric')) return { code: 'B', name: 'B - EB' }
-  if (lower.includes('water') || lower.includes('seawage') || lower.includes('drain')) return { code: 'C', name: 'C - Metro water/ drinage' }
-  if (lower.includes('forest') || lower.includes('ramsar') || lower.includes('palikaranai')) return { code: 'E', name: 'E - Forest [palikaranai, RAMSAR]' }
-  if (lower.includes('patta')) return { code: 'F', name: 'F - PATTA' }
-  if (lower.includes('help') || lower.includes('donation') || lower.includes('rural')) return { code: 'G', name: 'G - Help/Donation' }
-  if (lower.includes('storm')) return { code: 'H', name: 'H - Storm Water Drinage' }
+  if (lower.includes('road') || lower.includes('corporation')) return { code: 'A', name: 'A - Corporation Complaint / Roads' }
+  if (lower.includes('eb') || lower.includes('electric')) return { code: 'B', name: 'B - Electricity Board (EB)' }
+  if (lower.includes('water') || lower.includes('seawage') || lower.includes('drain')) return { code: 'C', name: 'C - Metro Water / Drainage' }
+  if (lower.includes('forest') || lower.includes('ramsar') || lower.includes('palikaranai')) return { code: 'E', name: 'E - Forest & Environment [Pallikaranai, RAMSAR]' }
+  if (lower.includes('patta')) return { code: 'F', name: 'F - PATTA & Land Revenue' }
+  if (lower.includes('help') || lower.includes('donation') || lower.includes('rural')) return { code: 'G', name: 'G - Welfare Help & Donations' }
+  if (lower.includes('storm')) return { code: 'H', name: 'H - Storm Water Drainage' }
   
-  return { code: 'D', name: titleOrCat ? `D - ${titleOrCat}` : 'D - Civil/others' }
+  return { code: 'D', name: titleOrCat ? `D - ${titleOrCat}` : 'D - Civil Works & General Issues' }
 }
 
 /**
- * Load remote image URL as Base64 data URL for embedding in jsPDF
+ * Load remote/local image URL as Base64 data URL for embedding in jsPDF
  */
+let logoBase64Cache = null
 const loadImageAsBase64 = (url) => {
   return new Promise((resolve) => {
     if (!url) return resolve(null)
@@ -64,7 +66,7 @@ const loadImageAsBase64 = (url) => {
         const ctx = canvas.getContext('2d')
         ctx.drawImage(img, 0, 0)
         resolve({
-          dataUrl: canvas.toDataURL('image/jpeg', 0.85),
+          dataUrl: canvas.toDataURL('image/png', 0.9),
           width: canvas.width,
           height: canvas.height
         })
@@ -78,38 +80,78 @@ const loadImageAsBase64 = (url) => {
   })
 }
 
+const getLogoBase64 = async () => {
+  if (logoBase64Cache) return logoBase64Cache
+  logoBase64Cache = await loadImageAsBase64(logoImg)
+  return logoBase64Cache
+}
+
 /**
- * Render a complete official grievance document on a jsPDF instance
+ * Helper to render high-contrast TVK Logo Badge preserving native aspect ratio
  */
-const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
+const drawHeaderLogo = (doc, logoData, headerHeight = 36) => {
+  if (!logoData) return 14
+
+  try {
+    const maxTargetH = 22 // Height in mm
+    const aspect = (logoData.width && logoData.height) ? (logoData.width / logoData.height) : 2.5
+    const renderW = Math.min(maxTargetH * aspect, 52)
+    const renderH = renderW / aspect
+    const logoY = 4 + (26 - renderH) / 2
+
+    // White rounded card background badge for clear visibility
+    doc.setFillColor(255, 255, 255)
+    doc.roundedRect(10, 4, renderW + 6, 27, 2, 2, 'F')
+    doc.setLineWidth(0.3)
+    doc.setDrawColor(220, 220, 220)
+    doc.roundedRect(10, 4, renderW + 6, 27, 2, 2, 'D')
+
+    // Render TVK Logo
+    doc.addImage(logoData.dataUrl, 'PNG', 13, logoY, renderW, renderH)
+
+    return 10 + renderW + 10 // Dynamic text offset
+  } catch (e) {
+    console.warn('Error drawing header logo:', e)
+    return 14
+  }
+}
+
+/**
+ * Render a complete official grievance document on a jsPDF instance with TVK Logo
+ */
+const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null, preloadedLogo = null) => {
   const { code: categoryCode, name: categoryName } = getCategoryCodeAndName(item)
+  const logoData = preloadedLogo !== null ? preloadedLogo : await getLogoBase64()
 
   // Brand Header Bar
   doc.setFillColor(145, 9, 5) // TVK Red (#910905)
-  doc.rect(0, 0, 210, 32, 'F')
+  doc.rect(0, 0, 210, 36, 'F')
+
+  // Render TVK Logo Badge
+  const textX = drawHeaderLogo(doc, logoData, 36)
 
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
-  doc.setFontSize(18)
-  doc.text('TAMIZHAGA VETRI KAZHAGAM', 14, 15)
+  doc.setFontSize(15)
+  doc.text('TAMIZHAGA VETRI KAZHAGAM', textX, 15)
 
-  doc.setFontSize(10)
+  doc.setFontSize(9)
   doc.setFont('helvetica', 'normal')
-  doc.text('Constituency Grievance Redressal Portal | Wards 188 & 189', 14, 23)
+  doc.text('Constituency Grievance Redressal Portal | Wards 188 & 189', textX, 23)
 
   // Title Section & Category Code Badge
   doc.setTextColor(30, 30, 30)
-  doc.setFontSize(14)
+  doc.setFontSize(13)
   doc.setFont('helvetica', 'bold')
-  doc.text('OFFICIAL GRIEVANCE RECORD', 14, 45)
+  doc.text('OFFICIAL GRIEVANCE RECORD', 14, 48)
 
   // Category Code Badge (top right box)
   doc.setFillColor(145, 9, 5)
-  doc.roundedRect(172, 38, 24, 16, 3, 3, 'F')
+  doc.roundedRect(172, 40, 24, 16, 3, 3, 'F')
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(18)
   doc.setFont('helvetica', 'bold')
-  doc.text(categoryCode, 184, 49, { align: 'center' })
+  doc.text(categoryCode, 184, 51, { align: 'center' })
 
   // Summary Metadata Table
   const metaRows = [
@@ -128,7 +170,7 @@ const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
   ]
 
   autoTable(doc, {
-    startY: 58,
+    startY: 60,
     margin: { left: 14, right: 14 },
     body: metaRows,
     theme: 'grid',
@@ -246,7 +288,6 @@ const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
         const loadedImg = await loadImageAsBase64(imgObj.url)
 
         if (loadedImg) {
-          // Calculate proportional width & height (max width 80mm, max height 60mm)
           const maxW = 82
           const maxH = 60
           let renderW = maxW
@@ -257,14 +298,12 @@ const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
             renderW = (loadedImg.width / loadedImg.height) * renderH
           }
 
-          // Page break check if image doesn't fit on page
           if (currentY + renderH + 12 > 275) {
             doc.addPage()
             currentY = 20
             imageX = 14
           }
 
-          // If side-by-side fits on same line
           if (imageX + renderW > 196) {
             imageX = 14
             currentY += maxRowHeight + 8
@@ -275,7 +314,6 @@ const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
             }
           }
 
-          // Draw Image Frame & Base64 Image
           doc.setDrawColor(220, 220, 220)
           doc.setFillColor(250, 250, 250)
           doc.rect(imageX, currentY, renderW, renderH + 6, 'FD')
@@ -286,7 +324,6 @@ const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
             console.error('Error adding image to PDF:', err)
           }
 
-          // Image Caption/Name
           doc.setFontSize(7)
           doc.setTextColor(100, 100, 100)
           const truncateName = imgObj.name.length > 30 ? imgObj.name.substring(0, 27) + '...' : imgObj.name
@@ -299,7 +336,6 @@ const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
       currentY += maxRowHeight + 10
     }
 
-    // Other non-image files table
     if (otherFiles.length > 0) {
       if (currentY > 250) {
         doc.addPage()
@@ -339,7 +375,7 @@ const renderSingleGrievanceOnDoc = async (doc, item, pageNumberInfo = null) => {
 }
 
 /**
- * Download a single grievance document as a styled PDF with embedded images
+ * Download a single grievance document as a styled PDF with TVK logo & embedded images
  */
 export const downloadSingleGrievancePDF = async (item) => {
   const doc = new jsPDF()
@@ -349,12 +385,12 @@ export const downloadSingleGrievancePDF = async (item) => {
 
 /**
  * Bulk download grievances as a structured multi-page PDF document
- * where EACH grievance is rendered as a FULL OFFICIAL DOCUMENT PAGE with embedded photos!
  */
 export const downloadBulkGrievancesPDF = async (items, filterSummary = {}) => {
   if (!items || items.length === 0) return
 
   const doc = new jsPDF()
+  const logoData = await getLogoBase64()
 
   for (let i = 0; i < items.length; i++) {
     if (i > 0) {
@@ -363,10 +399,142 @@ export const downloadBulkGrievancesPDF = async (items, filterSummary = {}) => {
     await renderSingleGrievanceOnDoc(doc, items[i], {
       docIndex: i + 1,
       totalDocs: items.length
-    })
+    }, logoData)
   }
 
   doc.save(`TVK_All_Grievances_Documents_${Date.now()}.pdf`)
+}
+
+/**
+ * Download a Weekly Grievances PDF Report featuring TVK Logo and executive analytics summary
+ */
+export const downloadWeeklyReportPDF = async (items, dateRange = {}) => {
+  const doc = new jsPDF()
+  const logoData = await getLogoBase64()
+
+  // Header background bar
+  doc.setFillColor(145, 9, 5) // TVK Red (#910905)
+  doc.rect(0, 0, 210, 36, 'F')
+
+  // Render TVK Logo Badge
+  const textX = drawHeaderLogo(doc, logoData, 36)
+
+  doc.setTextColor(255, 255, 255)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(15)
+  doc.text('TAMIZHAGA VETRI KAZHAGAM', textX, 15)
+
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'bold')
+  doc.text('WEEKLY CONSTITUENCY GRIEVANCES REPORT', textX, 22)
+
+  doc.setFontSize(8)
+  doc.setFont('helvetica', 'normal')
+  const dateFromStr = dateRange.dateFrom ? formatDate(dateRange.dateFrom) : 'Past 7 Days'
+  const dateToStr = dateRange.dateTo ? formatDate(dateRange.dateTo) : formatDate(new Date().toISOString())
+  doc.text(`Period: ${dateFromStr} — ${dateToStr} | Wards 188 & 189`, textX, 28)
+
+  // Executive Summary Box
+  doc.setTextColor(30, 30, 30)
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text('EXECUTIVE SUMMARY & STATISTICAL OVERVIEW', 14, 48)
+
+  const pendingCount = items.filter(i => i.status === 'pending').length
+  const inProgressCount = items.filter(i => i.status === 'in_progress').length
+  const resolvedCount = items.filter(i => i.status === 'resolved').length
+
+  const statTableBody = [
+    [
+      { content: 'Total Complaints Received:', styles: { fontStyle: 'bold' } }, String(items.length),
+      { content: 'Resolved Complaints:', styles: { fontStyle: 'bold' } }, String(resolvedCount)
+    ],
+    [
+      { content: 'Pending Review:', styles: { fontStyle: 'bold' } }, String(pendingCount),
+      { content: 'In Progress:', styles: { fontStyle: 'bold' } }, String(inProgressCount)
+    ]
+  ]
+
+  autoTable(doc, {
+    startY: 52,
+    margin: { left: 14, right: 14 },
+    body: statTableBody,
+    theme: 'grid',
+    styles: { fontSize: 9, cellPadding: 3 },
+    columnStyles: {
+      0: { cellWidth: 45, fillColor: [248, 249, 250] },
+      1: { cellWidth: 46 },
+      2: { cellWidth: 45, fillColor: [248, 249, 250] },
+      3: { cellWidth: 46 }
+    }
+  })
+
+  let currentY = (doc.lastAutoTable ? doc.lastAutoTable.finalY : 80) + 8
+
+  // Category Breakdown Table
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(145, 9, 5)
+  doc.text('CATEGORY-WISE WEEKLY BREAKDOWN (A – H)', 14, currentY)
+  doc.setLineWidth(0.5)
+  doc.setDrawColor(145, 9, 5)
+  doc.line(14, currentY + 2, 196, currentY + 2)
+
+  // Count items per category code A..H
+  const catCounts = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0 }
+  items.forEach(item => {
+    const { code } = getCategoryCodeAndName(item)
+    if (catCounts[code] !== undefined) catCounts[code]++
+    else catCounts['D']++
+  })
+
+  const catBreakdownRows = [
+    ['Code', 'Category Name', 'Weekly Count', '% of Total'],
+    ['A', 'Corporation Complaint / Roads', String(catCounts.A), `${items.length > 0 ? ((catCounts.A / items.length) * 100).toFixed(1) : 0}%`],
+    ['B', 'Electricity Board (EB)', String(catCounts.B), `${items.length > 0 ? ((catCounts.B / items.length) * 100).toFixed(1) : 0}%`],
+    ['C', 'Metro Water / Drainage', String(catCounts.C), `${items.length > 0 ? ((catCounts.C / items.length) * 100).toFixed(1) : 0}%`],
+    ['D', 'Civil Works & General Issues', String(catCounts.D), `${items.length > 0 ? ((catCounts.D / items.length) * 100).toFixed(1) : 0}%`],
+    ['E', 'Forest & Environment [Pallikaranai, RAMSAR]', String(catCounts.E), `${items.length > 0 ? ((catCounts.E / items.length) * 100).toFixed(1) : 0}%`],
+    ['F', 'PATTA & Land Revenue', String(catCounts.F), `${items.length > 0 ? ((catCounts.F / items.length) * 100).toFixed(1) : 0}%`],
+    ['G', 'Welfare Help & Donations', String(catCounts.G), `${items.length > 0 ? ((catCounts.G / items.length) * 100).toFixed(1) : 0}%`],
+    ['H', 'Storm Water Drainage', String(catCounts.H), `${items.length > 0 ? ((catCounts.H / items.length) * 100).toFixed(1) : 0}%`]
+  ]
+
+  autoTable(doc, {
+    startY: currentY + 5,
+    margin: { left: 14, right: 14 },
+    head: [catBreakdownRows[0]],
+    body: catBreakdownRows.slice(1),
+    theme: 'striped',
+    styles: { fontSize: 8.5, cellPadding: 2.5 },
+    headStyles: { fillColor: [145, 9, 5], textColor: 255, fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 16, fontStyle: 'bold', halign: 'center' },
+      1: { cellWidth: 100 },
+      2: { cellWidth: 32, halign: 'center' },
+      3: { cellWidth: 34, halign: 'center' }
+    }
+  })
+
+  // Footer for Page 1
+  doc.setPage(1)
+  doc.setDrawColor(220, 220, 220)
+  doc.line(14, 280, 196, 280)
+  doc.setFontSize(8)
+  doc.setTextColor(120, 120, 120)
+  doc.text(`Generated on ${new Date().toLocaleString('en-IN')} | Page 1 Summary`, 14, 285)
+  doc.text('TVK Grievance Redressal System', 196, 285, { align: 'right' })
+
+  // Render individual grievance record pages for every grievance registered during the week
+  for (let i = 0; i < items.length; i++) {
+    doc.addPage()
+    await renderSingleGrievanceOnDoc(doc, items[i], {
+      docIndex: i + 1,
+      totalDocs: items.length
+    }, logoData)
+  }
+
+  doc.save(`TVK_Weekly_Grievances_Report_${Date.now()}.pdf`)
 }
 
 /**

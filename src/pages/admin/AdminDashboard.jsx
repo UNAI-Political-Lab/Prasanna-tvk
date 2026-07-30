@@ -5,15 +5,39 @@ import {
     FileText, Users, MessageSquare, Bell,
     TrendingUp, Clock, CheckCircle2,
     ArrowUpRight, RefreshCw, Loader2,
-    CircleDot, Zap
+    CircleDot, Zap, Calendar
 } from 'lucide-react'
 import { adminService } from '../../services/adminService'
+import { downloadWeeklyReportPDF } from '../../utils/pdfGenerator'
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState(null)
     const [recentActivity, setRecentActivity] = useState([])
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
+    const [downloadingWeekly, setDownloadingWeekly] = useState(false)
+
+    const handleWeeklyReportDownload = async () => {
+        setDownloadingWeekly(true)
+        try {
+            const dateTo = new Date().toISOString().split('T')[0]
+            const dateFromObj = new Date()
+            dateFromObj.setDate(dateFromObj.getDate() - 7)
+            const dateFrom = dateFromObj.toISOString().split('T')[0]
+
+            const weeklyItems = await adminService.getAllFilteredGrievances({
+                dateFrom,
+                dateTo
+            })
+
+            await downloadWeeklyReportPDF(weeklyItems, { dateFrom, dateTo })
+        } catch (err) {
+            console.error('Failed to generate weekly report:', err)
+            alert('Failed to generate weekly report PDF.')
+        } finally {
+            setDownloadingWeekly(false)
+        }
+    }
 
     const fetchData = useCallback(async (isRefresh = false) => {
         if (isRefresh) setRefreshing(true)
@@ -199,14 +223,24 @@ const AdminDashboard = () => {
                     <h2 className="text-slate-900 font-black uppercase tracking-wider text-sm">Overview</h2>
                     <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-0.5">Real-time application statistics</p>
                 </div>
-                <button
-                    onClick={() => fetchData(true)}
-                    disabled={refreshing}
-                    className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl transition-all disabled:opacity-50 shadow-sm w-full sm:w-auto"
-                >
-                    <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-                    Refresh
-                </button>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                        onClick={handleWeeklyReportDownload}
+                        disabled={downloadingWeekly}
+                        className="flex items-center justify-center gap-2 text-xs font-extrabold uppercase tracking-wider text-white bg-tvk-red hover:bg-tvk-red/90 px-4 py-2.5 rounded-xl transition-all disabled:opacity-50 shadow-md cursor-pointer flex-1 sm:flex-none"
+                    >
+                        {downloadingWeekly ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Calendar className="w-3.5 h-3.5 text-tvk-yellow" />}
+                        {downloadingWeekly ? 'Generating...' : 'Weekly PDF Report'}
+                    </button>
+                    <button
+                        onClick={() => fetchData(true)}
+                        disabled={refreshing}
+                        className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl transition-all disabled:opacity-50 shadow-sm cursor-pointer"
+                    >
+                        <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+                        Refresh
+                    </button>
+                </div>
             </div>
 
             {/* KPI Cards */}

@@ -7,7 +7,7 @@ import {
     Download, FileDown, Filter, RefreshCw, Navigation, User
 } from 'lucide-react'
 import { adminService } from '../../services/adminService'
-import { downloadSingleGrievancePDF, downloadBulkGrievancesPDF, downloadGrievancesCSV, getCategoryCodeAndName } from '../../utils/pdfGenerator'
+import { downloadSingleGrievancePDF, downloadBulkGrievancesPDF, downloadWeeklyReportPDF, downloadGrievancesCSV, getCategoryCodeAndName } from '../../utils/pdfGenerator'
 
 const statusOptions = [
     { value: '', label: 'All Status' },
@@ -42,7 +42,30 @@ const AdminGrievances = () => {
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(true)
     const [downloadingBulk, setDownloadingBulk] = useState(false)
+    const [downloadingWeekly, setDownloadingWeekly] = useState(false)
     const [page, setPage] = useState(1)
+
+    const handleWeeklyReportPDF = async () => {
+        setDownloadingWeekly(true)
+        try {
+            const dateTo = new Date().toISOString().split('T')[0]
+            const dateFromObj = new Date()
+            dateFromObj.setDate(dateFromObj.getDate() - 7)
+            const dateFrom = dateFromObj.toISOString().split('T')[0]
+
+            const weeklyItems = await adminService.getAllFilteredGrievances({
+                dateFrom,
+                dateTo
+            })
+
+            await downloadWeeklyReportPDF(weeklyItems, { dateFrom, dateTo })
+        } catch (err) {
+            console.error('Weekly PDF export error:', err)
+            alert('Failed to export weekly report PDF.')
+        } finally {
+            setDownloadingWeekly(false)
+        }
+    }
     const [totalPages, setTotalPages] = useState(1)
     const [totalCount, setTotalCount] = useState(0)
     const [filters, setFilters] = useState({
@@ -184,6 +207,14 @@ const AdminGrievances = () => {
 
                     {/* Bulk Download Buttons */}
                     <div className="flex flex-wrap items-center gap-2">
+                        <button
+                            onClick={handleWeeklyReportPDF}
+                            disabled={downloadingWeekly}
+                            className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+                        >
+                            {downloadingWeekly ? <Loader2 className="w-4 h-4 animate-spin" /> : <Calendar className="w-4 h-4 text-amber-200" />}
+                            {downloadingWeekly ? 'Generating Weekly...' : 'Weekly PDF Report'}
+                        </button>
                         <button
                             onClick={handleBulkDownloadPDF}
                             disabled={downloadingBulk || totalCount === 0}
