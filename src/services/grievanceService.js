@@ -2,7 +2,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
 
 export const grievanceService = {
     /**
-     * Fetch all active categories from Supabase
+     * Fetch all active categories from Supabase, sorted by sort_order
      */
     async getCategories() {
         if (!isSupabaseConfigured) {
@@ -11,7 +11,7 @@ export const grievanceService = {
 
         const { data, error } = await supabase
             .from('complaint_categories')
-            .select('*')
+            .select('id, category_code, name_en, name_ta, icon, color, sort_order')
             .eq('is_active', true)
             .order('sort_order', { ascending: true })
 
@@ -37,7 +37,9 @@ export const grievanceService = {
                 name: formData.name,
                 phone: formData.phone,
                 email: formData.email || null,
-                area: formData.area,
+                area: formData.area || formData.street || 'Sholinganallur',
+                ward_number: formData.ward_number || null,
+                street: formData.street || null,
                 category_id: formData.category_id || null,
                 title: formData.title,
                 description: formData.description,
@@ -105,10 +107,10 @@ export const grievanceService = {
             }
         }
 
-        // 4. Fetch the final record to make sure we have reference_id
+        // 4. Fetch the final record to make sure we have reference_id and complaint_categories details
         const { data: finalGrievance, error: fetchError } = await supabase
             .from('grievances')
-            .select('*, complaint_categories(name_en, name_ta)')
+            .select('*, complaint_categories(id, category_code, name_en, name_ta)')
             .eq('id', grievanceId)
             .single()
 
@@ -127,6 +129,8 @@ export const grievanceService = {
                     name: grievanceToNotify.name,
                     phone: grievanceToNotify.phone,
                     area: grievanceToNotify.area,
+                    ward_number: grievanceToNotify.ward_number,
+                    street: grievanceToNotify.street,
                     category: categoryName,
                     title: grievanceToNotify.title,
                     description: grievanceToNotify.description
@@ -136,7 +140,6 @@ export const grievanceService = {
                     console.error('WhatsApp Edge Function error:', error)
                 } else {
                     console.log('WhatsApp notification response:', data)
-                    // Optionally update notification status in DB
                     supabase
                         .from('grievances')
                         .update({ whatsapp_notified: true })
@@ -161,7 +164,7 @@ export const grievanceService = {
 
         const { data, error } = await supabase
             .from('grievances')
-            .select('*, complaint_categories(name_en, name_ta)')
+            .select('*, complaint_categories(id, category_code, name_en, name_ta)')
             .eq('reference_id', referenceId.trim().toUpperCase())
             .single()
 
@@ -177,7 +180,7 @@ export const grievanceService = {
      */
     async getGrievanceStats() {
         if (!isSupabaseConfigured) {
-            return null // Let callers fall back to defaults
+            return null
         }
 
         const { data, error } = await supabase.rpc('get_grievance_stats')
@@ -187,12 +190,10 @@ export const grievanceService = {
             throw error
         }
 
-        // Return first row of query result
         if (data && data.length > 0) {
             return data[0]
         }
         
-        // Fallback default statistics
         return {
             total_complaints: 0,
             resolved_complaints: 0,

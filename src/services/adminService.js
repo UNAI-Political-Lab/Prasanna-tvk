@@ -16,16 +16,22 @@ export const adminService = {
     /**
      * Fetch paginated grievances with filters
      */
-    async getGrievances({ status, priority, category, search, page = 1, pageSize = 20 } = {}) {
+    async getGrievances({ status, priority, category, search, dateFrom, dateTo, page = 1, pageSize = 20 } = {}) {
         let query = supabase
             .from('grievances')
-            .select('*, complaint_categories(name_en, name_ta)', { count: 'exact' })
+            .select('*, complaint_categories(id, category_code, name_en, name_ta)', { count: 'exact' })
 
         if (status) query = query.eq('status', status)
         if (priority) query = query.eq('priority', priority)
         if (category) query = query.eq('category_id', category)
+        if (dateFrom) query = query.gte('created_at', new Date(dateFrom).toISOString())
+        if (dateTo) {
+            const endDate = new Date(dateTo)
+            endDate.setHours(23, 59, 59, 999)
+            query = query.lte('created_at', endDate.toISOString())
+        }
         if (search) {
-            query = query.or(`name.ilike.%${search}%,reference_id.ilike.%${search}%,title.ilike.%${search}%,area.ilike.%${search}%`)
+            query = query.or(`name.ilike.%${search}%,reference_id.ilike.%${search}%,title.ilike.%${search}%,area.ilike.%${search}%,street.ilike.%${search}%`)
         }
 
         const from = (page - 1) * pageSize
@@ -39,6 +45,37 @@ export const adminService = {
             throw error
         }
         return { data, count, page, pageSize, totalPages: Math.ceil((count || 0) / pageSize) }
+    },
+
+    /**
+     * Fetch all grievances matching current filters without pagination (for Bulk PDF / CSV export)
+     */
+    async getAllFilteredGrievances({ status, priority, category, search, dateFrom, dateTo } = {}) {
+        let query = supabase
+            .from('grievances')
+            .select('*, complaint_categories(id, category_code, name_en, name_ta)')
+
+        if (status) query = query.eq('status', status)
+        if (priority) query = query.eq('priority', priority)
+        if (category) query = query.eq('category_id', category)
+        if (dateFrom) query = query.gte('created_at', new Date(dateFrom).toISOString())
+        if (dateTo) {
+            const endDate = new Date(dateTo)
+            endDate.setHours(23, 59, 59, 999)
+            query = query.lte('created_at', endDate.toISOString())
+        }
+        if (search) {
+            query = query.or(`name.ilike.%${search}%,reference_id.ilike.%${search}%,title.ilike.%${search}%,area.ilike.%${search}%,street.ilike.%${search}%`)
+        }
+
+        query = query.order('created_at', { ascending: false })
+
+        const { data, error } = await query
+        if (error) {
+            console.error('Error fetching all filtered grievances for export:', error)
+            throw error
+        }
+        return data || []
     },
 
     /**
@@ -198,7 +235,6 @@ export const adminService = {
      * Fetch recent activity across all tables
      */
     async getRecentActivity(limit = 10) {
-        // Fetch recent items from each table in parallel
         const [grievances, memberships, messages] = await Promise.all([
             supabase
                 .from('grievances')
@@ -217,7 +253,6 @@ export const adminService = {
                 .limit(limit)
         ])
 
-        // Merge and sort by created_at
         const activities = [
             ...(grievances.data || []).map(g => ({
                 type: 'grievance',
@@ -255,7 +290,7 @@ export const adminService = {
     async getCategories() {
         const { data, error } = await supabase
             .from('complaint_categories')
-            .select('id, name_en, name_ta')
+            .select('id, category_code, name_en, name_ta')
             .order('sort_order', { ascending: true })
         if (error) {
             console.error('Error fetching categories:', error)
