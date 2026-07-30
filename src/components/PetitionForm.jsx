@@ -7,6 +7,14 @@ import { grievanceService } from '../services/grievanceService'
 import { WARD_STREETS } from '../data/wardStreets'
 import { GRIEVANCE_CATEGORIES } from '../data/categoryConfig'
 
+/**
+ * Strip leading alphabet code (e.g. "A - ", "B - ") from category name
+ */
+const getCleanCategoryTitle = (cat, lang) => {
+    const raw = lang === 'en' ? (cat.title_en || cat.name_en || '') : (cat.title_ta || cat.name_ta || '')
+    return raw.replace(/^[A-H]\s*-\s*/i, '').trim()
+}
+
 const PetitionForm = ({ compact = false }) => {
     const { language } = useLanguage()
     const [searchParams] = useSearchParams()
@@ -19,7 +27,6 @@ const PetitionForm = ({ compact = false }) => {
 
     // Ward & Street state
     const [isCustomStreet, setIsCustomStreet] = useState(false)
-    const [streetSearch, setStreetSearch] = useState('')
     
     const [formData, setFormData] = useState({
         name: '',
@@ -40,13 +47,19 @@ const PetitionForm = ({ compact = false }) => {
             try {
                 const dbCats = await grievanceService.getCategories()
                 if (dbCats && dbCats.length > 0) {
-                    setCategories(dbCats)
+                    // Filter to keep only active A-H categories that have a category_code
+                    const validCats = dbCats.filter(c => c.category_code && ['A','B','C','D','E','F','G','H'].includes(c.category_code))
+                    if (validCats.length > 0) {
+                        setCategories(validCats)
+                    } else {
+                        setCategories(dbCats)
+                    }
                 } else {
-                    setCategories(GRIEVANCE_CATEGORIES.map(c => ({ id: c.code, name_en: c.name_en, name_ta: c.name_ta, category_code: c.code })))
+                    setCategories(GRIEVANCE_CATEGORIES.map(c => ({ id: c.code, name_en: c.title_en, name_ta: c.title_ta, category_code: c.code })))
                 }
             } catch (err) {
                 console.warn('Failed to fetch categories from database, using fallbacks.', err)
-                setCategories(GRIEVANCE_CATEGORIES.map(c => ({ id: c.code, name_en: c.name_en, name_ta: c.name_ta, category_code: c.code })))
+                setCategories(GRIEVANCE_CATEGORIES.map(c => ({ id: c.code, name_en: c.title_en, name_ta: c.title_ta, category_code: c.code })))
             }
         }
         fetchCategories()
@@ -57,13 +70,13 @@ const PetitionForm = ({ compact = false }) => {
         const categoryParam = searchParams.get('category')
         if (categoryParam && categories.length > 0) {
             const matched = categories.find(
-                cat => cat.name_en === categoryParam || cat.name_ta === categoryParam || cat.category_code === categoryParam
+                cat => cat.name_en === categoryParam || cat.name_ta === categoryParam || cat.category_code === categoryParam || getCleanCategoryTitle(cat, 'en') === categoryParam
             )
             if (matched) {
                 setFormData(prev => ({
                     ...prev,
                     category_id: matched.id,
-                    title: language === 'en' ? matched.name_en : matched.name_ta
+                    title: getCleanCategoryTitle(matched, language)
                 }))
             }
         }
@@ -137,7 +150,7 @@ const PetitionForm = ({ compact = false }) => {
                 ...formData,
                 street: selectedStreet,
                 area: `Ward ${formData.ward_number} - ${selectedStreet}`,
-                title: formData.title || (selectedCat ? (language === 'en' ? selectedCat.name_en : selectedCat.name_ta) : 'Grievance'),
+                title: formData.title || (selectedCat ? getCleanCategoryTitle(selectedCat, language) : 'Grievance'),
                 category_id: (formData.category_id && formData.category_id.length === 36) ? formData.category_id : null
             }
 
@@ -160,7 +173,6 @@ const PetitionForm = ({ compact = false }) => {
                 description: ''
             })
             setIsCustomStreet(false)
-            setStreetSearch('')
             setMediaFiles([])
         } catch (err) {
             console.error('Submission error:', err)
@@ -178,7 +190,7 @@ const PetitionForm = ({ compact = false }) => {
             setFormData(prev => ({
                 ...prev,
                 category_id: value,
-                title: selected ? (language === 'en' ? selected.name_en : selected.name_ta) : ''
+                title: selected ? getCleanCategoryTitle(selected, language) : ''
             }))
         } else if (id === 'ward_number') {
             setFormData(prev => ({
@@ -186,7 +198,6 @@ const PetitionForm = ({ compact = false }) => {
                 ward_number: value,
                 street: ''
             }))
-            setStreetSearch('')
         } else {
             setFormData(prev => ({ ...prev, [id]: value }))
         }
@@ -202,9 +213,6 @@ const PetitionForm = ({ compact = false }) => {
 
     // Streets list based on ward selection
     const availableStreets = WARD_STREETS[formData.ward_number] || []
-    const filteredStreets = streetSearch
-        ? availableStreets.filter(s => s.toLowerCase().includes(streetSearch.toLowerCase()))
-        : availableStreets
 
     // Compact version for Sidebar
     if (compact) {
@@ -318,10 +326,10 @@ const PetitionForm = ({ compact = false }) => {
                                 onChange={handleChange}
                                 className="w-full pl-10 pr-4 py-3 bg-white border-2 border-tvk-red/10 rounded-xl outline-none focus:border-tvk-red/30 text-sm font-medium transition-all appearance-none cursor-pointer"
                             >
-                                <option value="">{language === 'en' ? 'Select Grievance Category (A - H)' : 'புகார் வகையை தேர்வு செய்க (A - H)'}</option>
+                                <option value="">{language === 'en' ? '-- Select Category --' : '-- வகையை தேர்ந்தெடுக்கவும் --'}</option>
                                 {categories.map(cat => (
                                     <option key={cat.id || cat.category_code} value={cat.id || cat.category_code}>
-                                        {language === 'en' ? cat.name_en : cat.name_ta}
+                                        {getCleanCategoryTitle(cat, language)}
                                     </option>
                                 ))}
                                 <option value="other">{language === 'en' ? 'Other Issue' : 'பிற'}</option>
@@ -527,7 +535,7 @@ const PetitionForm = ({ compact = false }) => {
                             </div>
                         </div>
 
-                        {/* Street Name Dropdown & Search / Custom Checkbox */}
+                        {/* Street Name Dropdown / Custom Checkbox */}
                         <div className="space-y-3">
                             <div className="flex items-center justify-between">
                                 <label htmlFor="street" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
@@ -539,28 +547,18 @@ const PetitionForm = ({ compact = false }) => {
                             </div>
 
                             {!isCustomStreet ? (
-                                <div className="space-y-2">
-                                    {/* Search filter for streets */}
-                                    <input
-                                        type="text"
-                                        placeholder={language === 'en' ? 'Type to search street name...' : 'தெரு பெயரைத் தேட தட்டச்சு செய்யவும்...'}
-                                        value={streetSearch}
-                                        onChange={(e) => setStreetSearch(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-tvk-dark outline-none focus:border-tvk-red/30"
-                                    />
-                                    <select
-                                        required={!isCustomStreet}
-                                        id="street"
-                                        value={formData.street}
-                                        onChange={handleChange}
-                                        className="w-full bg-white border-2 border-tvk-red/10 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/30 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm appearance-none cursor-pointer"
-                                    >
-                                        <option value="">{language === 'en' ? `-- Choose Street from Ward ${formData.ward_number} --` : `-- வார்டு ${formData.ward_number} தெருவைத் தேர்ந்தெடுக்கவும் --`}</option>
-                                        {filteredStreets.map((s, idx) => (
-                                            <option key={idx} value={s}>{s}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                                <select
+                                    required={!isCustomStreet}
+                                    id="street"
+                                    value={formData.street}
+                                    onChange={handleChange}
+                                    className="w-full bg-white border-2 border-tvk-red/10 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/30 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-medium shadow-sm appearance-none cursor-pointer"
+                                >
+                                    <option value="">{language === 'en' ? `-- Choose Street from Ward ${formData.ward_number} --` : `-- வார்டு ${formData.ward_number} தெருவைத் தேர்ந்தெடுக்கவும் --`}</option>
+                                    {availableStreets.map((s, idx) => (
+                                        <option key={idx} value={s}>{s}</option>
+                                    ))}
+                                </select>
                             ) : (
                                 <input
                                     required={isCustomStreet}
@@ -589,10 +587,10 @@ const PetitionForm = ({ compact = false }) => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {/* Grievance Category A - H Dropdown */}
+                            {/* Grievance Category Dropdown */}
                             <div className="space-y-3">
                                 <label htmlFor="category_id" className="text-sm font-black text-tvk-dark uppercase tracking-widest">
-                                    {language === 'en' ? 'Grievance Category (A - H)' : 'புகார் வகை (A - H)'}
+                                    {language === 'en' ? 'Grievance Category' : 'புகார் வகை'}
                                 </label>
                                 <select
                                     required
@@ -601,10 +599,10 @@ const PetitionForm = ({ compact = false }) => {
                                     onChange={handleChange}
                                     className="w-full bg-white border-2 border-tvk-red/10 rounded-2xl px-5 py-4 outline-none focus:border-tvk-red/30 focus:ring-4 focus:ring-tvk-red/5 transition-all text-tvk-dark font-bold shadow-sm appearance-none cursor-pointer"
                                 >
-                                    <option value="">{language === 'en' ? '-- Select Category (A to H) --' : '-- வகையை தேர்ந்தெடுக்கவும் (A முதல் H) --'}</option>
+                                    <option value="">{language === 'en' ? '-- Select Category --' : '-- வகையை தேர்ந்தெடுக்கவும் --'}</option>
                                     {categories.map(cat => (
                                         <option key={cat.id || cat.category_code} value={cat.id || cat.category_code}>
-                                            {language === 'en' ? cat.name_en : cat.name_ta}
+                                            {getCleanCategoryTitle(cat, language)}
                                         </option>
                                     ))}
                                     <option value="other">{language === 'en' ? 'Other Issue' : 'பிற'}</option>

@@ -4,7 +4,7 @@ import {
     Search, ChevronLeft, ChevronRight,
     FileText, MapPin, Phone, Mail, Calendar,
     X, ExternalLink, Loader2, Image as ImageIcon,
-    Download, FileDown, Filter, RefreshCw, Navigation
+    Download, FileDown, Filter, RefreshCw, Navigation, User
 } from 'lucide-react'
 import { adminService } from '../../services/adminService'
 import { downloadSingleGrievancePDF, downloadBulkGrievancesPDF, downloadGrievancesCSV, getCategoryCodeAndName } from '../../utils/pdfGenerator'
@@ -75,6 +75,18 @@ const AdminGrievances = () => {
     }, [filters, page])
 
     useEffect(() => { fetchData() }, [fetchData])
+
+    // Lock background page scroll when grievance detail modal is open
+    useEffect(() => {
+        if (selectedItem) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+        return () => {
+            document.body.style.overflow = ''
+        }
+    }, [selectedItem])
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }))
@@ -159,23 +171,23 @@ const AdminGrievances = () => {
 
     return (
         <div className="space-y-4">
-            {/* Header & Bulk Actions */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-md shadow-slate-900/5 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            {/* Header & Bulk Actions Toolbar */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-md shadow-slate-900/5 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                     <div>
-                        <h2 className="text-slate-900 font-extrabold text-lg flex items-center gap-2">
-                            <FileText className="w-5 h-5 text-tvk-red" />
+                        <h2 className="text-slate-900 font-extrabold text-base sm:text-lg flex items-center gap-2">
+                            <FileText className="w-5 h-5 text-tvk-red shrink-0" />
                             Constituency Grievances Management
                         </h2>
-                        <p className="text-slate-500 text-xs font-semibold">Filter, review, and download PDF reports for Wards 188 & 189</p>
+                        <p className="text-slate-500 text-xs font-medium">Filter, review, and download PDF reports for Wards 188 & 189</p>
                     </div>
 
-                    {/* Bulk Downloads */}
+                    {/* Bulk Download Buttons */}
                     <div className="flex flex-wrap items-center gap-2">
                         <button
                             onClick={handleBulkDownloadPDF}
                             disabled={downloadingBulk || totalCount === 0}
-                            className="bg-tvk-red hover:bg-tvk-red/90 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+                            className="w-full sm:w-auto bg-tvk-red hover:bg-tvk-red/90 text-white font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
                         >
                             {downloadingBulk ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                             {downloadingBulk ? 'Generating PDF...' : `Download PDF Documents (${totalCount})`}
@@ -183,7 +195,7 @@ const AdminGrievances = () => {
                         <button
                             onClick={handleBulkDownloadCSV}
                             disabled={downloadingBulk || totalCount === 0}
-                            className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 flex items-center gap-1.5 transition-all disabled:opacity-50 cursor-pointer"
+                            className="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs px-3 py-2.5 rounded-xl border border-slate-200 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 cursor-pointer"
                         >
                             <FileDown className="w-4 h-4 text-emerald-600" />
                             Export CSV
@@ -191,10 +203,10 @@ const AdminGrievances = () => {
                     </div>
                 </div>
 
-                {/* Filter Controls */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+                {/* Filter Controls - Clean Flexible Wrap */}
+                <div className="flex flex-wrap items-center gap-3">
                     {/* Search */}
-                    <div className="relative sm:col-span-2">
+                    <div className="relative flex-1 min-w-[220px]">
                         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input
                             type="text"
@@ -208,7 +220,7 @@ const AdminGrievances = () => {
                     <select
                         value={filters.status}
                         onChange={(e) => handleFilterChange('status', e.target.value)}
-                        className="bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tvk-red/20 focus:border-tvk-red font-bold uppercase cursor-pointer"
+                        className="bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tvk-red/20 focus:border-tvk-red font-bold uppercase cursor-pointer min-w-[110px]"
                     >
                         {statusOptions.map(opt => (
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -218,40 +230,43 @@ const AdminGrievances = () => {
                     <select
                         value={filters.priority}
                         onChange={(e) => handleFilterChange('priority', e.target.value)}
-                        className="bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tvk-red/20 focus:border-tvk-red font-bold uppercase cursor-pointer"
+                        className="bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tvk-red/20 focus:border-tvk-red font-bold uppercase cursor-pointer min-w-[110px]"
                     >
                         {priorityOptions.map(opt => (
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                     </select>
-                    {/* Category A - H */}
+                    {/* Category */}
                     <select
                         value={filters.category}
                         onChange={(e) => handleFilterChange('category', e.target.value)}
-                        className="bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tvk-red/20 focus:border-tvk-red font-bold uppercase cursor-pointer"
+                        className="bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tvk-red/20 focus:border-tvk-red font-bold uppercase cursor-pointer max-w-[200px]"
                     >
-                        <option value="">All Categories (A - H)</option>
+                        <option value="">All Categories</option>
                         {categories.map(cat => (
                             <option key={cat.id} value={cat.id}>{cat.name_en}</option>
                         ))}
                     </select>
 
                     {/* Date From & Date To */}
-                    <div className="flex items-center gap-1.5 sm:col-span-2 lg:col-span-1">
+                    <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 min-w-[260px]">
+                        <Calendar className="w-3.5 h-3.5 text-tvk-red shrink-0" />
+                        <span className="text-[10px] font-bold text-slate-400 uppercase shrink-0">From</span>
                         <input
                             type="date"
                             value={filters.dateFrom}
                             onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
                             title="From Date"
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl text-[11px] font-bold text-slate-800 px-2 py-2 focus:outline-none"
+                            className="bg-transparent text-[11px] font-bold text-slate-800 outline-none cursor-pointer w-28"
                         />
-                        <span className="text-slate-400 text-xs font-bold">-</span>
+                        <span className="text-slate-300 text-xs font-bold shrink-0">-</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase shrink-0">To</span>
                         <input
                             type="date"
                             value={filters.dateTo}
                             onChange={(e) => handleFilterChange('dateTo', e.target.value)}
                             title="To Date"
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl text-[11px] font-bold text-slate-800 px-2 py-2 focus:outline-none"
+                            className="bg-transparent text-[11px] font-bold text-slate-800 outline-none cursor-pointer w-28"
                         />
                     </div>
                 </div>
@@ -266,8 +281,84 @@ const AdminGrievances = () => {
                 </div>
             </div>
 
-            {/* Table */}
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-md shadow-slate-900/5">
+            {/* Mobile Card List View (< 768px) */}
+            <div className="block md:hidden space-y-3">
+                {loading ? (
+                    <div className="flex items-center justify-center py-16 bg-white rounded-2xl border border-slate-200">
+                        <Loader2 className="w-6 h-6 text-tvk-red animate-spin" />
+                    </div>
+                ) : data.length === 0 ? (
+                    <div className="text-center py-12 text-slate-500 bg-white rounded-2xl border border-slate-200">
+                        <FileText className="w-10 h-10 mx-auto mb-2 opacity-40 text-tvk-red" />
+                        <p className="text-xs font-bold uppercase tracking-wider">No grievances found</p>
+                    </div>
+                ) : (
+                    data.map((item) => {
+                        const { code, name: catName } = getCategoryCodeAndName(item)
+                        return (
+                            <div
+                                key={item.id}
+                                onClick={() => setSelectedItem(item)}
+                                className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all space-y-3 cursor-pointer"
+                            >
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <span className="bg-tvk-red text-white font-black text-xs px-2.5 py-0.5 rounded-md">
+                                            {code}
+                                        </span>
+                                        <span className="text-tvk-red font-mono text-xs font-bold">{item.reference_id}</span>
+                                    </div>
+                                    <span className="text-[10px] text-slate-400 font-bold">{formatDate(item.created_at)}</span>
+                                </div>
+
+                                <div>
+                                    <h4 className="font-extrabold text-slate-900 text-sm line-clamp-1">{catName}</h4>
+                                    <p className="text-xs text-slate-600 font-medium line-clamp-2 mt-0.5">{item.title || item.description}</p>
+                                </div>
+
+                                <div className="flex items-center justify-between text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                                    <div className="flex items-center gap-1.5 font-bold">
+                                        <User className="w-3.5 h-3.5 text-tvk-red" />
+                                        <span className="truncate max-w-[120px]">{item.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1 font-bold text-slate-600 text-[11px]">
+                                        <Navigation className="w-3.5 h-3.5 text-tvk-red" />
+                                        <span>{item.ward_number ? `Ward ${item.ward_number}` : 'N/A'}</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center justify-between pt-1" onClick={(e) => e.stopPropagation()}>
+                                    <select
+                                        value={item.status}
+                                        onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                                        disabled={updating === item.id}
+                                        className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border ${statusColors[item.status]} bg-white cursor-pointer focus:outline-none`}
+                                    >
+                                        <option value="pending">Pending</option>
+                                        <option value="in_progress">In Progress</option>
+                                        <option value="resolved">Resolved</option>
+                                    </select>
+
+                                    <select
+                                        value={item.priority}
+                                        onChange={(e) => handlePriorityChange(item.id, e.target.value)}
+                                        disabled={updating === item.id}
+                                        className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg ${priorityColors[item.priority]} bg-white cursor-pointer focus:outline-none`}
+                                    >
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+                        )
+                    })
+                )}
+            </div>
+
+            {/* Desktop Table View (>= 768px) */}
+            <div className="hidden md:block bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-md shadow-slate-900/5">
                 {loading ? (
                     <div className="flex items-center justify-center py-16">
                         <Loader2 className="w-6 h-6 text-tvk-red animate-spin" />
@@ -286,10 +377,10 @@ const AdminGrievances = () => {
                                     <th className="text-center text-slate-500 font-bold uppercase tracking-wider text-[10px] px-3 py-4">Code</th>
                                     <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4">Category</th>
                                     <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4">Petitioner</th>
-                                    <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4 hidden md:table-cell">Ward & Street</th>
+                                    <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4">Ward & Street</th>
                                     <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4">Status</th>
-                                    <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4 hidden sm:table-cell">Priority</th>
-                                    <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4 hidden lg:table-cell">Date</th>
+                                    <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4">Priority</th>
+                                    <th className="text-left text-slate-500 font-bold uppercase tracking-wider text-[10px] px-4 py-4">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -309,14 +400,14 @@ const AdminGrievances = () => {
                                                     {code}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3.5 text-slate-800 font-semibold text-xs max-w-[200px] truncate">
+                                            <td className="px-4 py-3.5 text-slate-800 font-semibold text-xs max-w-[220px] truncate">
                                                 {catName}
                                             </td>
                                             <td className="px-4 py-3.5">
                                                 <div className="font-semibold text-slate-900 text-xs">{item.name}</div>
                                                 <div className="text-[10px] text-slate-500 font-mono">{item.phone}</div>
                                             </td>
-                                            <td className="px-4 py-3.5 text-slate-700 text-xs font-medium hidden md:table-cell">
+                                            <td className="px-4 py-3.5 text-slate-700 text-xs font-medium">
                                                 <div className="font-bold text-slate-900">{item.ward_number ? `Ward ${item.ward_number}` : '—'}</div>
                                                 <div className="text-[11px] text-slate-500 truncate max-w-[180px]">{item.street || item.area}</div>
                                             </td>
@@ -333,7 +424,7 @@ const AdminGrievances = () => {
                                                     <option value="resolved">Resolved</option>
                                                 </select>
                                             </td>
-                                            <td className="px-4 py-3.5 hidden sm:table-cell">
+                                            <td className="px-4 py-3.5">
                                                 <select
                                                     value={item.priority}
                                                     onChange={(e) => { e.stopPropagation(); handlePriorityChange(item.id, e.target.value) }}
@@ -347,7 +438,7 @@ const AdminGrievances = () => {
                                                     <option value="urgent">Urgent</option>
                                                 </select>
                                             </td>
-                                            <td className="px-4 py-3.5 text-slate-500 font-bold text-[11px] hidden lg:table-cell">
+                                            <td className="px-4 py-3.5 text-slate-500 font-bold text-[11px]">
                                                 {formatDate(item.created_at)}
                                             </td>
                                         </tr>
@@ -357,41 +448,41 @@ const AdminGrievances = () => {
                         </table>
                     </div>
                 )}
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-4 py-4 border-t border-slate-200 bg-slate-50/50">
-                        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">
-                            Page {page} of {totalPages}
-                        </p>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => setPage(p => Math.max(1, p - 1))}
-                                disabled={page === 1}
-                                className="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 transition-all cursor-pointer"
-                            >
-                                <ChevronLeft className="w-4 h-4" />
-                            </button>
-                            <button
-                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                                disabled={page === totalPages}
-                                className="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 transition-all cursor-pointer"
-                            >
-                                <ChevronRight className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                )}
             </div>
 
-            {/* Detail Modal with Single PDF Download */}
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex items-center justify-between px-4 py-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                        Page {page} of {totalPages}
+                    </p>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                            disabled={page === 1}
+                            className="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 transition-all cursor-pointer"
+                        >
+                            <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                            disabled={page === totalPages}
+                            className="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 transition-all cursor-pointer"
+                        >
+                            <ChevronRight className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Detail Modal with Mobile Responsive View */}
             <AnimatePresence>
                 {selectedItem && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
                         onClick={() => setSelectedItem(null)}
                     >
                         <motion.div
@@ -399,26 +490,26 @@ const AdminGrievances = () => {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[88vh] overflow-y-auto shadow-slate-900/10"
+                            className="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-slate-900/10"
                         >
                             {/* Modal Header */}
-                            <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50/50">
+                            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 bg-slate-50/50 sticky top-0 z-10">
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className="bg-tvk-red text-white font-black text-sm px-3 py-1 rounded-md">
-                                             {getCategoryCodeAndName(selectedItem).code}
-                                         </span>
-                                        <h3 className="text-slate-900 font-black uppercase tracking-wider text-base">{selectedItem.title}</h3>
+                                        <span className="bg-tvk-red text-white font-black text-xs px-2.5 py-0.5 rounded-md">
+                                            {getCategoryCodeAndName(selectedItem).code}
+                                        </span>
+                                        <h3 className="text-slate-900 font-black uppercase tracking-wider text-sm sm:text-base line-clamp-1">{selectedItem.title}</h3>
                                     </div>
-                                    <span className="text-tvk-red font-mono text-xs font-bold block mt-1">{selectedItem.reference_id}</span>
+                                    <span className="text-tvk-red font-mono text-xs font-bold block mt-0.5">{selectedItem.reference_id}</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => downloadSingleGrievancePDF(selectedItem)}
-                                        className="bg-tvk-red hover:bg-tvk-red/90 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                                        className="bg-tvk-red hover:bg-tvk-red/90 text-white font-extrabold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                                     >
-                                        <Download className="w-4 h-4" /> Download Official PDF
+                                        <Download className="w-4 h-4" /> <span className="hidden sm:inline">Download PDF</span>
                                     </button>
                                     <button
                                         onClick={() => setSelectedItem(null)}
@@ -430,58 +521,58 @@ const AdminGrievances = () => {
                             </div>
 
                             {/* Modal Body */}
-                            <div className="p-6 space-y-5">
+                            <div className="p-4 sm:p-6 space-y-5">
                                 {/* Contact & Ward Info */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 rounded-xl p-4 border border-slate-200 shadow-sm">
-                                    <div className="flex items-center gap-2.5 text-sm">
-                                        <FileText className="w-4 h-4 text-tvk-red" />
-                                        <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">Name:</span>
-                                        <span className="text-slate-900 font-bold">{selectedItem.name}</span>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200 shadow-sm">
+                                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                                        <FileText className="w-4 h-4 text-tvk-red shrink-0" />
+                                        <span className="text-slate-500 font-bold uppercase text-[10px]">Name:</span>
+                                        <span className="text-slate-900 font-bold truncate">{selectedItem.name}</span>
                                     </div>
-                                    <div className="flex items-center gap-2.5 text-sm">
-                                        <Phone className="w-4 h-4 text-tvk-red" />
-                                        <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">Phone:</span>
+                                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                                        <Phone className="w-4 h-4 text-tvk-red shrink-0" />
+                                        <span className="text-slate-500 font-bold uppercase text-[10px]">Phone:</span>
                                         <span className="text-slate-900 font-bold">{selectedItem.phone}</span>
                                     </div>
                                     {selectedItem.email && (
-                                        <div className="flex items-center gap-2.5 text-sm">
-                                            <Mail className="w-4 h-4 text-tvk-red" />
-                                            <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">Email:</span>
-                                            <span className="text-slate-900 font-bold select-all">{selectedItem.email}</span>
+                                        <div className="flex items-center gap-2 text-xs sm:text-sm">
+                                            <Mail className="w-4 h-4 text-tvk-red shrink-0" />
+                                            <span className="text-slate-500 font-bold uppercase text-[10px]">Email:</span>
+                                            <span className="text-slate-900 font-bold truncate select-all">{selectedItem.email}</span>
                                         </div>
                                     )}
-                                    <div className="flex items-center gap-2.5 text-sm">
-                                        <Navigation className="w-4 h-4 text-tvk-red" />
-                                        <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">Ward Number:</span>
+                                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                                        <Navigation className="w-4 h-4 text-tvk-red shrink-0" />
+                                        <span className="text-slate-500 font-bold uppercase text-[10px]">Ward:</span>
                                         <span className="text-slate-900 font-extrabold">{selectedItem.ward_number ? `Ward ${selectedItem.ward_number}` : 'N/A'}</span>
                                     </div>
-                                    <div className="flex items-center gap-2.5 text-sm sm:col-span-2">
+                                    <div className="flex items-center gap-2 text-xs sm:text-sm sm:col-span-2">
                                         <MapPin className="w-4 h-4 text-tvk-red shrink-0" />
-                                        <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px] shrink-0">Street & Location:</span>
-                                        <span className="text-slate-900 font-bold">{selectedItem.street || selectedItem.area}</span>
+                                        <span className="text-slate-500 font-bold uppercase text-[10px] shrink-0">Location:</span>
+                                        <span className="text-slate-900 font-bold break-all">{selectedItem.street || selectedItem.area}</span>
                                     </div>
                                 </div>
 
-                                {/* Status & Priority */}
-                                <div className="flex flex-wrap gap-4 bg-slate-50 rounded-xl p-4 border border-slate-200 shadow-sm">
-                                    <div>
-                                        <label className="text-slate-500 font-bold uppercase tracking-wider text-[10px] block mb-1.5">Status</label>
+                                {/* Status & Priority Selectors */}
+                                <div className="flex flex-wrap gap-4 bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200 shadow-sm">
+                                    <div className="flex-1 min-w-[120px]">
+                                        <label className="text-slate-500 font-bold uppercase text-[10px] block mb-1">Status</label>
                                         <select
                                             value={selectedItem.status}
                                             onChange={(e) => handleStatusChange(selectedItem.id, e.target.value)}
-                                            className={`text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-lg border ${statusColors[selectedItem.status]} bg-white border-slate-200 cursor-pointer focus:outline-none`}
+                                            className={`w-full text-xs font-black uppercase px-3 py-2 rounded-lg border ${statusColors[selectedItem.status]} bg-white cursor-pointer focus:outline-none`}
                                         >
                                             <option value="pending">Pending</option>
                                             <option value="in_progress">In Progress</option>
                                             <option value="resolved">Resolved</option>
                                         </select>
                                     </div>
-                                    <div>
-                                        <label className="text-slate-500 font-bold uppercase tracking-wider text-[10px] block mb-1.5">Priority</label>
+                                    <div className="flex-1 min-w-[120px]">
+                                        <label className="text-slate-500 font-bold uppercase text-[10px] block mb-1">Priority</label>
                                         <select
                                             value={selectedItem.priority}
                                             onChange={(e) => handlePriorityChange(selectedItem.id, e.target.value)}
-                                            className={`text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-lg ${priorityColors[selectedItem.priority]} bg-white border-slate-200 cursor-pointer focus:outline-none`}
+                                            className={`w-full text-xs font-black uppercase px-3 py-2 rounded-lg ${priorityColors[selectedItem.priority]} bg-white cursor-pointer focus:outline-none`}
                                         >
                                             <option value="low">Low</option>
                                             <option value="medium">Medium</option>
@@ -489,18 +580,12 @@ const AdminGrievances = () => {
                                             <option value="urgent">Urgent</option>
                                         </select>
                                     </div>
-                                    <div>
-                                        <label className="text-slate-500 font-bold uppercase tracking-wider text-[10px] block mb-1.5">Category</label>
-                                        <span className="text-xs font-extrabold text-slate-900 block mt-1">
-                                            {getCategoryCodeAndName(selectedItem).name}
-                                        </span>
-                                    </div>
                                 </div>
 
                                 {/* Description */}
                                 <div>
-                                    <label className="text-slate-500 font-bold uppercase tracking-wider text-[10px] block mb-1.5">Grievance Description</label>
-                                    <p className="text-slate-700 text-sm bg-slate-50 rounded-xl p-4 border border-slate-200 whitespace-pre-wrap leading-relaxed">
+                                    <label className="text-slate-500 font-bold uppercase text-[10px] block mb-1">Description</label>
+                                    <p className="text-slate-700 text-xs sm:text-sm bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200 whitespace-pre-wrap leading-relaxed">
                                         {selectedItem.description}
                                     </p>
                                 </div>
@@ -511,7 +596,7 @@ const AdminGrievances = () => {
                                     (() => { try { return JSON.parse(selectedItem.attachments) } catch { return [] } })()
                                 ).length > 0 && (
                                     <div>
-                                        <label className="text-slate-500 font-bold uppercase tracking-wider text-[10px] block mb-2">
+                                        <label className="text-slate-500 font-bold uppercase text-[10px] block mb-2">
                                             Evidence Media Attachments ({(Array.isArray(selectedItem.attachments) ? selectedItem.attachments : JSON.parse(selectedItem.attachments || '[]')).length})
                                         </label>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -554,7 +639,7 @@ const AdminGrievances = () => {
                                 )}
 
                                 {/* Timeline */}
-                                <div className="flex flex-wrap gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 pt-4 border-t border-slate-200">
+                                <div className="flex flex-wrap gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 pt-3 border-t border-slate-200">
                                     <div className="flex items-center gap-1.5">
                                         <Calendar className="w-3.5 h-3.5 text-tvk-red" />
                                         Created: {formatDate(selectedItem.created_at)}

@@ -65,7 +65,8 @@ const IssueCategories = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-3">
                 {categories.map((cat, i) => {
-                    const label = language === 'en' ? cat.label_en : cat.label_ta
+                    const rawLabel = language === 'en' ? cat.label_en : cat.label_ta
+                    const label = (rawLabel || '').replace(/^[A-H]\s*-\s*/i, '').trim()
                     return (
                         <motion.div
                             key={i}
@@ -74,7 +75,7 @@ const IssueCategories = () => {
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.04 }}
                         >
-                            <Link to={`/petition?category=${encodeURIComponent(label)}`} className="category-card group">
+                            <Link to={`/petition?category=${encodeURIComponent(rawLabel)}`} className="category-card group">
                                 <div className={`icon-wrap ${cat.color} group-hover:text-white transition-all duration-300`}>
                                     {getIconComponent(cat.icon)}
                                 </div>
