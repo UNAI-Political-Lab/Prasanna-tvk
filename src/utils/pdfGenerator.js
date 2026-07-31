@@ -475,7 +475,7 @@ export const downloadWeeklyReportPDF = async (items, dateRange = {}) => {
   doc.setFontSize(11)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(145, 9, 5)
-  doc.text('CATEGORY-WISE WEEKLY BREAKDOWN (A – H)', 14, currentY)
+  doc.text('CATEGORY-WISE WEEKLY BREAKDOWN', 14, currentY)
   doc.setLineWidth(0.5)
   doc.setDrawColor(145, 9, 5)
   doc.line(14, currentY + 2, 196, currentY + 2)

@@ -57,13 +57,13 @@ const IssueCategories = () => {
         <div>
             <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg md:text-xl font-extrabold text-tvk-dark">
-                    {language === 'en' ? 'Grievance Categories (A – H)' : 'புகார் வகைகள் (A – H)'}
+                    {language === 'en' ? 'Grievance Categories' : 'புகார் வகைகள்'}
                 </h3>
                 <Link to="/services" className="text-tvk-red text-sm font-bold flex items-center gap-1 hover:gap-2 transition-all">
                     {language === 'en' ? 'View All' : 'அனைத்தையும் பார்க்க'} <Icons.ChevronRight size={16} />
                 </Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-3 items-stretch">
                 {categories.map((cat, i) => {
                     const rawLabel = language === 'en' ? cat.label_en : cat.label_ta
                     const label = (rawLabel || '').replace(/^[A-H]\s*-\s*/i, '').trim()
@@ -74,12 +74,13 @@ const IssueCategories = () => {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.04 }}
+                            className="h-full flex flex-col"
                         >
                             <Link to={`/petition?category=${encodeURIComponent(rawLabel)}`} className="category-card group">
-                                <div className={`icon-wrap ${cat.color} group-hover:text-white transition-all duration-300`}>
+                                <div className={`icon-wrap ${cat.color} group-hover:text-white transition-all duration-300 flex-shrink-0 mb-2`}>
                                     {getIconComponent(cat.icon)}
                                 </div>
-                                <span className="text-[11px] md:text-xs font-bold text-tvk-dark/80 leading-tight text-center">
+                                <span className="text-[11px] md:text-xs font-bold text-tvk-dark/80 leading-tight text-center flex-1 flex items-center justify-center min-h-[2.5rem] w-full px-1">
                                     {label}
                                 </span>
                             </Link>

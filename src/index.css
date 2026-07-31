@@ -41,7 +41,7 @@
 
     /* Category card */
     .category-card {
-        @apply flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:border-tvk-red/20 transition-all duration-300 cursor-pointer;
+        @apply flex flex-col items-center justify-start h-full w-full min-h-[140px] p-3.5 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:border-tvk-red/20 transition-all duration-300 cursor-pointer text-center;
     }
 
     /* Complaint form card */
@@ -96,4 +96,5 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
+    flex-shrink: 0;
 }
